@@ -1,0 +1,535 @@
+h1. Testdatagenerator
+
+bq. Denne siden er på engelsk, siden det er kladd til prosjektbeskrivelse på github....
+
+{excerpt}This project contains a simple set of tools to help generate test data.{excerpt}  It is primarily a way to train myself in Scala (by porting and enhancing some very old AWK scripts :\), but can hopefully be useful to someone...
+
+{panel}{toc:minLevel=2}{panel}
+
+h2. Overview
+The basic component is the {*}{qc}Generator[T]{qc}{*} trait, which is able to provide a (possibly filtered) list of instances of a given type, as well as the same list converted to strings.
+
+On top of this is a set of generators based on the {*}{qc}ExtendedGenerator[T]{qc}{*} interface, containing methods to set up lists of basic data like strings and numbers.
+
+Furthermore, there are some utility classes like {{FieldConcatenator}} and {{WeightedGenerator}} to assist in creating aggregate or more complex data.
+
+And finally, there are a set of classes to assist in creating complete data records, like {{SqlGenerator}} for generating SQL inserts, and {{CsvGenerator}} to create simple flat file records.
+
+h3. Sample usage
+Here is an introductry example to show you what it's all about:
+{anchor:sample1}{code:scala|title=Order.scala}
+package net.kalars.testgen.generators.sample
+
+import net.kalars.testgen.aggreg.{FieldConcatenator, SomeNulls, WeightedGenerator}
+import net.kalars.testgen.generators.{Dates, Doubles, FixedGenerator, Ints, ListGenerator}
+import net.kalars.testgen.generators.misc.NameGenerator
+import net.kalars.testgen.recordgen.{SkipNull, XmlElementGenerator}
+
+object SimpleSample extends App {
+  XmlElementGenerator("order", "orderLine", SkipNull).
+    add("id", Ints() from(1) sequential).
+    add("productName", WeightedGenerator().
+                         add(60, NameGenerator(1)).
+                         add(40, NameGenerator(2))).
+    add("qty", SomeNulls(3,
+                 FieldConcatenator().
+                   add(Doubles() from(1) to(300) format("%5.2f")).
+                   add(FixedGenerator(" ")).
+                   add(ListGenerator(List("l", "kg", "", "m"))))).
+    add("orderDate", Dates() from(y=2012, m=9) to(y=2013, m=1) format("yyyy-MM-dd")).
+    toFile("order.xml").
+    getStrings(4)
+}
+{code}
+
+This produces an XML-file, {{order.xml}}, with the following content:
+{noformat}
+<order>
+   <orderLine>
+      <id>1</id>
+      <productName>Shrpfljookmlvkpe</productName>
+      <orderDate>2012-11-24</orderDate>
+   </orderLine>
+   <orderLine>
+      <id>2</id>
+      <productName>Ysmlyjyvygsrtbr Dnbldegkieivvdrut</productName>
+      <qty>113,99 kg</qty>
+      <orderDate>2012-10-20</orderDate>
+   </orderLine>
+   <orderLine>
+      <id>3</id>
+      <productName>Iphlifhmopaka</productName>
+      <qty>87,77 kg</qty>
+      <orderDate>2012-11-04</orderDate>
+   </orderLine>
+   <orderLine>
+      <id>4</id>
+      <productName>Afoubrksoomnhehtt Leoiom</productName>
+      <qty>283,82 l</qty>
+      <orderDate>2012-09-16</orderDate>
+   </orderLine>
+</order>
+{noformat}
+
+For a more thorough example, scroll down...
+
+h2. Core definitions
+
+h3. Generator
+The basic generator trait looks like this (details omitted):
+{code:scala|title=Generator}
+trait Generator[T] {
+  /** Get the next n entries. */
+  def get(n: Int): List[T]
+
+  /** Get n entries converted to strings and formatted. */
+  def getStrings(n:Int): List[String]
+
+  /** Set a formatting function. */
+  def format(f: T=>String): this.type
+
+  /** Add a filter function. */
+  def filterWith(f: T=>Boolean): this.type
+}
+{code}
+
+The elements here are:
+# {*}{qc}get(n){qc}{*}: The main function, providing  a list ([TODO-1|#td1]) of _n_ data elements.
+# {*}{qc}getStrings(n){qc}{*}: Returns the same list as the previous, but mapped via the formatter function (see below) and thus converted to string format.
+# {*}{qc}filter(f){qc}{*}: Adds a function that takes an instances of the generator's type and returns {{true}} if the instance should be included in the list.  Should be applied before constructing the final list (to ensure that {qc}get(n){qc} actually contains n elements). The function may be called several times to add multiple filters to apply -- each filter must accept the instance to include it in the final list.
+# {*}{qc}formatWith(f){qc}{*}: Adds a formatting function that takes an instance of the given type {{T}} and formats it as a string.
+
+h4. GeneratorImpl
+is a simple trait containing a sufficient implementation of most of the generator methods (except {{get}}).  Implementing classes get
+* {{protected var filterFuns}} and {{protected def filterAll(elem:T)}} -- the list of defined filters and a function to check them all at once.
+A default filter function that accepts any input is included.
+* {{protected var formatter}} which is the defined formatting function, defaulting to a simple {{toString}}.
+* An implementation of {{{{getStrings}}}} that calls {{get}} and formats each element with the formatter.
+
+h3. ExtendedGenerator
+The ExtendedGenerator trait extends the {{Generator}} trait with methods to control how data is generated.
+{code:scala|title=ExtendedGenerator}
+trait ExtendedGenerator[T] extends Generator[T] {
+  /** Set a formatting string. */
+  def format(f: String): this.type
+
+  /** Lower bound.  */
+  def from(min: T): this.type
+
+  /** Upper bound. */
+  def to(max: T): this.type
+
+  /** Generate sequential, not random. */
+  def sequential: this.type
+
+  /** Generate unique, random values. */
+  def unique: this.type
+
+  /** Generate reversed sequential values. */
+  def reversed: this.type
+}
+{code}
+
+The general methods are:
+# {*}{qc}format(s){qc}{*}: A simpler way to define a formatting function, by providing a simple format string for {{java.lang.String.format}}.
+# {*}{qc}from(T) / to(T){qc}{*}: defines a lower/upper bound for generated values (takes a value of the output type, subclasses may provide variants)
+# {*}{qc}sequential{qc}{*}: Signals that sequential values are to be generated (subclasses may define a step size) -- by default, random values are generated.
+Generation starts at the lower bound, generating towards the upper.  If the upper bound is reached without providing the wanted _n_ occurrences, it wraps around from the starts.  E.g.: when getting 3 numbers from {{Ints() from 0 to 1 sequential}} you get 0,1,0.
+# {*}{qc}reversed{qc}{*}: Calling this implies a call to {{sequential}}; additionally, generation starts at the upper bound, stepping towards the lower.
+# {*}{qc}unique{qc}{*}: Calling this sets the generation to random, and the checks to see that each generated value is unique.
+
+All the methods return {{this.type}} (ending up in the type of the class implementing the trait), to allow _builders_ like {{Ints().from(1).to(10).reversed()}}.
+
+As the method definitions imply, generators will by default pick _random_ sequences from their value space (the range of the underlying data type(s), possibly limited by from/to-arguments).  When {{unique}} is added, it will check to see that the same value is never drawn twice.  For generators with a limited value space, you should be careful with this setting -- {{ListGenerator(List(1,2)).unique.get(3)}} will probably crash or run forever...
+The methods {{sequential}} and {{reversed}} (and for some subclasses, a {{step}} method) change this behaviour -- in stead a series of increasing (or decreasing) values will be produced.
+Some times you will find it necessary to have two generators A and B draw from the same value space.  In that case, you could use a generator to fill a list, and then use a {{ListGenerator}} to produce the final values.
+
+
+h4. ExtendedDelegate
+The final basic building block is the {qc}trait ExtendedDelegate[G, T]{qc}.
+This trait
+* can only be used on a type implementing {qc}Generator[T]{qc}
+* requires the implementing type to have a {qc}var generator:Generator[G]{qc} containing the actual generator
+* allows you to override
+** only the methods of {{ExtendedGenerator}} you need to change
+** the definition of {{def conv2gen(f: T): G}} and / or {qc}conv2result(f: G): T{qc} to convert between the types of the generator and the implementing class (by default both are implemented with {{asInstanceOf}}
+
+h4. SingleGenerator
+{{SingleGenerator}} is an abstract base class extending {qc}ExtendedGenerator[T]{qc} backed by {qc}GeneratorImpl[T]{qc}.  All methods except {qc}get(n){qc} are defined.
+Subclasses get the following {{protected}} members:
+* {qc}var lower: Option[T]{qc}
+* {qc}var upper: Option[T]{qc}
+* {{var isSequential}}
+* {{final def isRandom= !isSequential}}
+* {{var isUnique}}
+* {{var isReversed}}
+
+h2. Basic generators
+
+h3. Booleans
+This class has the rather simple job of generating Booleans...  It uses {{ListGenerator}} under the hood.
+* {{from}} and {{to}} are not supported
+* an additional method {{format(falseString, trueString)}} is available for the conversion in {{getStrings}}
+
+Apply methods:
+# {{Booleans()}}
+# {{Booleans(trueString, falseString)}}
+
+h3. Ints
+returns ints from the entire range.  The only special method is
+* {{step(Int}} to define step size for sequences
+
+Apply methods (defaults for all parameters):
+* {{Ints(from:Int=Integer.MIN_VALUE, to:Int=Integer.MAX_VALUE, step:Int=1)}}
+
+h3. Chars
+uses {{ExtendedDelegate}} and a 1-character {{Strings}}-generator to do its work.  It adds
+* the {qc}chars(Seq[Char]){qc} also supported by {{Strings}} to add a range of available characters.  Accepts a string ({{chars("aeiouy")}}, an interval ({{chars('a' to 'z')}} etc.
+
+Apply methods:
+# {{Chars()}}
+# {{Chars(seq)}}
+
+h3. Doubles
+returns doubles from the entire range.  The only special method is
+* {{step(Double}} to define step size for sequences
+
+Apply methods:
+# {{Double()}}
+
+h3. Dates
+A simple enough data type, this is still one of the more complex generators.  It uses JodaTime for date/time representation, although conversions for {{java.util.Date}} are available.  There are a lot of special methods:
+* {{timeOnly}}: generates different times with date part omitted
+* {{dateAndTime}}: include both date and time in the output (default is just date)
+* {{setStdTime(h: Int, min:Int, s:Int, ms:Int)}}: set the standard time parts used when generating (default 0,0,0,0)
+* {{setStdDate(y: Int, m:Int, d:Int)}}: set the standard date parts used when generating (default today's date)
+* {{from(java.util.Date)}} / {{to(java.util.Date)}}: limit using JDK Dates rather than Joda DateTimes.
+* {{from(y: Int=1753, m: Int=1, d:Int=1, hh: Int=0, mm: Int=0, ss:Int=0, ms: Int=0)}} / {{to(y: Int=9999, m: Int=12, d:Int= -31, hh: Int=23, mm: Int=59, ss:Int=59, ms: Int=999)}}: These are designed to be used with named arguments, like {{from(y=1980, m=1).to(y=1999, m=12)}}
+* {{step(y: Int=0, m: Int=0, d:Int=0, hh: Int=0, mm: Int=0, ss:Int=0, ms:Int=0)}}: Another candidate for named arguments, this method sets the interval for sequential generation
+* {{format(DateTimeFormatter)}}: Use one of Joda's formatters
+* {{getJavaDates(n:Int)}}: same as {{get}}, but converts to {{java.util.Date}}
+* {{Dates.dateFormatter(formatString)}}: returns a partial function to format dates according to a given string
+
+
+h3. Strings
+The Strings generator generate strings, would you believe it...
+
+Special methods:
+* {qc}length(n){qc} / {{lengthBetween(from, to)}}: sets the required length (default 1) of the generated strings
+* {qc}chars(Seq[Char]){qc}: defines the default characters to build strings from (default printable ASCII, i.e. space to  {{~}}).
+Note that there are many ways to define a {qc}Seq[Char]{qc}, e.g.
+** {{"aeiuoy"}}
+** {{'a' to 'z'}}
+** {qc}'a' to 'z' filter {x=> !"aeiouy".contains(x)}{qc}
+
+Apply methods:
+* {{Strings(length: Int=0)}}: default method, exact length may be given
+* {qc}Strings(length: Int, chars:Seq[Char]){qc}: supply length and character set
+
+
+h3. FixedGenerator
+This generator may seem superfluous...  It takes a single value, and returns that same value repeatedly.  But it is meant for aggregating values, see {{FieldConcatenator}} for an example.
+
+This "generator" is actually just an apply method taking a single value, it is backed by a {{ListGenerator}}.
+
+h3. FromFileGenerator
+This generator reads lines from an input file and creates a list of values, from which a delegate {{ListGenerator}} can take its values. The values may be typed [(does not currently work as expected...)|#td2], even though they are read as strings.
+
+Specialities:
+* The {{from}} and {{to}} methods are not supported.
+* {{allLines(all:Boolean=true)}}: to support large input files, the generator only reads the first _n_ lines from the file when asked to produce _n_ values.  To utilize the entire file, call {{allLines}} before getting input, this is meaningless for sequential output, but increases the value space for random generation.
+
+Apply method:
+* {{FromFileGenerator(resourceName: String, allLines:Boolean=false, encoding: String= "ISO-8859-1")}}: A file name must be given, allLines is optional (see the similar method), so is the encoding to be used (defaults to ISO-8859-1).
+The file to be read is first searched for on the classpath, then as a regular file name.  Since reading is not done until a get-method is called, invalid file names will not be detected when constructing the generator.
+
+
+h3. ListGenerator
+Probably the most versatile of all the generators, the ListGenerator takes a list of "anything" as input and generates its values from that, it is typed ({qc}ListGenerator[T]{qc}), so you keep the type of the input list.
+To name a few possible uses:
+# If you already have a list of the values you want to pick from, the ListGenerator takes care of the rest...  This is what the Boolean (short list :\), fixed (even shorter) and FromFile generators do.  You could just as well use it for a list of Person objects or DOM trees...
+# As mentioned above, if you need to reuse the same values in several generators, e.g. if you need "foreign keys" from one list to another, you could generate the needed values in a list, and use that list for the other generators.
+# You could use it to scramble existing data.  E.g.: do a {{select Id, FirstName, LastName, Address, CreditCardNumber from Customer}} in your code, keep the field values in each their list, and the generate a number of {{insert}} picking random values from the lists.
+
+Specialities:
+* {{from}} and {{to}} are not supported
+* The method {{fromList(list)}} *must* be called before you generate values (unless you use the apply method with a list argument).
+
+Apply methods:
+* {{ListGenerator()}} -- then you _must_ call {{fromList}} afterwards
+* {{ListGenerator(List}}
+
+h2. Aggregates
+There will often be a need to handle more complex data than what the basic generators can produce. A set of generators are provided to facilitate building of aggregate generators.
+
+h3. TextWrapper
+This generator takes any other generator as input, always uses its {qc}getStrings(n){qc} as input, thus acting as "text converter", and adds methods to manipulate text.
+
+
+Special methods:
+* {qc}substring(from:Int, to:Int=-1{qc} (if {{to}} is omitted, the rest of the string is used)
+* {{toLower}} / {{toUpper}}
+* {qc}surroundWith(prefix:String="", suffix:String=""){qc} pre/suffixes the result string with a fixed string
+* {qc}transform(f: String=> String){qc} -- add your own string transformer function
+
+Apply methods:
+* {{TextWrapper(generator)}}
+
+h3. FieldConcatenator
+You saw the {{FieldConcatenator}} in action in the introductory example:
+{code:scala}
+FieldConcatenator().
+  add(Doubles() from(1) to(300) format("%5.2f")).
+  add(FixedGenerator(" ")).
+  add(ListGenerator(List("l", "kg", "", "m")))
+{code}
+The FieldConcatenator is given a set of generators with the {{add}} method. When {{get}} is called, it calls {{getString}} on each of its generators, and concatenates the output from each generator (in the same order as the {{add}} calls), and returns the list of concatenated strings (in the above example strings like "12.04 kg").
+
+h3. SomeNulls
+This generator takes another generator and a frequency factor as input.  Both the {{get}} and the {{getStrings}} method calls the original generator to retrieve its values, and then replaces approximately each Nth occurrence (decided by a random generator) with {{null}}.  N==0 means no nulls, N==1 means only nulls, N==2 50% nulls etc.
+
+Methods:
+* {{nullFactorN)}} as described above
+
+Apply methods:
+* {{apply(N, generator}}: supply both the factor and the generator
+
+
+h2. Specialized generators
+
+h3. NameGenerator
+Creates "name-like" strings -- words containing A-Zs with random length between 3 and 20 with an uppercase first letter.  You can see some sample output in the product names in the introductory example.  This is only a wrapper object around a {{Strings}} generator, its only parameter is an int telling how many words to create in each string.
+
+h3. CarMakesGenerator
+This generator selects from a list of about a 100 manufactureres of cars, motor cycles etc, like "Porsche" and "Toyota".
+No class, just an apply method without parameters returning av {{ListGenerator}}.
+
+h3. UrlGenerator
+Builds fake URLs using a http/hhtps prefix, "://",, sometimes "www.", a lowercase string (a-z) of length 4-10, and a suffix of .com/no/org/net/co.uk/gov.
+No class, just an apply method without parameters.
+
+h3. MailGenerator
+Builds email addresses using this pattern:
+# A name of 3-8 letters (a-z)
+# Sometimes expanded with "." and another name (4-9 letters)
+# "@"
+# A name of 4-9 characters
+# "."
+# com/no/org/net/co.uk/gov
+
+h3. PasswordGenerator
+xxxxxxxxxxxx TODO
+
+h3. CreditCardGenerator
+xxxxxxxxxxx TODO
+
+h3. Norwegian custom generators
+These generators create data specific to Norwegian domains.  They use Norwegian names, as they are of limited value outside of Norway anyway.
+
+h4. KjennemerkeGenerator
+No class, just an apply method without parameters.
+Generates strings resembling Norwegian car license plates -- 2 uppercase letters (not I, M, O or Q) followed by 5 digits (use a TextWrapper to shorten them if you need).
+
+h4. FnrGenerator
+Generates a legal "fodselsnummer", Norwegian "social security IDs". These are strings of 11 digits:
+# Birth date -- "ddmmyy"
+# A random 3-digit ID code
+# 2 check digits (using two mod11 algorithms)
+
+There are several rules pertaining to these numbers, some of which are supported by the generator.
+# The date part usually starts with 01-31.  However, temporary numbers called D-numbers are issued, they add 40 to the birth day (i.e. 41-71).
+# If you only want certain dates, use the apply method or constructor with an {{ExtendedGenerator[DateTime]}} argument (e.g. a {{Dates}} generator).
+Add a call to {{withDnr}} to generate such numbers.
+# The 3-digit ID is given in intervals signifying century.  This is not supported by the generator.
+# The 3-digit ID is odd for men, even for women.  Call {{boysOnly}} og {{girlsOnly}} if you are a sexist.
+# The algorithm for the check numbers leads to not all IDs being valid.  The generator ensures that all values are valid.
+
+*Apply methods*
+# Standard no-args
+# {{apply(ExtendedGenerator[DateTime])}}: (e.g. {{Dates}}) to govern which dates are produced.
+
+h4. LandGenerator
+(Country generator.)
+This generator (object) reads the supplied "land.txt" file containing country names in Norwegian spelling, and uses a {{FromFileGenerator}} to supply values.
+
+
+h4. PoststedGenerator
+(Postal code generator.)
+This one is also based on a {{FromFileGenerator}} reading the supplied "postnr.txt" which contains Norwegian postal codes, formatted as "NNNN Ssss....", where NNNN is the 4-digit code, followed by a space, then the name.  There are 3 alternative invokations, they all have an optional {{allLines}} parameter (default {{true}}) for the {{FromFileGenerator}}:
+* {{PoststedGenerator}}: returns full strings as described above
+* {{PoststedGenerator.postnr}}: returns the numeric code only
+* {{PoststedGenerator.poststed}}: returns the name only
+
+
+h4. KommuneGenerator
+(County generator.)
+Another one based on a {{FromFileGenerator}}, reading  "kommuner.txt" which contains Norwegian county names, formatted as "NNNN Ssss....", where NNNN is a 4-digit code, followed by a space, then the name.  There are 3 alternative invokations, they all have an optional {{allLines}} parameter (default {{true}}) for the {{FromFileGenerator}}:
+* {{KommuneGenerator}}: returns full strings as described above
+* {{KommuneGenerator.kommunenr}}: returns the numeric code only
+* {{KommuneGenerator.kommunenavn}}: returns the name only
+
+h4. NorskeNavnGenerator
+(Generator for Norwegian names.)
+First a bit about the background for this generator...
+
+Over the years, I have "scraped" lists of names from the net -- tax lists, participants in conferences and sports events etc, and tried to normalize and uniquify these lists (this bears the risk of having first and last names mixed up, and wrong capitalization...).  Then I removed first and last names that only appeared once in any combination, to avoid generating names that identifies a single person.  To these list, I added the list from Norwegian SSB (Staistics Norway) of the most popular names, from these I have extracted the lists of names in "fornavn.txt" (a little short of 5000 first names) and "etternavn.txt" (about 8300 last names).  The lists have no notion of gender, so you might well end up with names like "Ann Abdul Hansen"...
+
+To generate names
+# You start with the the apply method -- {{NorskeNavnGenerator(allLines:Boolean=true)}} (with {{allLines=true}}, all 12500 names are read at least once)
+# and may optionally add {{forOgEtternavn}} (default, both first and last names, creating names with 1 or 2 of each), {{kunFornavn}} (single first names only) or {{kunEtternavn}} (single last names only)
+# the standard {{filter}} and {{formatWith}} may also be used.
+
+h4. RareNavnGenerator
+xxxxxxxxxx
+
+h2. Record builders
+Generating values is all well and fine, and you may want to use the previous generators in contexts of your own.  But often, you will want to use the test data in another context.  The generators that follow help you in building not values but data structures, and perhaps saving them to a file.
+
+h3. Core classes
+There are a few base classes that the other record generators are based on. The main concept is that you create a structure by adding a list of fields (the order in which they are added is normally important) -- each field has a _name_ (even for the few generators that does not use it) and a value generator, typically one f the generators above.  The {{get}} methods for the record generators call the {{getStrings}} method on each field's generator, and assembles records from the combined results.
+
+The main class is the {qc}abstract class DataRecordGenerator[T](nulls: NullHandler){qc} whch implements {qc}Generator[T]{qc}.  It contains the following methods:
+* {qc}add(fieldName: String, gen:Generator[_]){qc} -- adds a named field (as previously mentioned, the order in which you call {{add}} becomes the order of the fields).
+* {qc}add(DataField){qc}: specialized subclasses of {{DataField}} (see below) may need to be built outside the DataRecordGenerator and added "as is".
+* {qc}toFile{qc} / {qc}appendToFile{qc}: these methods, if called, must be the last call on the record generator, because they return a {{ToFileGenerator}} (which see), not the generator itself, to allow the result to be saved to a file.
+* Subclasses may also use the protected variable {{fields}}, which is the generator list, as well as the utility method {{fieldNames}} which returns the ordered list of field names.
+
+{qc}StringRecordGenerator{qc} is a subclass specialized for generating strings, with a notion of pre/suffixes, and an overridable {{NL}} method that defaults to the current platform line ending.
+
+The {{NullHandler}} in the constructor is a sealed trait describing how {{null}} values in the input should be handled (some strategies may be less relevant for some record formats):
+# {{EmptyNull}}: include the element as an empty string/element/..., e.g. {{<foo/>}} in an XML record.
+# {{SkipNull}}: exclude empty fields entirely
+# {{KeepNull}}: include null fields with an explicit "null" representation.
+
+Each field (i.e. name\+ generator) is represented by a {qc}case class DataField(name: String, generator: Generator[_]{qc} or one of its subclasses.  In addition to its constructor arguments, it contains the overridable methods
+* {{prefix}} / {{suffix}}: how to add "something" before or after the field value
+* {{transform(String)}}: how to transform the value from the generator's {{getStrings}} to the output string
+* {{getTuples(Int, NullHandler}}: the method that calls the generator and produces N tuples in a {{(name,value)}} format.
+
+A couple of subclasses are provided -- {{SingleQuoteWithEscapeDataField}} and {{DoubleQuoteWithEscapeDataField}}, they encapsulate their values with single/double quotes, and escapes their respective quotes with a backslash.
+
+h3. CsvGenerator
+This generator produces values separated by a comma (or another delimiter, e.g. TAB), value is pre- and suffixed with a delimiter, by default a double quote.  By default, the first record contains field names (which can be excluded).  Access it through the apply method {{CsvGenerator}} with the following optional parameters
+# {qc}withHeaders: Boolean=true{qc}: include header record
+* {qc}delimiter:String= "\""{qc}: how to enclose each value
+# {qc}separator:String= ","{qc}: how to separate each field
+
+The output would typically look like this:
+{noformat}
+"id","userId","ssn","mail","active"
+"1","SSQH","23040852859","oviydeo@nvyebr.org","false"
+"2","RYZJ","14088638868","pwrdsi@rvyhjvimz.gov","false"
+"3","UODG","08039917611","uex.hshuka@anqfj.net","false"
+{noformat}
+
+h3. FixedWidthGenerator
+This genearator produces data in fixed width fields, where each value is padded with blanks (or truncated) to a fixed width.  The inherited {{add}} method cannot be used, use {qc}add(fieldName: String, gen: Generator[_], width: Int){qc} to add fields. The apply method is {qc}FixedWidthGenerator(withHeaders: Boolean=true){qc} (as the output of a header record is optional).
+
+Sample output:
+{noformat}
+rec u  ssn
+HEADEFB17046606698
+VALUNE 01027711576
+{noformat}
+
+{{skipNull}} is not supported for this generator.
+
+h3. XML
+There are two different XML generators, and a generator for HTML. As opposed to other record generators, these differntiate between the {{get}} and {{getStrings}} methods, the latter pretty-prints the result to create a more readable layout.
+
+h4. XmlElementGenerator
+The output from this generator is a set of data records, optionally enclosed in a root record. The apply method {{XmlElementGenerator()}} has 3 named parameters:
+# {{rootName:String}}: if this parameter has a value, a root record with that name is generated, enclosing the other records.
+# {{recordName:String}}: must be given, sets he name of the base element for each record
+# {{nullHandler}}: see above, default {{EmptyNull}}
+
+[The introductory example|#sample1] shows sample output from this.
+
+h4. XmlAttributeGenerator
+Much like the previous, but the fields are represented as _attributes_ on the (empty) data record, rather than enclosed elements.  Parameters are like the precious.
+
+Sample without root record and with empty nulls:
+{code:xml}
+<data homePage="" userId="RKGG" id="1" name="Gleihoy Tmfsmr" born=""></data>
+<data homePage="http://eeofau.net" userId="EALP" id="2" name="Jnnadfpnfbjjv Jsokovknmvn" born="2004-03-14"></data>
+<data homePage="https://jdje.net" userId="GBDB" id="3" name="Gmbgbsnmatmiij Kafkdyydkkfkoi" born="1982-06-26"></data>
+{code}
+
+h4. HtmlGenerator
+This one formats its output as an HTML table, optionally as a complete HTML document.  The apply methods has two optional parameters:
+# {{pageTitle:String}}: if this parameter has a value, a complete HTML document with that title and heading is generated, enclosing the table.
+# {{nullHandler}}: see above, default {{EmptyNull}}.  {{EmptyNull}} is handled with a {qc}<td>&nbsp;</td>{qc} cell, {{SkipNull}} should not be used.
+
+Sample output:
+{code:html}
+<html>
+   <head>
+      <title>Brukere</title>
+   </head>
+   <body>
+      <h1>Brukere</h1>
+      <table border="border">
+         <tr>
+            <th>id</th>
+            <th>userId</th>
+            <th>ssn</th>
+            <th>born</th>
+            <th>name</th>
+            <th>homePage</th>
+         </tr>
+         <tr>
+            <td>1</td>
+            <td>XNAO</td>
+            <td>05068636754</td>
+            <td>1986-06-05</td>
+            <td>Anna George Lund</td>
+            <td>&nbsp;</td>
+         </tr>
+      </table>
+   </body>
+</html>
+{code}
+
+h3. WikiGenerator
+Another way to output a table is to use the wiki generator.  No moving parts here, it simply generates markup syntax like this:
+{noformat}
+|| id || userId || ssn || mail || active ||
+| 1 | ZYFR | 27020785859 | ueaqefjn@iojuwy.no | X |
+| 2 | AIUS | 16021276441 | lgdnjli.luccdz@uogugujjq.gov | |
+| 3 | WRCB | 05086007810 | | X |
+{noformat}
+
+h3. SqlGenerator
+Often, you will need to put test data into a data base.  This generator tries to help you...  It generates records of the form
+{code:sql}
+insert into tableName (field1, field2,...) values (value1, value2, ...);
+{code}
+
+To facilitate quoting, you must call the alternative add method for values that need quotes -- they are then single quoted (and embedded single quotes escaped):
+* {qc}addQuoted(fieldName: String, gen: Generator[_]){qc}
+
+The apply method needs to know the table name, you may optionally use a record separator different from ";":
+* {qc}SqlGenerator(tableName: String, exec: String=";"){qc}
+
+Sample output:
+{code:sql}
+insert into User (id, userId, born, name, mail)
+values (1, 'UGRY', 1951-11-25, 'Vgdfhpgyp Fvtniivskmjkeaaol', 'udkad@efrghssgn.gov');
+insert into User (id, userId, born, name, mail)
+values (2, 'HWTG', null, 'Tykpieydmkdnsir Lioesngyhfrvatbsbe', 'idboyjq@cakcrrrny.no');
+insert into User (id, userId, born, name, mail)
+values (3, 'RBWC', 1951-08-15, 'Kmdiklyumethyf Paabya', null);
+{code}
+
+h3. JsonGenerator
+todo xxxxxxxxxxxxxxxxxxxxxx
+
+h3. ToFileGenerator
+
+xxxxxxxxxx TODO append
+
+h2. Notes
+
+h3. TODO
+|| 1 | {anchor:td1} Could perhaps be changed to a Stream? |
+|| 2 | {anchor:td2} Actual typesafe reading! |

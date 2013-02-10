@@ -1,0 +1,22 @@
+package net.kalars.testgen.generators.sample
+
+import net.kalars.testgen.aggreg.{FieldConcatenator, SomeNulls, WeightedGenerator}
+import net.kalars.testgen.generators.{Dates, Doubles, FixedGenerator, Ints, ListGenerator}
+import net.kalars.testgen.generators.misc.NameGenerator
+import net.kalars.testgen.recordgen.{SkipNull, XmlElementGenerator}
+
+object SimpleSample extends App {
+  XmlElementGenerator("order", "orderLine", SkipNull).
+    add("id", Ints() from(1) sequential).
+    add("productName", WeightedGenerator().
+                         add(60, NameGenerator(1)).
+                         add(40, NameGenerator(2))).
+    add("qty", SomeNulls(3,
+                 FieldConcatenator().
+                   add(Doubles() from(1) to(300) format("%5.2f")).
+                   add(FixedGenerator(" ")).
+                   add(ListGenerator(List("l", "kg", "", "m"))))).
+    add("orderDate", Dates() from(y=2012, m=9) to(y=2013, m=1) format("yyyy-MM-dd")).
+    toFile("orders.xml").
+    getStrings(1000)
+}

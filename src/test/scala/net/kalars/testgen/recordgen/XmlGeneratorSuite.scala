@@ -1,12 +1,12 @@
 package net.kalars.testgen.recordgen
 
 import org.junit.runner.RunWith
-import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
+
+import net.kalars.testgen.FunSuite
 import net.kalars.testgen.aggreg.SomeNulls
-import net.kalars.testgen.generators.{Dates, Ints, Strings}
+import net.kalars.testgen.generators.{Chars, Dates, Ints, Strings}
 import net.kalars.testgen.generators.misc.{Names, Urls}
-import net.kalars.testgen.generators.Chars
 
 @RunWith(classOf[JUnitRunner])
 class XmlGeneratorSuite extends FunSuite {
@@ -14,9 +14,9 @@ class XmlGeneratorSuite extends FunSuite {
   trait Setup {
     val idGen= Ints().from(1).sequential
     val codeGen= Strings().chars('A' to 'Z').length(4)
-    val nameGen= NameGenerator(2)
+    val nameGen= Names(2)
     val bornGen= SomeNulls(4, Dates().from(y=1950).to(y=2012).format("yyyy-MM-dd"))
-    val urlGen= SomeNulls(3, UrlGenerator())
+    val urlGen= SomeNulls(3, Urls())
   }
 
   trait SetupElement extends Setup {

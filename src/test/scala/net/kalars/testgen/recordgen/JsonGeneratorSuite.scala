@@ -2,12 +2,12 @@ package net.kalars.testgen.recordgen
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+
+import net.kalars.testgen.FunSuite
 import net.kalars.testgen.aggreg.SomeNulls
-import net.kalars.testgen.generators.{Booleans, Chars, Dates, Ints, FromList, Strings}
+import net.kalars.testgen.generators.{Booleans, Chars, Dates, Fixed, FromList, Ints, Strings}
 import net.kalars.testgen.generators.misc.MailAddresses
 import net.kalars.testgen.generators.norway.Fnr
-import net.kalars.testgen.FunSuite
-import net.kalars.testgen.generators.FixedGenerator
 
 @RunWith(classOf[JUnitRunner])
 class JsonGeneratorSuite extends FunSuite {
@@ -16,9 +16,9 @@ class JsonGeneratorSuite extends FunSuite {
   trait Setup {
     val idGen = Ints().from(1).sequential
     val codeGen = Strings().chars('A' to 'Z').length(4)
-    val fnrGen = FnrGenerator(ListGenerator(dates).sequential)
+    val fnrGen = Fnr(FromList(dates).sequential)
     val boolGen = Booleans()
-    val mailGen = SomeNulls(2, MailGenerator())
+    val mailGen = SomeNulls(2, MailAddresses())
     val recordGen = JsonGenerator("data", nulls=KeepNull).
       add("id", idGen).
       addQuoted("userId", codeGen).
@@ -60,17 +60,17 @@ class JsonGeneratorSuite extends FunSuite {
   }
 
   test("keeping null") {
-    val res= JsonGenerator(nulls=KeepNull).addQuoted("x", FixedGenerator(null)).getStrings(1)(1)
+    val res= JsonGenerator(nulls=KeepNull).addQuoted("x", Fixed(null)).getStrings(1)(1)
     assert(res.matches("""(?s)^.*"x": null.*"""), res)
   }
 
   test("skipping null") {
-    val res= JsonGenerator(nulls=SkipNull).addQuoted("x", FixedGenerator(null)).getStrings(1)(1)
+    val res= JsonGenerator(nulls=SkipNull).addQuoted("x", Fixed(null)).getStrings(1)(1)
     assert(res.matches("(?s)^[^x].*$"), res)
   }
 
   test("empty null") {
-    val res= JsonGenerator(nulls=EmptyNull).addQuoted("x", FixedGenerator(null)).getStrings(1)(1)
+    val res= JsonGenerator(nulls=EmptyNull).addQuoted("x", Fixed(null)).getStrings(1)(1)
     assert(res.matches("""(?s).*"x": "".*"""), res)
     assert(!res.matches("(?s).*null.*"), "!" + res)
   }

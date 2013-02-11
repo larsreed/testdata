@@ -1,11 +1,11 @@
 package net.kalars.testgen.recordgen
 
 import org.junit.runner.RunWith
-import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
 
+import net.kalars.testgen.FunSuite
 import net.kalars.testgen.aggreg.SomeNulls
-import net.kalars.testgen.generators.{Booleans, Chars, Dates, Doubles, Ints, FromList, Strings}
+import net.kalars.testgen.generators.{Booleans, Chars, Dates, Doubles, FromList, Ints, Strings}
 import net.kalars.testgen.generators.misc.{MailAddresses, Names, Urls}
 import net.kalars.testgen.generators.norway.{Fnr, Kjennemerker}
 
@@ -16,14 +16,14 @@ class SqlGeneratorSuite extends FunSuite {
   trait Setup {
     val idGen = Ints().from(1).sequential
     val codeGen = Strings().chars('A' to 'Z').length(4)
-    val nameGen = NameGenerator(2)
-    val bornGen = SomeNulls(4, ListGenerator(dates).sequential.formatWith(Dates.dateFormatter("yyyy-MM-dd")))
-    val fnrGen = FnrGenerator(ListGenerator(dates).sequential)
+    val nameGen = Names(2)
+    val bornGen = SomeNulls(4, FromList(dates).sequential.formatWith(Dates.dateFormatter("yyyy-MM-dd")))
+    val fnrGen = Fnr(FromList(dates).sequential)
     val boolGen = Booleans()
     val scoreGen = SomeNulls(2, Doubles().from(0).to(10000))
-    val urlGen = SomeNulls(3, UrlGenerator())
-    val mailGen = SomeNulls(5, MailGenerator())
-    var kjmGen = SomeNulls(6, KjennemerkeGenerator())
+    val urlGen = SomeNulls(3, Urls())
+    val mailGen = SomeNulls(5, MailAddresses())
+    var kjmGen = SomeNulls(6, Kjennemerker())
     val recordGen = SqlGenerator("User").
       add("id", idGen).
       addQuoted("userId", codeGen).

@@ -1,13 +1,13 @@
 package net.kalars.testgen.recordgen
 
 import org.junit.runner.RunWith
-import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
+
+import net.kalars.testgen.FunSuite
 import net.kalars.testgen.aggreg.SomeNulls
-import net.kalars.testgen.generators.{Booleans, Chars, Dates, Ints, FromList, Strings}
+import net.kalars.testgen.generators.{Booleans, Dates, Fixed, FromList, Ints, Strings}
 import net.kalars.testgen.generators.misc.MailAddresses
 import net.kalars.testgen.generators.norway.Fnr
-import net.kalars.testgen.generators.FixedGenerator
 
 @RunWith(classOf[JUnitRunner])
 class WikiGeneratorSuite extends FunSuite {
@@ -16,10 +16,10 @@ class WikiGeneratorSuite extends FunSuite {
   trait Setup {
     val idGen = Ints().from(1).sequential
     val codeGen = Strings().chars('A' to 'Z').length(4)
-    val fnrGen = FnrGenerator(ListGenerator(dates).sequential)
+    val fnrGen = Fnr(FromList(dates).sequential)
     val boolGen = Booleans()
-    val mailGen = SomeNulls(5, MailGenerator())
-    val recordGen = WikiGenerator().
+    val mailGen = SomeNulls(5, MailAddresses())
+    val recordGen = WikiGenerator(). 
       add("id", idGen).
       add("userId", codeGen).
       add("ssn", fnrGen).
@@ -67,7 +67,7 @@ class WikiGeneratorSuite extends FunSuite {
 
   test("quoting") {
     new Setup {
-      var badGen = FixedGenerator("""
+      var badGen = Fixed("""
 [|]
 """)
       val res = WikiGenerator().add("", badGen).getStrings(1)(1)

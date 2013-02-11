@@ -1,19 +1,17 @@
 package net.kalars.testgen.aggreg
 
 import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
+
 import net.kalars.testgen.FunSuite
-import org.scalatest.junit.JUnitRunner
-import net.kalars.testgen.generators.Strings
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-import net.kalars.testgen.generators.FixedGenerator
+import net.kalars.testgen.generators.{Fixed, Strings}
 
 @RunWith(classOf[JUnitRunner])
 class TextWrapperSuite extends FunSuite {
 
   trait Setup {
     val xgen= TextWrapper(Strings().chars('A' to 'Z').sequential).surroundWith("* ", "\n")
-    val fix= FixedGenerator("ABCDEFG")
+    val fix= Fixed("ABCDEFG")
   }
 
   print {

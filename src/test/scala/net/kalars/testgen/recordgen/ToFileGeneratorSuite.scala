@@ -1,13 +1,11 @@
 package net.kalars.testgen.recordgen
 
 import org.junit.runner.RunWith
-import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
-import net.kalars.testgen.aggreg.SomeNulls
-import net.kalars.testgen.generators.{Booleans, Dates, Ints, FromList, Strings}
-import net.kalars.testgen.generators.misc.MailAddresses
-import net.kalars.testgen.generators.norway.Fnr
-import net.kalars.testgen.generators.norway.NorskeNavn
+
+import net.kalars.testgen.FunSuite
+import net.kalars.testgen.generators.{Dates, FromList, Ints}
+import net.kalars.testgen.generators.norway.{Fnr, NorskeNavn}
 
 @RunWith(classOf[JUnitRunner])
 class ToFileGeneratorSuite extends FunSuite {
@@ -15,8 +13,8 @@ class ToFileGeneratorSuite extends FunSuite {
 
   trait Setup {
     val idGen = Ints().from(1).sequential
-    val nameGen = NorskeNavnGenerator()
-    val fnrGen = FnrGenerator(ListGenerator(dates).sequential)
+    val nameGen = NorskeNavn()
+    val fnrGen = Fnr(FromList(dates).sequential)
     val recordGen = CsvGenerator(true).
       add("id", idGen).
       add("name", nameGen).

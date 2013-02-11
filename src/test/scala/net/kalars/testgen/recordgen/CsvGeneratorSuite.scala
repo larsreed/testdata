@@ -16,9 +16,9 @@ class CsvGeneratorSuite extends FunSuite {
   trait Setup {
     val idGen = Ints().from(1).sequential
     val codeGen = Strings().chars('A' to 'Z').length(4)
-    val fnrGen = FnrGenerator(ListGenerator(dates).sequential)
+    val fnrGen = Fnr(FromList(dates).sequential)
     val boolGen = Booleans()
-    val mailGen = SomeNulls(5, MailGenerator())
+    val mailGen = SomeNulls(5, MailAddresses())
     val recordGen = CsvGenerator(true).
       add("id", idGen).
       add("userId", codeGen).

@@ -1,18 +1,16 @@
 package net.kalars.testgen.aggreg
 
 import org.junit.runner.RunWith
-import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import net.kalars.testgen.generators.Booleans
-import net.kalars.testgen.generators.Chars
-import net.kalars.testgen.generators.FromList
+import net.kalars.testgen.FunSuite
+import net.kalars.testgen.generators.{Booleans, Chars, FromList}
 
 @RunWith(classOf[JUnitRunner])
 class WeightedGeneratorSuite extends FunSuite {
 
   trait Setup {
-    val xgen= WeightedGenerator().add(1, ListGenerator(List(1,2,3))).
+    val xgen= WeightedGenerator().add(1, FromList(1,2,3)).
                                   add(2, Chars("1abc")).
                                   add(1, Booleans().format("0", "1")).
                                   filter(x=> !(x.toString.matches("1")))

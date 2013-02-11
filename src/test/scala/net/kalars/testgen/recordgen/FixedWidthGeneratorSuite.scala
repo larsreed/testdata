@@ -1,13 +1,11 @@
 package net.kalars.testgen.recordgen
 
 import org.junit.runner.RunWith
-import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
-import net.kalars.testgen.aggreg.SomeNulls
-import net.kalars.testgen.generators.{Booleans, Chars, Dates, Ints, FromList, Strings}
-import net.kalars.testgen.generators.misc.MailAddresses
+
+import net.kalars.testgen.FunSuite
+import net.kalars.testgen.generators.{Dates, Fixed, FromList, Ints, Strings}
 import net.kalars.testgen.generators.norway.Fnr
-import net.kalars.testgen.generators.FixedGenerator
 
 @RunWith(classOf[JUnitRunner])
 class FixedWidthGeneratorSuite extends FunSuite {
@@ -16,7 +14,7 @@ class FixedWidthGeneratorSuite extends FunSuite {
   trait Setup {
     val idGen = Ints().from(1).format("%4d").sequential
     val codeGen = Strings().chars('A' to 'Z').length(4)
-    val fnrGen = FnrGenerator(ListGenerator(dates).sequential)
+    val fnrGen = Fnr(FromList(dates).sequential)
     val recordGen = FixedWidthGenerator().
       add("id", idGen, 5).
       add("userId", codeGen, 3).
@@ -44,7 +42,7 @@ class FixedWidthGeneratorSuite extends FunSuite {
 
   test("0-width is meaningsless") {
     intercept[IllegalArgumentException] {
-      FixedWidthGenerator().add("bah", FixedGenerator(12), 0).get(1)
+      FixedWidthGenerator().add("bah", Fixed(12), 0).get(1)
     }
   }
 
@@ -64,7 +62,7 @@ class FixedWidthGeneratorSuite extends FunSuite {
     new Setup {
       val res=recordGen.get(3).mkString("\n")
       assert(res.matches("(?s)\\s*id.*$"),res)
-      assert(FixedWidthGenerator(false).add("aha", FixedGenerator("aha"), 4).get(1)(0)==="aha ")
+      assert(FixedWidthGenerator(false).add("aha", Fixed("aha"), 4).get(1)(0)==="aha ")
     }
   }
 }

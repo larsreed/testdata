@@ -4,10 +4,10 @@ import org.junit.runner.RunWith
 import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
 import net.kalars.testgen.aggreg.SomeNulls
-import net.kalars.testgen.generators.{Booleans, Dates, Ints, ListGenerator, Strings}
-import net.kalars.testgen.generators.misc.MailGenerator
-import net.kalars.testgen.generators.norway.FnrGenerator
-import net.kalars.testgen.generators.norway.NorskeNavnGenerator
+import net.kalars.testgen.generators.{Booleans, Dates, Ints, FromList, Strings}
+import net.kalars.testgen.generators.misc.MailAddresses
+import net.kalars.testgen.generators.norway.Fnr
+import net.kalars.testgen.generators.norway.NorskeNavn
 
 @RunWith(classOf[JUnitRunner])
 class ToFileGeneratorSuite extends FunSuite {

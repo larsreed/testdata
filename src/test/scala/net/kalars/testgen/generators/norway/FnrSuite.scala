@@ -1,13 +1,13 @@
 package net.kalars.testgen.generators.norway
 
 import org.junit.runner.RunWith
-import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
 
+import net.kalars.testgen.FunSuite
 import net.kalars.testgen.generators.Dates
 
 @RunWith(classOf[JUnitRunner])
-class FnrGeneratorSuite extends FunSuite {
+class FnrSuite extends FunSuite {
 
   def sjekkFnr(fnr: String) = {
     def sjekk(fnr: List[Int], fakt: List[Int], sum: Int): Boolean =
@@ -24,30 +24,30 @@ class FnrGeneratorSuite extends FunSuite {
 
   print {
     val dg = Dates().from(y = 1968, m = 9, d = 20).to(y = 1968, m = 9, d = 20)
-    println(FnrGenerator(dg).withDnr.boysOnly.get(1200))
+    println(Fnr(dg).withDnr.boysOnly.get(1200))
   }
 
   test("negative get") {
     intercept[IllegalArgumentException] {
-      FnrGenerator().get(-1)
+      Fnr().get(-1)
     }
     intercept[IllegalArgumentException] {
-      FnrGenerator().getStrings(-1)
+      Fnr().getStrings(-1)
     }
   }
 
   test("count") {
-    assert(FnrGenerator().get(120).size === 120)
+    assert(Fnr().get(120).size === 120)
   }
 
   ignore("contents") {
-    val res= FnrGenerator().boysOnly.withDnr.get(100) ++
-             FnrGenerator().girlsOnly.get(100) ++
-             FnrGenerator().get(100)
+    val res= Fnr().boysOnly.withDnr.get(100) ++
+             Fnr().girlsOnly.get(100) ++
+             Fnr().get(100)
     for (fnr<-res) assert(sjekkFnr(fnr), fnr)
   }
 
   test("empty") {
-    assert(FnrGenerator().get(0).size === 0)
+    assert(Fnr().get(0).size === 0)
   }
 }

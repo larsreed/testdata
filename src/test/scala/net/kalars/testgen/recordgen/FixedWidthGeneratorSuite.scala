@@ -4,9 +4,9 @@ import org.junit.runner.RunWith
 import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
 import net.kalars.testgen.aggreg.SomeNulls
-import net.kalars.testgen.generators.{Booleans, Chars, Dates, Ints, ListGenerator, Strings}
-import net.kalars.testgen.generators.misc.MailGenerator
-import net.kalars.testgen.generators.norway.FnrGenerator
+import net.kalars.testgen.generators.{Booleans, Chars, Dates, Ints, FromList, Strings}
+import net.kalars.testgen.generators.misc.MailAddresses
+import net.kalars.testgen.generators.norway.Fnr
 import net.kalars.testgen.generators.FixedGenerator
 
 @RunWith(classOf[JUnitRunner])

@@ -4,9 +4,9 @@ import org.junit.runner.RunWith
 import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
 import net.kalars.testgen.aggreg.SomeNulls
-import net.kalars.testgen.generators.{Booleans, Chars, Dates, Doubles, Ints, ListGenerator, Strings}
-import net.kalars.testgen.generators.misc.{MailGenerator, UrlGenerator}
-import net.kalars.testgen.generators.norway.{FnrGenerator, KjennemerkeGenerator, NorskeNavnGenerator}
+import net.kalars.testgen.generators.{Booleans, Chars, Dates, Doubles, Ints, FromList, Strings}
+import net.kalars.testgen.generators.misc.{MailAddresses, Urls}
+import net.kalars.testgen.generators.norway.{Fnr, Kjennemerker, NorskeNavn}
 
 @RunWith(classOf[JUnitRunner])
 class HtmlGeneratorSuite extends FunSuite {

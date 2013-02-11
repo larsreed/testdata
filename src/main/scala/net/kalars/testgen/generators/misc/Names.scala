@@ -5,11 +5,10 @@ import net.kalars.testgen.aggreg.FieldConcatenator
 import net.kalars.testgen.generators.Strings
 
 /**
- * Generate Name-like strings...
- * Special methods:
+ * Generate name-like strings...
  * Default limits: name length from 3 to 18, first letter upper case
  */
-object NameGenerator {
+object Names {
   private val pfxChars= "ABDEFGHIJKLMNOPRSTUVY"*12 +
                 "CQWXZ"
   private val sfxChars= "abdefghijklmnoprstuvy" * 20 +

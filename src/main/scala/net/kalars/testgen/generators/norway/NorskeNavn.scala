@@ -2,13 +2,12 @@ package net.kalars.testgen.generators.norway
 
 import net.kalars.testgen.Generator
 import net.kalars.testgen.aggreg.{FieldConcatenator, TextWrapper, WeightedGenerator}
-import net.kalars.testgen.generators.{FromFileGenerator, Strings}
+import net.kalars.testgen.generators.{FromFile, Strings}
 
 /**
  * Generate Norwegian names...
- * Special methods:
  */
-class NorskeNavnGenerator(allLines: Boolean) extends Generator[String] {
+class NorskeNavn(allLines: Boolean) extends Generator[String] {
   private val fornavn= "fornavn.txt"
   private val etternavn= "etternavn.txt"
 
@@ -54,16 +53,16 @@ class NorskeNavnGenerator(allLines: Boolean) extends Generator[String] {
    val gen= new FieldConcatenator()
    for ( i<- 0 to antFor-1) {
      if (i>0) gen.add(Strings().length(1).chars(" "))
-     gen.add(FromFileGenerator(fornavn, allLines))
+     gen.add(FromFile(fornavn, allLines))
    }
    for ( i<- 0+antFor to antFor+antEtter-1) {
      if (i>0) gen.add(Strings().length(1).chars(" "))
-     gen.add(FromFileGenerator(etternavn, allLines))
+     gen.add(FromFile(etternavn, allLines))
    }
    gen
   }
 }
 
-object NorskeNavnGenerator {
-  def apply(allLines:Boolean=true): NorskeNavnGenerator = new NorskeNavnGenerator(allLines)
+object NorskeNavn {
+  def apply(allLines:Boolean=true): NorskeNavn = new NorskeNavn(allLines)
 }

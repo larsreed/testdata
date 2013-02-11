@@ -1,14 +1,15 @@
 package net.kalars.testgen.generators.misc
 
 import org.junit.runner.RunWith
-import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
 
+import net.kalars.testgen.FunSuite
+
 @RunWith(classOf[JUnitRunner])
-class MailGeneratorSuite extends FunSuite {
+class UrlsSuite extends FunSuite {
 
   trait Setup {
-    val xgen= MailGenerator()
+    val xgen= Urls()
   }
 
   print {
@@ -39,7 +40,7 @@ class MailGeneratorSuite extends FunSuite {
   test("contents") {
       new Setup {
         val res= xgen.get(20)
-        for (s<-res) assert(s.matches("^[a-z]+[.a-z]+[@][.a-z]+$"), s)
+        for (s<-res) assert(s.matches("^http(s)?:.*[.].+$"), s)
       }
   }
 

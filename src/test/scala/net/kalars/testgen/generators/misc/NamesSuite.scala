@@ -1,21 +1,20 @@
-package net.kalars.testgen.generators.norway
+package net.kalars.testgen.generators.misc
 
 import org.junit.runner.RunWith
 import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class NorskeNavnGeneratorSuite extends FunSuite {
+class NamesSuite extends FunSuite {
 
   trait Setup {
-    val xgen= NorskeNavnGenerator(false)
+    val xgen= Names(3)
   }
 
   print {
-    println(NorskeNavnGenerator(false).get(50))
-    println(NorskeNavnGenerator(true).get(50))
-    println(NorskeNavnGenerator(true).kunFornavn.get(20))
-    println(NorskeNavnGenerator(true).kunEtternavn.get(20))
+    new Setup {
+      println(xgen.get(120))
+    }
   }
 
   test("negative get") {
@@ -33,13 +32,13 @@ class NorskeNavnGeneratorSuite extends FunSuite {
 
   test("count") {
       new Setup {
-        assert(xgen.get(300).size===300)
+        assert(xgen.get(30).size===30)
       }
   }
 
-  ignore("contents") {
+  test("contents") {
       new Setup {
-        val res= xgen.get(120)
+        val res= xgen.get(20)
         for (s<-res) assert(s.matches("[A-Z][a-z-\\']+ [A-Z][a-z-\\']+ [A-Z][a-z-\\']+"), res)
       }
   }

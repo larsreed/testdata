@@ -10,7 +10,7 @@ import net.kalars.testgen.SingleGenerator
  * Special methods: format(falseString, trueString) -- alternative string representations
  * Default limits: false, true
  */
-class Booleans extends ListGenerator[Boolean] {
+class Booleans extends FromList[Boolean] {
 
   fromList(List(false, true))
 

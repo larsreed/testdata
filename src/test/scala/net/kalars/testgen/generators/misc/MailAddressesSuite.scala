@@ -5,10 +5,10 @@ import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class UrlGeneratorSuite extends FunSuite {
+class MailAddressesSuite extends FunSuite {
 
   trait Setup {
-    val xgen= UrlGenerator()
+    val xgen= MailAddresses()
   }
 
   print {
@@ -39,7 +39,7 @@ class UrlGeneratorSuite extends FunSuite {
   test("contents") {
       new Setup {
         val res= xgen.get(20)
-        for (s<-res) assert(s.matches("^http(s)?:.*[.].+$"), s)
+        for (s<-res) assert(s.matches("^[a-z]+[.a-z]+[@][.a-z]+$"), s)
       }
   }
 

@@ -5,10 +5,10 @@ import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class LandGeneratorSuite extends FunSuite {
+class LandSuite extends FunSuite {
 
   trait Setup {
-    val xgen= LandGenerator(true)
+    val xgen= Land(true)
   }
 
   print {

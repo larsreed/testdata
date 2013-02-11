@@ -1,14 +1,14 @@
 package net.kalars.testgen.generators.misc
 
 import net.kalars.testgen.ExtendedGenerator
-import net.kalars.testgen.generators.ListGenerator
+import net.kalars.testgen.generators.FromList
 
 /**
  * Generate car makes.
  * Special methods: from/to/unique -- not supported
  * Default limits: 102 given makes
  */
-object CarMakesGenerator {
+object CarMakes {
   lazy val makes= List("Alfa Romeo", "Aston Martin", "Atlas", "Audi", "Austin",
      "Autobianchi", "Bedford", "Bentley", "Buddy", "Bugatti", "Buick",
      "Cadillac", "Chevrolet", "Chrysler", "Citroen", "Daewoo", "Daihatsu",
@@ -26,5 +26,5 @@ object CarMakesGenerator {
      "Steyr", "Studebaker", "Subaru", "Suzuki", "Talbot", "Tempo", "Tesla",
      "Toyota", "Trabant", "Triumph", "Unimog", "Vauxhall", "Volga",
      "Volkswagen", "Volvo", "Yamaha", "Zundapp")
-  def apply(): ExtendedGenerator[String] = new ListGenerator[String]().fromList(makes)
+  def apply(): ExtendedGenerator[String] = new FromList[String]().fromList(makes)
 }

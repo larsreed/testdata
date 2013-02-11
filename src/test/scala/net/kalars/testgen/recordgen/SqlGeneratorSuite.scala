@@ -5,9 +5,9 @@ import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
 
 import net.kalars.testgen.aggreg.SomeNulls
-import net.kalars.testgen.generators.{Booleans, Chars, Dates, Doubles, Ints, ListGenerator, Strings}
-import net.kalars.testgen.generators.misc.{MailGenerator, NameGenerator, UrlGenerator}
-import net.kalars.testgen.generators.norway.{FnrGenerator, KjennemerkeGenerator}
+import net.kalars.testgen.generators.{Booleans, Chars, Dates, Doubles, Ints, FromList, Strings}
+import net.kalars.testgen.generators.misc.{MailAddresses, Names, Urls}
+import net.kalars.testgen.generators.norway.{Fnr, Kjennemerker}
 
 @RunWith(classOf[JUnitRunner])
 class SqlGeneratorSuite extends FunSuite {

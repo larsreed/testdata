@@ -5,7 +5,7 @@ import net.kalars.testgen.FunSuite
 import org.scalatest.junit.JUnitRunner
 import net.kalars.testgen.aggreg.SomeNulls
 import net.kalars.testgen.generators.{Dates, Ints, Strings}
-import net.kalars.testgen.generators.misc.{NameGenerator, UrlGenerator}
+import net.kalars.testgen.generators.misc.{Names, Urls}
 import net.kalars.testgen.generators.Chars
 
 @RunWith(classOf[JUnitRunner])

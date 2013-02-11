@@ -1,10 +1,9 @@
 package net.kalars.testgen.generators.norway
 
-import scala.util.Random
 import org.joda.time.DateTime
-import net.kalars.testgen.{Generator, GeneratorImpl}
+
+import net.kalars.testgen.{ExtendedGenerator, GeneratorImpl}
 import net.kalars.testgen.generators.{Dates, Ints}
-import net.kalars.testgen.ExtendedGenerator
 
 /**
  * Generate Norwegian "foedselsnummer" (social registration numbers).
@@ -12,7 +11,7 @@ import net.kalars.testgen.ExtendedGenerator
  *                  boys/girlsOnly
  * Default limits: Always random, the letters IMOQ are never used.
  */
-class FnrGenerator(dateGenerator:ExtendedGenerator[DateTime]) extends GeneratorImpl[String] {
+class Fnr(dateGenerator:ExtendedGenerator[DateTime]) extends GeneratorImpl[String] {
 
   private def isOdd(i: Int)= i%2 == 1
   private def isEven(i: Int)= !isOdd(i)
@@ -74,7 +73,7 @@ class FnrGenerator(dateGenerator:ExtendedGenerator[DateTime]) extends GeneratorI
   }
 }
 
-object FnrGenerator {
-  def apply(): FnrGenerator = new FnrGenerator(Dates().from(y=1855).to(new DateTime()))
-  def apply(g: ExtendedGenerator[DateTime]): FnrGenerator = new FnrGenerator(g)
+object Fnr {
+  def apply(): Fnr = new Fnr(Dates().from(y=1855).to(new DateTime()))
+  def apply(g: ExtendedGenerator[DateTime]): Fnr = new Fnr(g)
 }

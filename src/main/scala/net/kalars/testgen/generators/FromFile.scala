@@ -11,10 +11,10 @@ import net.kalars.testgen.{ExtendedDelegate, ExtendedGenerator}
  * Special methods: from/to/unique -- not supported
  * Default limits: n/a
  */
-class FromFileGenerator[T](fileName: String, encoding:String) extends ExtendedGenerator[T]
+class FromFile[T](fileName: String, encoding:String) extends ExtendedGenerator[T]
   with ExtendedDelegate[T, T] {
 
-  private var listGen=new ListGenerator[T]()
+  private var listGen=new FromList[T]()
   var generator: ExtendedGenerator[T]= listGen // For the trait
 
   override def from(f:T) = throw new UnsupportedOperationException
@@ -55,9 +55,9 @@ class FromFileGenerator[T](fileName: String, encoding:String) extends ExtendedGe
   override def getStrings(n: Int): List[String] = listGen.fromList(getContents(n)).getStrings(n)
 }
 
-object FromFileGenerator {
+object FromFile {
   // Only String is actually working at the moment
-  def apply(resourceName: String, allLines:Boolean=false,
-      encoding: String= "ISO-8859-1"): FromFileGenerator[String] =
-    new FromFileGenerator[String](resourceName, encoding).allLines(allLines)
+  def apply(resourceName: String, allLines:Boolean=false, 
+      encoding: String= "ISO-8859-1"): FromFile[String] =
+    (new FromFile[String](resourceName, encoding)).allLines(allLines)
 }

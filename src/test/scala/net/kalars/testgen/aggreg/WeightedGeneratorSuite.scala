@@ -6,7 +6,7 @@ import org.scalatest.junit.JUnitRunner
 
 import net.kalars.testgen.generators.Booleans
 import net.kalars.testgen.generators.Chars
-import net.kalars.testgen.generators.ListGenerator
+import net.kalars.testgen.generators.FromList
 
 @RunWith(classOf[JUnitRunner])
 class WeightedGeneratorSuite extends FunSuite {

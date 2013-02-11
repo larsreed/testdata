@@ -7,6 +7,6 @@ import net.kalars.testgen.Generator
  * Special methods: from/to/unique -- not supported
  * Default limits: n/a
  */
-object FixedGenerator {
-  def apply[T](v: T): Generator[T] = new ListGenerator().fromList(List(v))
+object Fixed {
+  def apply[T](v: T): Generator[T] = new FromList().fromList(List(v))
 }

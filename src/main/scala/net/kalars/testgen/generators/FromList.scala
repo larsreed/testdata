@@ -8,9 +8,8 @@ import net.kalars.testgen.SingleGenerator
 /**
  * Generate values based on lists.
  * Special methods: from/to/unique -- not supported
- * Default limits: n/a
  */
-class ListGenerator[T] extends SingleGenerator[T] {
+class FromList[T] extends SingleGenerator[T] {
 
   override def from(f:T) = throw new UnsupportedOperationException
   override def to(f:T) = throw new UnsupportedOperationException
@@ -51,7 +50,8 @@ class ListGenerator[T] extends SingleGenerator[T] {
 
 }
 
-object ListGenerator {
-  def apply[T](): ListGenerator[T] = new ListGenerator()
-  def apply[T](l: List[T]): ListGenerator[T] = new ListGenerator().fromList(l)
+object FromList {
+  def apply[T](): FromList[T] = new FromList()
+  def apply[T](l: List[T]): FromList[T] = new FromList().fromList(l)
+  def apply[T](ls: T*): FromList[T] = new FromList().fromList(ls.toList)
 }

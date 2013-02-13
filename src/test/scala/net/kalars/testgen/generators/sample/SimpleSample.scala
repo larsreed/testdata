@@ -3,10 +3,10 @@ package net.kalars.testgen.generators.sample
 import net.kalars.testgen.aggreg.{FieldConcatenator, SomeNulls, WeightedGenerator}
 import net.kalars.testgen.generators.{Dates, Doubles, Fixed, FromList, Ints}
 import net.kalars.testgen.generators.misc.Names
-import net.kalars.testgen.recordgen.{SkipNull, XmlElementGenerator}
+import net.kalars.testgen.recordgen.{SkipNull, ToXmlElements}
 
 object SimpleSample extends App {
-  XmlElementGenerator("order", "orderLine", SkipNull).
+  ToXmlElements("order", "orderLine", SkipNull).
     add("id", Ints() from(1) sequential).
     add("productName", WeightedGenerator().
                          add(60, Names(1)).

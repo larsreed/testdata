@@ -20,13 +20,13 @@ class XmlGeneratorSuite extends FunSuite {
   }
 
   trait SetupElement extends Setup {
-    val rootGen= XmlElementGenerator("root", "data").
+    val rootGen= ToXmlElements("root", "data").
                      add("id", idGen).
                      add("userId", codeGen).
                      add("name", nameGen).
                      add("homePage", urlGen).
                      add("born", bornGen)
-    val fragmentGen= XmlElementGenerator("", "data", SkipNull).
+    val fragmentGen= ToXmlElements("", "data", SkipNull).
                      add("id", idGen).
                      add("userId", codeGen).
                      add("name", nameGen).
@@ -34,13 +34,13 @@ class XmlGeneratorSuite extends FunSuite {
   }
 
   trait SetupAttribute extends Setup {
-    val rootGen= XmlAttributeGenerator("root", "data").
+    val rootGen= ToXmlAttributes("root", "data").
                      add("id", idGen).
                      add("userId", codeGen).
                      add("name", nameGen).
                      add("homePage", urlGen).
                      add("born", bornGen)
-    val fragmentGen= XmlAttributeGenerator("", "data", SkipNull).
+    val fragmentGen= ToXmlAttributes("", "data", SkipNull).
                      add("id", idGen).
                      add("userId", codeGen).
                      add("name", nameGen).
@@ -82,10 +82,10 @@ class XmlGeneratorSuite extends FunSuite {
 
   test("needs one generator") {
     intercept[IllegalArgumentException] {
-      XmlElementGenerator(recordName="x").get(1)
+      ToXmlElements(recordName="x").get(1)
     }
     intercept[IllegalArgumentException] {
-      XmlAttributeGenerator(recordName="x").get(1)
+      ToXmlAttributes(recordName="x").get(1)
     }
   }
 
@@ -108,7 +108,7 @@ class XmlGeneratorSuite extends FunSuite {
 
   test("count no root elem") {
     new SetupElement {
-      val nGen= XmlElementGenerator(recordName="data").
+      val nGen= ToXmlElements(recordName="data").
                      add("id", idGen).
                      add("born", bornGen)
       assert(nGen.get(30).size === 30)
@@ -116,7 +116,7 @@ class XmlGeneratorSuite extends FunSuite {
   }
   test("count no root attr") {
     new SetupAttribute {
-      val nGen= XmlAttributeGenerator(recordName="data").
+      val nGen= ToXmlAttributes(recordName="data").
                      add("id", idGen).
                      add("born", bornGen)
       assert(nGen.get(30).size === 30)
@@ -138,7 +138,7 @@ class XmlGeneratorSuite extends FunSuite {
 
   test("format no root attr") {
     new SetupAttribute {
-      val nGen= XmlAttributeGenerator(recordName="data").
+      val nGen= ToXmlAttributes(recordName="data").
                      add("id", idGen).
                      add("born", bornGen)
       val v= nGen.getStrings(1)(0)
@@ -149,7 +149,7 @@ class XmlGeneratorSuite extends FunSuite {
 
   test("format no root elem") {
     new SetupElement {
-      val nGen= XmlElementGenerator(recordName="data").
+      val nGen= ToXmlElements(recordName="data").
                      add("id", idGen).
                      add("born", bornGen)
       val v= nGen.getStrings(1)(0)
@@ -160,7 +160,7 @@ class XmlGeneratorSuite extends FunSuite {
 
   test("keepNulls elem") {
     new SetupElement {
-      val gen = XmlElementGenerator(recordName = "data", nulls = KeepNull).
+      val gen = ToXmlElements(recordName = "data", nulls = KeepNull).
           add("id", SomeNulls(1, idGen))
       val res = gen.get(1)(0).toString()
       assert(res.matches("(?s)^\\s*<data>\\s*<id>\\s*null\\s*</id>\\s*</data>\\s*$"), res)
@@ -168,7 +168,7 @@ class XmlGeneratorSuite extends FunSuite {
   }
   test("keepNulls attr") {
     new SetupAttribute {
-      val gen = XmlAttributeGenerator(recordName = "data", nulls = KeepNull).
+      val gen = ToXmlAttributes(recordName = "data", nulls = KeepNull).
           add("id", SomeNulls(1, idGen))
       val res = gen.get(1)(0).toString()
       assert(res.matches("(?s)^\\s*<data\\s*id=.null.\\s*(/>|></data>)\\s*$"), res)
@@ -177,7 +177,7 @@ class XmlGeneratorSuite extends FunSuite {
 
   test("skipNulls elem") {
     new SetupElement {
-      val gen = XmlElementGenerator(recordName = "data", nulls = SkipNull).
+      val gen = ToXmlElements(recordName = "data", nulls = SkipNull).
           add("id", SomeNulls(1, idGen))
       val res = gen.get(1)(0).toString()
       assert(res.matches("(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"), res)
@@ -185,7 +185,7 @@ class XmlGeneratorSuite extends FunSuite {
   }
   test("skipNulls attr") {
     new SetupAttribute {
-      val gen = XmlAttributeGenerator(recordName = "data", nulls = SkipNull).
+      val gen = ToXmlAttributes(recordName = "data", nulls = SkipNull).
           add("id", SomeNulls(1, idGen))
       val res = gen.get(1)(0).toString()
       assert(res.matches("(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"), res)
@@ -194,7 +194,7 @@ class XmlGeneratorSuite extends FunSuite {
 
   test("emptyNulls elem") {
     new SetupElement {
-      val gen = XmlElementGenerator(recordName = "data", nulls = EmptyNull).
+      val gen = ToXmlElements(recordName = "data", nulls = EmptyNull).
           add("id", SomeNulls(1, idGen))
       val res = gen.get(1)(0).toString()
       assert(res.matches("(?s)^\\s*<data>\\s*(<id>\\s*</id>|<id/>)\\s*</data>\\s*$"), res)
@@ -202,7 +202,7 @@ class XmlGeneratorSuite extends FunSuite {
   }
   test("emptyNulls attr") {
     new SetupAttribute {
-      val gen = XmlAttributeGenerator(recordName = "data", nulls = EmptyNull).
+      val gen = ToXmlAttributes(recordName = "data", nulls = EmptyNull).
           add("id", SomeNulls(1, idGen))
       val res = gen.get(1)(0).toString()
       assert(res.matches("(?s)^\\s*<data\\s*id=..\\s*(/>|></data>)\\s*$"), res)
@@ -211,7 +211,7 @@ class XmlGeneratorSuite extends FunSuite {
 
   test("quoting elem") {
     new SetupElement {
-      val gen = XmlElementGenerator(recordName = "i").
+      val gen = ToXmlElements(recordName = "i").
           add("x", Chars("<&\"' >").sequential)
       val res = gen.getStrings(6)
       val expected= List("&lt;", "&amp;", "&quot;", "'", " ", "&gt;")
@@ -222,7 +222,7 @@ class XmlGeneratorSuite extends FunSuite {
   }
   test("quoting attr") {
     new SetupAttribute {
-      val gen = XmlAttributeGenerator(recordName = "i").
+      val gen = ToXmlAttributes(recordName = "i").
           add("x", Chars("<&\"' >").sequential)
       val res = gen.getStrings(6)
       val expected= List("&lt;", "&amp;", "&quot;", "'", " ", "&gt;")

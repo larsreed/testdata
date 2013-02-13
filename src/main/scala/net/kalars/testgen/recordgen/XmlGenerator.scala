@@ -25,7 +25,7 @@ abstract class XmlGenerator(nulls:NullHandler) extends DataRecordGenerator[NodeS
  * one common root.  The get method returns NodeSeqs, while getStrings
  * converts the result to a somewhat indented string format...
  */
-class XmlAttributeGenerator(rootName: String, recordName: String,
+class ToXmlAttributes(rootName: String, recordName: String,
     nulls:NullHandler) extends XmlGenerator(nulls) {
 
   override def get(n: Int): List[NodeSeq] = {
@@ -62,7 +62,7 @@ class XmlAttributeGenerator(rootName: String, recordName: String,
  *
  * Possible extension: generate attributes, not elements
  */
-class XmlElementGenerator(rootName: String, recordName: String,
+class ToXmlElements(rootName: String, recordName: String,
     nulls:NullHandler) extends XmlGenerator(nulls) {
 
   override def get(n: Int): List[NodeSeq] = {
@@ -89,12 +89,12 @@ class XmlElementGenerator(rootName: String, recordName: String,
   }
 }
 
-object XmlElementGenerator {
-  def apply(rootName: String="", recordName: String, nulls:NullHandler=EmptyNull): XmlElementGenerator =
-    new XmlElementGenerator(rootName, recordName, nulls)
+object ToXmlElements {
+  def apply(rootName: String="", recordName: String, nulls:NullHandler=EmptyNull): ToXmlElements =
+    new ToXmlElements(rootName, recordName, nulls)
 }
 
-object XmlAttributeGenerator {
-  def apply(rootName: String="", recordName: String, nulls:NullHandler=EmptyNull): XmlAttributeGenerator =
-    new XmlAttributeGenerator(rootName, recordName, nulls)
+object ToXmlAttributes {
+  def apply(rootName: String="", recordName: String, nulls:NullHandler=EmptyNull): ToXmlAttributes =
+    new ToXmlAttributes(rootName, recordName, nulls)
 }

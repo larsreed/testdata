@@ -13,7 +13,7 @@ On top of this is a set of generators based on the {*}{qc}ExtendedGenerator[T]{q
 
 Furthermore, there are some utility classes like {{FieldConcatenator}} and {{WeightedGenerator}} to assist in creating aggregate or more complex data.
 
-And finally, there are a set of classes to assist in creating complete data records, like {{SqlGenerator}} for generating SQL inserts, and {{CsvGenerator}} to create simple flat file records.
+And finally, there are a set of classes to assist in creating complete data records, like {{ToSql}} for generating SQL inserts, and {{ToCsv}} to create simple flat file records.
 
 h3. Sample usage
 Here is an introductry example to show you what it's all about:
@@ -23,10 +23,10 @@ package net.kalars.testgen.generators.sample
 import net.kalars.testgen.aggreg.{FieldConcatenator, SomeNulls, WeightedGenerator}
 import net.kalars.testgen.generators.{Dates, Doubles, Fixed, FromList, Ints}
 import net.kalars.testgen.generators.misc.Names
-import net.kalars.testgen.recordgen.{SkipNull, XmlElementGenerator}
+import net.kalars.testgen.recordgen.{SkipNull, ToXmlElements}
 
 object SimpleSample extends App {
-  XmlElementGenerator("order", "orderLine", SkipNull).
+  ToXmlElements("order", "orderLine", SkipNull).
     add("id", Ints() from(1) sequential).
     add("productName", WeightedGenerator().
                          add(60, Names(1)).
@@ -392,7 +392,7 @@ There are a few base classes that the other record generators are based on. The 
 The main class is the {qc}abstract class DataRecordGenerator[T](nulls: NullHandler){qc} whch implements {qc}Generator[T]{qc}.  It contains the following methods:
 * {qc}add(fieldName: String, gen:Generator[_]){qc} -- adds a named field (as previously mentioned, the order in which you call {{add}} becomes the order of the fields).
 * {qc}add(DataField){qc}: specialized subclasses of {{DataField}} (see below) may need to be built outside the DataRecordGenerator and added "as is".
-* {qc}toFile{qc} / {qc}appendToFile{qc}: these methods, if called, must be the last call on the record generator, because they return a {{ToFileGenerator}} (which see), not the generator itself, to allow the result to be saved to a file.
+* {qc}toFile{qc} / {qc}appendToFile{qc}: these methods, if called, must be the last call on the record generator, because they return a {{ToFile}} (which see), not the generator itself, to allow the result to be saved to a file.
 * Subclasses may also use the protected variable {{fields}}, which is the generator list, as well as the utility method {{fieldNames}} which returns the ordered list of field names.
 
 {qc}StringRecordGenerator{qc} is a subclass specialized for generating strings, with a notion of pre/suffixes, and an overridable {{NL}} method that defaults to the current platform line ending.
@@ -409,8 +409,8 @@ Each field (i.e. name\+ generator) is represented by a {qc}case class DataField(
 
 A couple of subclasses are provided -- {{SingleQuoteWithEscapeDataField}} and {{DoubleQuoteWithEscapeDataField}}, they encapsulate their values with single/double quotes, and escapes their respective quotes with a backslash.
 
-h3. CsvGenerator
-This generator produces values separated by a comma (or another delimiter, e.g. TAB), value is pre- and suffixed with a delimiter, by default a double quote.  By default, the first record contains field names (which can be excluded).  Access it through the apply method {{CsvGenerator}} with the following optional parameters
+h3. ToCsv
+This generator produces values separated by a comma (or another delimiter, e.g. TAB), value is pre- and suffixed with a delimiter, by default a double quote.  By default, the first record contains field names (which can be excluded).  Access it through the apply method {{ToCsv}} with the following optional parameters
 # {qc}withHeaders: Boolean=true{qc}: include header record
 * {qc}delimiter:String= "\""{qc}: how to enclose each value
 # {qc}separator:String= ","{qc}: how to separate each field
@@ -423,8 +423,8 @@ The output would typically look like this:
 "3","UODG","08039917611","uex.hshuka@anqfj.net","false"
 {noformat}
 
-h3. FixedWidthGenerator
-This genearator produces data in fixed width fields, where each value is padded with blanks (or truncated) to a fixed width.  The inherited {{add}} method cannot be used, use {qc}add(fieldName: String, gen: Generator[_], width: Int){qc} to add fields. The apply method is {qc}FixedWidthGenerator(withHeaders: Boolean=true){qc} (as the output of a header record is optional).
+h3. ToFixedWidth
+This genearator produces data in fixed width fields, where each value is padded with blanks (or truncated) to a fixed width.  The inherited {{add}} method cannot be used, use {qc}add(fieldName: String, gen: Generator[_], width: Int){qc} to add fields. The apply method is {qc}ToFixedWidth(withHeaders: Boolean=true){qc} (as the output of a header record is optional).
 
 Sample output:
 {noformat}
@@ -438,15 +438,15 @@ VALUNE 01027711576
 h3. XML
 There are two different XML generators, and a generator for HTML. As opposed to other record generators, these differntiate between the {{get}} and {{getStrings}} methods, the latter pretty-prints the result to create a more readable layout.
 
-h4. XmlElementGenerator
-The output from this generator is a set of data records, optionally enclosed in a root record. The apply method {{XmlElementGenerator()}} has 3 named parameters:
+h4. ToXmlElements
+The output from this generator is a set of data records, optionally enclosed in a root record. The apply method {{ToXmlElements()}} has 3 named parameters:
 # {{rootName:String}}: if this parameter has a value, a root record with that name is generated, enclosing the other records.
 # {{recordName:String}}: must be given, sets he name of the base element for each record
 # {{nullHandler}}: see above, default {{EmptyNull}}
 
 [The introductory example|#sample1] shows sample output from this.
 
-h4. XmlAttributeGenerator
+h4. ToXmlAttribute
 Much like the previous, but the fields are represented as _attributes_ on the (empty) data record, rather than enclosed elements.  Parameters are like the precious.
 
 Sample without root record and with empty nulls:
@@ -456,7 +456,7 @@ Sample without root record and with empty nulls:
 <data homePage="https://jdje.net" userId="GBDB" id="3" name="Gmbgbsnmatmiij Kafkdyydkkfkoi" born="1982-06-26"></data>
 {code}
 
-h4. HtmlGenerator
+h4. ToHtml
 This one formats its output as an HTML table, optionally as a complete HTML document.  The apply methods has two optional parameters:
 # {{pageTitle:String}}: if this parameter has a value, a complete HTML document with that title and heading is generated, enclosing the table.
 # {{nullHandler}}: see above, default {{EmptyNull}}.  {{EmptyNull}} is handled with a {qc}<td>&nbsp;</td>{qc} cell, {{SkipNull}} should not be used.
@@ -491,7 +491,7 @@ Sample output:
 </html>
 {code}
 
-h3. WikiGenerator
+h3. ToWiki
 Another way to output a table is to use the wiki generator.  No moving parts here, it simply generates markup syntax like this:
 {noformat}
 || id || userId || ssn || mail || active ||
@@ -500,7 +500,7 @@ Another way to output a table is to use the wiki generator.  No moving parts her
 | 3 | WRCB | 05086007810 | | X |
 {noformat}
 
-h3. SqlGenerator
+h3. ToSql
 Often, you will need to put test data into a data base.  This generator tries to help you...  It generates records of the form
 {code:sql}
 insert into tableName (field1, field2,...) values (value1, value2, ...);
@@ -510,7 +510,7 @@ To facilitate quoting, you must call the alternative add method for values that 
 * {qc}addQuoted(fieldName: String, gen: Generator[_]){qc}
 
 The apply method needs to know the table name, you may optionally use a record separator different from ";":
-* {qc}SqlGenerator(tableName: String, exec: String=";"){qc}
+* {qc}ToSql(tableName: String, exec: String=";"){qc}
 
 Sample output:
 {code:sql}
@@ -522,10 +522,10 @@ insert into User (id, userId, born, name, mail)
 values (3, 'RBWC', 1951-08-15, 'Kmdiklyumethyf Paabya', null);
 {code}
 
-h3. JsonGenerator
+h3. ToJson
 todo xxxxxxxxxxxxxxxxxxxxxx
 
-h3. ToFileGenerator
+h3. ToFile
 
 xxxxxxxxxx TODO append
 

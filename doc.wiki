@@ -500,6 +500,9 @@ Another way to output a table is to use the wiki generator.  No moving parts her
 | 3 | WRCB | 05086007810 | | X |
 {noformat}
 
+h3. ToJson
+todo xxxxxxxxxxxxxxxxxxxxxx
+
 h3. ToSql
 Often, you will need to put test data into a data base.  This generator tries to help you...  It generates records of the form
 {code:sql}
@@ -521,9 +524,6 @@ values (2, 'HWTG', null, 'Tykpieydmkdnsir Lioesngyhfrvatbsbe', 'idboyjq@cakcrrrn
 insert into User (id, userId, born, name, mail)
 values (3, 'RBWC', 1951-08-15, 'Kmdiklyumethyf Paabya', null);
 {code}
-
-h3. ToJson
-todo xxxxxxxxxxxxxxxxxxxxxx
 
 h3. ToFile
 

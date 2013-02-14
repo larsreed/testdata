@@ -6,7 +6,7 @@ import no.mesan.testdatagen.generators.FromFile
 /**
  * Generate funny names....
  */
-object RareNavnGenerator {
+object RareNavn {
   def apply(allLines:Boolean=true): ExtendedGenerator[String] =
     FromFile("rareNavn.txt", allLines)
 }

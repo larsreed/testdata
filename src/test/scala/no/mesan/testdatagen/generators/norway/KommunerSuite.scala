@@ -1,15 +1,15 @@
 package no.mesan.testdatagen.generators.norway
 
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.FunSuite
-import no.mesan.testdatagen.generators.norway.Kommuner;
+import no.mesan.testdatagen.Printer
 
 @RunWith(classOf[JUnitRunner])
-class KommunerSuite extends FunSuite {
+class KommunerSuite extends FunSuite with Printer {
 
-  print {
+  print(false) {
     println(Kommuner().get(120))
     println(Kommuner.kommunenr().get(120))
     println(Kommuner.kommunenavn().get(120))

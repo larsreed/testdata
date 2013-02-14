@@ -3,11 +3,13 @@ package no.mesan.testdatagen.generators.norway
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
 import no.mesan.testdatagen.generators.Dates
 
+import no.mesan.testdatagen.Printer
+
 @RunWith(classOf[JUnitRunner])
-class FnrSuite extends FunSuite {
+class FnrSuite extends FunSuite with Printer {
 
   def sjekkFnr(fnr: String) = {
     def sjekk(fnr: List[Int], fakt: List[Int], sum: Int): Boolean =
@@ -22,7 +24,7 @@ class FnrSuite extends FunSuite {
       sjekk(fnrList, List(5, 4, 3, 2, 7, 6, 5, 4, 3, 2), 0)
   }
 
-  print {
+  print(false) {
     val dg = Dates().from(y = 1968, m = 9, d = 20).to(y = 1968, m = 9, d = 20)
     println(Fnr(dg).withDnr.boysOnly.get(1200))
   }

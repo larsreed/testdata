@@ -3,12 +3,14 @@ package no.mesan.testdatagen.recordgen
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
 import no.mesan.testdatagen.generators.{Dates, Fixed, FromList, Ints, Strings}
 import no.mesan.testdatagen.generators.norway.Fnr
 
+import no.mesan.testdatagen.Printer
+
 @RunWith(classOf[JUnitRunner])
-class ToFixedWidthSuite extends FunSuite {
+class ToFixedWidthSuite extends FunSuite with Printer {
   val dates = Dates().from(y = 1950).to(y = 2012).get(1000)
 
   trait Setup {
@@ -21,7 +23,7 @@ class ToFixedWidthSuite extends FunSuite {
       add("ssn", fnrGen,11)
   }
 
-  print {
+  print(false) {
     new Setup {
       println(recordGen.get(120).mkString("\n"))
     }

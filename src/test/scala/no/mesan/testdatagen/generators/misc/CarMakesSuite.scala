@@ -1,13 +1,14 @@
 package no.mesan.testdatagen.generators.misc
 
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.{ExtendedGenerator, FunSuite}
+import no.mesan.testdatagen.{ExtendedGenerator, Printer}
 
 @RunWith(classOf[JUnitRunner])
-class CarMakesSuite extends FunSuite {
-  print {
+class CarMakesSuite extends FunSuite with Printer {
+  print(false) {
     println(CarMakes().get(25))
     println(CarMakes().reversed.get(25))
   }

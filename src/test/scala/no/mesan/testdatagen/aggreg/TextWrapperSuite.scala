@@ -3,18 +3,20 @@ package no.mesan.testdatagen.aggreg
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
 import no.mesan.testdatagen.generators.{Fixed, Strings}
 
+import no.mesan.testdatagen.Printer
+
 @RunWith(classOf[JUnitRunner])
-class TextWrapperSuite extends FunSuite {
+class TextWrapperSuite extends FunSuite with Printer {
 
   trait Setup {
     val xgen= TextWrapper(Strings().chars('A' to 'Z').sequential).surroundWith("* ", "\n")
     val fix= Fixed("ABCDEFG")
   }
 
-  print {
+  print(false) {
     new Setup {
       println(xgen.get(120))
     }
@@ -60,12 +62,12 @@ class TextWrapperSuite extends FunSuite {
   test("order of operations") {
     new Setup {
       assert(TextWrapper(fix).transform(_.toLowerCase).
-          substring(1,	4).
+          substring(1,  4).
           surroundWith("(", ")").
           get(1)(0)==="(bcd)")
       assert(TextWrapper(fix).transform(_.toLowerCase).
           surroundWith("(", ")").
-          substring(1,	4).
+          substring(1,  4).
           get(1)(0)==="abc")
     }
   }

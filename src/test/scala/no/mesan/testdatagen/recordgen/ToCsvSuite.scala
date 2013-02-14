@@ -3,14 +3,16 @@ package no.mesan.testdatagen.recordgen
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
 import no.mesan.testdatagen.aggreg.SomeNulls
 import no.mesan.testdatagen.generators.{Booleans, Chars, Dates, FromList, Ints, Strings}
 import no.mesan.testdatagen.generators.misc.MailAddresses
 import no.mesan.testdatagen.generators.norway.Fnr
 
+import no.mesan.testdatagen.Printer
+
 @RunWith(classOf[JUnitRunner])
-class ToCsvSuite extends FunSuite {
+class ToCsvSuite extends FunSuite with Printer {
   val dates = Dates().from(y = 1950).to(y = 2012).get(1000)
 
   trait Setup {
@@ -27,7 +29,7 @@ class ToCsvSuite extends FunSuite {
       add("active", boolGen)
   }
 
-  print {
+  print(false) {
     new Setup {
       println(recordGen.get(120).mkString("\n"))
     }

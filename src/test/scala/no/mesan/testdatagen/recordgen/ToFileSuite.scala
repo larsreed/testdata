@@ -3,12 +3,14 @@ package no.mesan.testdatagen.recordgen
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
 import no.mesan.testdatagen.generators.{Dates, FromList, Ints}
 import no.mesan.testdatagen.generators.norway.{Fnr, NorskeNavn}
 
+import no.mesan.testdatagen.Printer
+
 @RunWith(classOf[JUnitRunner])
-class ToFileSuite extends FunSuite {
+class ToFileSuite extends FunSuite with Printer {
   val dates = Dates().from(y = 1950).to(y = 2012).get(1000)
 
   trait Setup {

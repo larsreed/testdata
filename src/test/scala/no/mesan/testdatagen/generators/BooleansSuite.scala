@@ -1,13 +1,15 @@
 package no.mesan.testdatagen.generators
 
 import org.junit.runner.RunWith
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
-class BooleansSuite extends FunSuite {
+import no.mesan.testdatagen.Printer
 
-    print {
+@RunWith(classOf[JUnitRunner])
+class BooleansSuite extends FunSuite with Printer {
+
+    print(false) {
       println(Booleans().get(30))
     }
 

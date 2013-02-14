@@ -3,11 +3,13 @@ package no.mesan.testdatagen.aggreg
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
 import no.mesan.testdatagen.generators.{Booleans, Chars, FromList}
 
+import no.mesan.testdatagen.Printer
+
 @RunWith(classOf[JUnitRunner])
-class WeightedGeneratorSuite extends FunSuite {
+class WeightedGeneratorSuite extends FunSuite with Printer {
 
   trait Setup {
     val xgen= WeightedGenerator().add(1, FromList(1,2,3)).
@@ -16,7 +18,7 @@ class WeightedGeneratorSuite extends FunSuite {
                                   filter(x=> !(x.toString.matches("1")))
   }
 
-  print {
+  print(false) {
     new Setup {
       println(xgen.get(120))
       println(xgen.getStrings(120))

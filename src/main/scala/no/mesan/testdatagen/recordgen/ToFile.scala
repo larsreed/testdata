@@ -4,11 +4,11 @@ import java.io.{File, PrintWriter}
 
 import no.mesan.testdatagen.Generator
 
-class ToFile[T](fileName:String, 
-                         generator: Generator[T], 
-                         append:Boolean, 
+class ToFile[T](fileName:String,
+                         generator: Generator[T],
+                         append:Boolean,
                          charSet:String) extends Generator[T] {
-  
+
   require(!append, "TODO!!!!!!!!!!")
 
   def printToFile(f: java.io.File)(op: PrintWriter => Unit) {
@@ -41,9 +41,9 @@ class ToFile[T](fileName:String,
 }
 
 object ToFile {
-  def apply[T](fileName:String, 
-               generator: Generator[T], 
-               append:Boolean=false, 
+  def apply[T](fileName:String,
+               generator: Generator[T],
+               append:Boolean=false,
                charSet:String="ISO-8859-1"): ToFile[T]=
     new ToFile(fileName, generator, append, charSet)
 }

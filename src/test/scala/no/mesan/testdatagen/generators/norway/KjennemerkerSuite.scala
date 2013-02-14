@@ -3,11 +3,13 @@ package no.mesan.testdatagen.generators.norway
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
+
+import no.mesan.testdatagen.Printer
 
 @RunWith(classOf[JUnitRunner])
-class KjennemerkerSuite extends FunSuite {
-    print {
+class KjennemerkerSuite extends FunSuite with Printer {
+    print(false) {
        println(Kjennemerker().get(120))
     }
 

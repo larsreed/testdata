@@ -1,17 +1,19 @@
 package no.mesan.testdatagen.generators.norway
 
 import org.junit.runner.RunWith
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
+import no.mesan.testdatagen.Printer
+
 @RunWith(classOf[JUnitRunner])
-class LandSuite extends FunSuite {
+class LandSuite extends FunSuite with Printer {
 
   trait Setup {
     val xgen= Land(true)
   }
 
-  print {
+  print(false) {
     new Setup {
       println(xgen.get(120))
     }

@@ -2,12 +2,14 @@ package no.mesan.testdatagen.generators
 
 import org.joda.time.DateTime
 import org.junit.runner.RunWith
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import java.util.Date
 
+import no.mesan.testdatagen.Printer
+
 @RunWith(classOf[JUnitRunner])
-class DatesSuite extends FunSuite {
+class DatesSuite extends FunSuite with Printer {
 
   test("print") {
     Dates().from(y = 2004, m = 2).to(y = 2004, m = 2).get(1)

@@ -3,14 +3,16 @@ package no.mesan.testdatagen.recordgen
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
 import no.mesan.testdatagen.aggreg.SomeNulls
 import no.mesan.testdatagen.generators.{Booleans, Chars, Dates, Doubles, FromList, Ints, Strings}
 import no.mesan.testdatagen.generators.misc.{MailAddresses, Names, Urls}
 import no.mesan.testdatagen.generators.norway.{Fnr, Kjennemerker}
 
+import no.mesan.testdatagen.Printer
+
 @RunWith(classOf[JUnitRunner])
-class ToSqlSuite extends FunSuite {
+class ToSqlSuite extends FunSuite with Printer {
   val dates = Dates().from(y = 1950).to(y = 2012).get(1000)
 
   trait Setup {
@@ -37,7 +39,7 @@ class ToSqlSuite extends FunSuite {
       addQuoted("car", kjmGen)
   }
 
-  print {
+  print(false) {
     new Setup {
       println(recordGen.get(4).mkString("\n"))
     }

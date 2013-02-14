@@ -1,13 +1,15 @@
 package no.mesan.testdatagen.generators
 
 import org.junit.runner.RunWith
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-@RunWith(classOf[JUnitRunner])
-class IntsSuite extends FunSuite {
+import no.mesan.testdatagen.Printer
 
-  print {
+@RunWith(classOf[JUnitRunner])
+class IntsSuite extends FunSuite with Printer {
+
+  print(false) {
     println(Ints().from(4).to(44).get(30))
     println(Ints().step(7).from(4).to(44).reversed.get(30))
   }

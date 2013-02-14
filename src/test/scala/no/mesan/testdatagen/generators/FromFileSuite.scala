@@ -1,12 +1,13 @@
 package no.mesan.testdatagen.generators
 
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.{ExtendedGenerator, FunSuite}
+import no.mesan.testdatagen.{ExtendedGenerator, Printer}
 
 @RunWith(classOf[JUnitRunner])
-class FromFileSuite extends FunSuite {
+class FromFileSuite extends FunSuite with Printer {
 
   trait Setup {
     val pfx= "src/test/scala/no/mesan/testdatagen/generators/"
@@ -17,7 +18,7 @@ class FromFileSuite extends FunSuite {
     val strGen= FromFile(strings)
   }
 
-  print {
+  print(false) {
     new Setup {
       println(new java.io.File(".").getCanonicalPath)
       println(intGen.get(25))
@@ -29,12 +30,12 @@ class FromFileSuite extends FunSuite {
   test("negative get") {
     intercept[IllegalArgumentException] {
       new Setup {
-    	  intGen.get(-1)
+          intGen.get(-1)
       }
     }
     intercept[IllegalArgumentException] {
       new Setup {
-    	  intGen.getStrings(-1)
+          intGen.getStrings(-1)
       }
     }
   }

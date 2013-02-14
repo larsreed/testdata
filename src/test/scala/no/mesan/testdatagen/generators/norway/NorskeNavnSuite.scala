@@ -3,16 +3,18 @@ package no.mesan.testdatagen.generators.norway
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
+
+import no.mesan.testdatagen.Printer
 
 @RunWith(classOf[JUnitRunner])
-class NorskeNavnSuite extends FunSuite {
+class NorskeNavnSuite extends FunSuite with Printer {
 
   trait Setup {
     val xgen= NorskeNavn(false)
   }
 
-  print {
+  print(false) {
     println(NorskeNavn(false).get(50))
     println(NorskeNavn(true).get(50))
     println(NorskeNavn(true).kunFornavn.get(20))

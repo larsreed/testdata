@@ -71,5 +71,3 @@ class DoubleQuoteWithEscapeDataField(name: String, generator: Generator[_])
   override def suffix: String = "\""
   override def transform(s: String): String = if (s==null) null else s.replaceAll("[\"]", """\\\"""")
 }
-
-

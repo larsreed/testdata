@@ -1,12 +1,14 @@
 package no.mesan.testdatagen.generators
 
 import org.junit.runner.RunWith
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
+import no.mesan.testdatagen.Printer
+
 @RunWith(classOf[JUnitRunner])
-class CharsSuite extends FunSuite {
-  print {
+class CharsSuite extends FunSuite with Printer {
+  print(false) {
     println(Chars().chars('a' to 'c').reversed.get(120))
   }
 

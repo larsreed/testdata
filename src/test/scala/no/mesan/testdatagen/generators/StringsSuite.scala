@@ -1,12 +1,14 @@
 package no.mesan.testdatagen.generators
 
 import org.junit.runner.RunWith
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
+import no.mesan.testdatagen.Printer
+
 @RunWith(classOf[JUnitRunner])
-class StringsSuite extends FunSuite {
-    print {
+class StringsSuite extends FunSuite with Printer {
+    print(false) {
        println(Strings().lengthBetween(1,3).chars('a' to 'c').reversed.get(120))
        println(Strings().lengthBetween(1,3).chars('a' to 'c').sequential.get(100))
        println(Strings().lengthBetween(1000,1003).chars('0' to '1').sequential.get(2))

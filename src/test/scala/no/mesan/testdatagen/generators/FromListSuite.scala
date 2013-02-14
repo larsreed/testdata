@@ -1,14 +1,16 @@
 package no.mesan.testdatagen.generators
 
 import org.junit.runner.RunWith
-import no.mesan.testdatagen.FunSuite
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
 import no.mesan.testdatagen.SingleGenerator
 
+import no.mesan.testdatagen.Printer
+
 @RunWith(classOf[JUnitRunner])
-class FromListSuite extends FunSuite {
-  print {
+class FromListSuite extends FunSuite with Printer {
+  print(false) {
     println(FromList(List(1, 2, 3, 4, 5, 6)).get(25))
     println(FromList(List("A", "B", "C")).reversed.get(25))
   }

@@ -57,7 +57,7 @@ class FromFile[T](fileName: String, encoding:String) extends ExtendedGenerator[T
 
 object FromFile {
   // Only String is actually working at the moment
-  def apply(resourceName: String, allLines:Boolean=false, 
+  def apply(resourceName: String, allLines:Boolean=false,
       encoding: String= "ISO-8859-1"): FromFile[String] =
     (new FromFile[String](resourceName, encoding)).allLines(allLines)
 }

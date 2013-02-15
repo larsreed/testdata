@@ -9,7 +9,7 @@ import no.mesan.testdatagen.Printer
 @RunWith(classOf[JUnitRunner])
 class CreditCardsSuite extends FunSuite with Printer {
 
-  print(true) {
+  print(false) {
     println(CreditCards().get(12))
     println(CreditCards.visas.get(12))
     println(CreditCards.masterCards.get(12))

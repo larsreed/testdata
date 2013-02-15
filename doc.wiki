@@ -318,9 +318,6 @@ Builds email addresses using this pattern:
 # "."
 # com/no/org/net/co.uk/gov
 
-h3. PasswordGenerator
-xxxxxxxxxxxx TODO
-
 h3. CreditCardGenerator
 xxxxxxxxxxx TODO
 

@@ -533,6 +533,11 @@ apply[T](fileName:String,
 {code}
 When {{get}} (or {{getStrings}}) is called, values are obtained from the embedded generator, and written/appended to the named file.
 
+h2. Miscellaneous
+
+h3. Printer
+All the test suites uses the {{Printer}} trait.  This contains a single method: {qc}def print(localPrint:Boolean)(printFun: =>Unit ){qc}.  If either the {{localPrint}} argument or the local {{centralPrint}} val is true, the {{printFun}} method is executed.  I use it to visually inspect the results, create samples etc.
+
 h2. Notes
 
 h3. TODO

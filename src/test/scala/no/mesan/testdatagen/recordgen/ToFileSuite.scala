@@ -21,7 +21,8 @@ class ToFileSuite extends FunSuite with Printer {
       add("id", idGen).
       add("name", nameGen).
       add("fnr", fnrGen)
-    val gen= recordGen.toFile("target/test.txt")
+    val fName= "target/test.txt"
+    val gen= recordGen.toFile(fName)
   }
 
   test("negative get") {
@@ -43,9 +44,10 @@ class ToFileSuite extends FunSuite with Printer {
     }
   }
 
-  test("print") {
+  print(false) {
     new Setup {
       gen.get(100)
+      recordGen.appendToFile(fName).get(100)
     }
   }
 }

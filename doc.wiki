@@ -524,8 +524,14 @@ values (3, 'RBWC', 1951-08-15, 'Kmdiklyumethyf Paabya', null);
 {code}
 
 h3. ToFile
-
-xxxxxxxxxx TODO append
+This generator is typically the end of a chain, and called implicitly by either {{toFile}} or {{appendToFile}} from a record generator, but may also be called through the apply method
+{code:scala}
+apply[T](fileName:String,
+         generator: Generator[T],
+         append:Boolean=false,
+         charSet:String="ISO-8859-1")
+{code}
+When {{get}} (or {{getStrings}}) is called, values are obtained from the embedded generator, and written/appended to the named file.
 
 h2. Notes
 

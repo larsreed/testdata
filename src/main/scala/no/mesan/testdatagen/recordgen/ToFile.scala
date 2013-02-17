@@ -1,23 +1,21 @@
 package no.mesan.testdatagen.recordgen
 
 import java.io.{File, PrintWriter}
-
 import no.mesan.testdatagen.Generator
+import java.io.FileWriter
 
 class ToFile[T](fileName:String,
                          generator: Generator[T],
                          append:Boolean,
                          charSet:String) extends Generator[T] {
 
-  require(!append, "TODO!!!!!!!!!!")
-
-  def printToFile(f: java.io.File)(op: PrintWriter => Unit) {
-    val p = new PrintWriter(f, charSet)
+  def printToFile(f: java.io.FileWriter)(op: PrintWriter => Unit) {
+    val p = new PrintWriter(f)
     try { op(p) } finally { p.close() }
   }
 
   protected def toFile(list: List[String]) {
-    printToFile(new File(fileName))(p => {
+    printToFile(new FileWriter(fileName, append))(p => {
       list.foreach(p.println)
     })
   }

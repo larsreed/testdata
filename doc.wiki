@@ -385,7 +385,8 @@ To generate names
 # the standard {{filter}} and {{formatWith}} may also be used.
 
 h4. RareNavn
-xxxxxxxxxx
+This is a simpler name generator, picking from a list of about 100 names.  These names are meant to sound "funny", read the right way, they form other words or expressions, e.g. "Buster Minal" and "Mary Christmas".. :-)
+It supports the {{allLines}} parameter of {{FromFile}}.
 
 h2. Record builders
 Generating values is all well and fine, and you may want to use the previous generators in contexts of your own.  But often, you will want to use the test data in another context.  The generators that follow help you in building not values but data structures, and perhaps saving them to a file.
@@ -505,8 +506,17 @@ Another way to output a table is to use the wiki generator.  No moving parts her
 {noformat}
 
 h3. ToJson
-No prize for guessing the output from this generator...
-todo xxxxxxxxxxxxxxxxxxxxxx
+No prize for guessing the output format from this generator...
+The apply method has 3 parameters:
+# {{header:String}}: This is the label for each record (ignored if {{bare}}, see below)
+# {{bare:Boolean=false}}: This is intended for nesting JSON-generators.  If you want to generate embedded records, use {{bare=true}} for the inner generators, e.g.:
+{code:scala}
+val addressGen= ToJson(bare=true).addQuoted("line1", ....)...
+val customerGen= ToJson(header="customer").add("address", addressGen) ...
+// => "customer": { "address": { "line1": ... }, ...}
+{code}
+# {qc}nulls: NullHandler= KeepNull{qc}: as described above
+
 
 h3. ToSql
 Often, you will need to put test data into a data base.  This generator tries to help you...  It generates records of the form

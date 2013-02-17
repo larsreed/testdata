@@ -31,10 +31,18 @@ class ToJsonSuite extends FunSuite with Printer {
 
   print(false) {
     new Setup {
-      println(recordGen.get(120).mkString("\n"))
+      val recordGenInner= ToJson(nulls=SkipNull, bare=true).
+        addQuoted("userId", codeGen).
+        addQuoted("ssn", fnrGen).
+        addQuoted("mail", mailGen)
+      val recordGenOuter= ToJson("data", nulls=KeepNull).
+        add("id", idGen).
+        add("userData", recordGenInner).
+        add("active", boolGen)
+      println(recordGenOuter.get(12).mkString("\n"))
     }
   }
-
+  
   test("negative get") {
     intercept[IllegalArgumentException] {
       new Setup {

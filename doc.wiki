@@ -318,8 +318,15 @@ Builds email addresses using this pattern:
 # "."
 # com/no/org/net/co.uk/gov
 
-h3. CreditCardGenerator
-xxxxxxxxxxx TODO
+h3. CreditCards
+This generator by default generates 16-digit credit card numbers from Visa or MasterCard, but you can instruct it otherwise through its generic apply method. The last digit is generated using Luhn's algorithm.
+There are 4 different "apply" methods:
+# {qc}CreditCards(){qc}: 16 digit MasterCard/Visa
+# {qc}CreditCards.visas{qc}: 16 digit Visa numbers (starts with 4)
+# {qc}CreditCards.masterCards{qc}: 16 digit MasterCard numbers (starts with 51..55)
+# {qc}CreditCards(prefixes: List[Long], length: Int){qc}: you decide the prefixes and length; make sure you leave room for the check digit.
+
+Additionally, you may add a call to {{unique()}}, to ensure unique values.
 
 h3. Norwegian custom generators
 These generators create data specific to Norwegian domains.  They use Norwegian names, as they are of limited value outside of Norway anyway.

@@ -11,7 +11,7 @@ import no.mesan.testdatagen.generators.Ints
 /**
  * Generate credit card numbers.
  */
-class CreditCards (prefixes: List[Long]) extends GeneratorImpl[Long] {
+class CreditCards (prefixes: List[Long], length:Int) extends GeneratorImpl[Long] {
 
   protected var isUnique= false
   /** Generate unique, random values. */
@@ -39,7 +39,7 @@ class CreditCards (prefixes: List[Long]) extends GeneratorImpl[Long] {
     if (soFar.length>=n) soFar
     else {
       val pfx: Long= pfxGen.get(1)(0)
-      val allInts= ints.get(16-(pfx.toString.length)) // up to 15 more digits
+      val allInts= ints.get(length-(pfx.toString.length)) // up to 15 more digits
       val sample= allInts.foldLeft(pfx)(10L*_ + _)
       val nxt= (sample/10L)*10L + checkDigit(sample)
       if (filterAll(nxt) && (!isUnique || !(soFar contains nxt)))
@@ -51,9 +51,11 @@ class CreditCards (prefixes: List[Long]) extends GeneratorImpl[Long] {
 }
 
 object CreditCards {
+  val stdLength= 16
   private val masterCard= (51L to 55L).toList
-  private val visa= (40L to 49L).toList
-  def apply(): CreditCards = new CreditCards(masterCard ::: visa)
-  def visas : CreditCards = new CreditCards(visa)
-  def masterCards: CreditCards= new CreditCards(masterCard)
+  private val visa= List(4L)
+  def apply(): CreditCards = new CreditCards(masterCard ::: visa, stdLength)
+  def visas : CreditCards = new CreditCards(visa, stdLength)
+  def masterCards: CreditCards= new CreditCards(masterCard, stdLength)
+  def apply(prefixes: List[Long], length: Int)= new CreditCards(prefixes, length)
 }

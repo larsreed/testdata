@@ -34,7 +34,7 @@ class CreditCardsSuite extends FunSuite with Printer {
   }
 
   test("unique") {
-    val res = new CreditCards(List(12345678901234L)).unique.get(9).toSet
+    val res = CreditCards(List(1234L),6).unique.get(9).toSet
     assert(res.size===9)
   }
 

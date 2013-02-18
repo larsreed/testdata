@@ -20,9 +20,9 @@ abstract class SingleGenerator[T] extends ExtendedGenerator[T] with GeneratorImp
 
   protected var isUnique= false
   /** Generate unique, random values. */
-  override def unique: this.type= { isUnique=true; isSequential= false; this }
+  override def unique(): this.type= { isUnique=true; isSequential= false; this }
 
   protected var isReversed= false
   /** If sequential, generate from top. */
-  override def reversed: this.type= { isReversed=true; sequential }
+  override def reversed(): this.type= { isReversed=true; sequential }
 }

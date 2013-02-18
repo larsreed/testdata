@@ -269,7 +269,7 @@ This generator takes any other generator as input, always uses its {qc}getString
 
 Special methods:
 * {qc}substring(from:Int, to:Int=-1{qc} (if {{to}} is omitted, the rest of the string is used)
-* {{toLower}} / {{toUpper}}
+* {{toLower}} / {{toUpper}} / {{trim}} -- as in {{java.lang.String}}
 * {qc}surroundWith(prefix:String="", suffix:String=""){qc} pre/suffixes the result string with a fixed string
 * {qc}transform(f: String=> String){qc} -- add your own string transformer function
 
@@ -576,7 +576,7 @@ For this last sample, we'll look at generation of data for several SQL tables.  
 ** Postal code (Norwegian: name & number)
 * Customer
 ** ID
-** SSN (Norwegian: fodselsnummer)
+** SSN (Norwegian: fodselsnummer) (optional)
 ** Name (Norwegian)
 ** Address (embedded)
 * Product
@@ -586,13 +586,13 @@ For this last sample, we'll look at generation of data for several SQL tables.  
 ** ID
 ** State (one of 'Pending', 'Ready', 'Delivered, 'Closed')
 ** Customer (by ID)
+** Order date (optional)
 ** Set of Order lines
 * Order line
 ** Order (by ID)
 ** Line no. (sequential)
 ** Product (by ID)
-** Quantity
-** Amount
+** Info (optional, string)
 
 
 

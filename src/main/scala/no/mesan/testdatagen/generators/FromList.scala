@@ -43,7 +43,7 @@ class FromList[T] extends SingleGenerator[T] {
         else getRandomly(soFar)
       }
 
-    require(!isRandom || !isUnique || n<= accepted.size, "too few elements")
+    require(!isRandom || !isUnique || n<= accepted.size, "too few elements: " + accepted)
     if (isSequential) getSequentially
     else getRandomly(Nil)
   }

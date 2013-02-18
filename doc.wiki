@@ -365,7 +365,6 @@ This one is also based on a {{FromFile}} reading the supplied "postnr.txt" which
 * {{Poststeder.postnr}}: returns the numeric code only
 * {{Poststeder.poststed}}: returns the name only
 
-
 h4. Kommuner
 (County generator.)
 Another one based on a {{FromFile}}, reading  "kommuner.txt" which contains Norwegian county names, formatted as "NNNN Ssss....", where NNNN is a 4-digit code, followed by a space, then the name.  There are 3 alternative invokations, they all have an optional {{allLines}} parameter (default {{true}}) for the {{FromFile}} generator:
@@ -387,6 +386,19 @@ To generate names
 h4. RareNavn
 This is a simpler name generator, picking from a list of about 100 names.  These names are meant to sound "funny", read the right way, they form other words or expressions, e.g. "Buster Minal" and "Mary Christmas".. :-)
 It supports the {{allLines}} parameter of {{FromFile}}.
+
+h4. Adresser
+A generator to create strings that look like Norwegian street addresses.  It uses surnames (from {{NorskeNavn.kunEtternavn}}) and places (from {{Poststeder.poststed}}), and optionally a house number (sometimes with a letter suffix).
+
+Apply method:
+* {qc}Adresser(withNumbers: Boolean=true){qc}
+
+Samples:
+{noformat}
+Vogts gate 62
+Vossskroken 87C
+Cowards plass 105
+{noformat}
 
 h2. Record builders
 Generating values is all well and fine, and you may want to use the previous generators in contexts of your own.  But often, you will want to use the test data in another context.  The generators that follow help you in building not values but data structures, and perhaps saving them to a file.
@@ -554,6 +566,36 @@ h2. Miscellaneous
 
 h3. Printer
 All the test suites uses the {{Printer}} trait.  This contains a single method: {qc}def print(localPrint:Boolean)(printFun: =>Unit ){qc}.  If either the {{localPrint}} argument or the local {{centralPrint}} val is true, the {{printFun}} method is executed.  I use it to visually inspect the results, create samples etc.
+
+h2. Extended example
+
+For this last sample, we'll look at generation of data for several SQL tables.  The data structure to fill looks like this:
+
+* Address:
+** Street
+** Postal code (Norwegian: name & number)
+* Customer
+** ID
+** SSN (Norwegian: fodselsnummer)
+** Name (Norwegian)
+** Address (embedded)
+* Product
+** ID
+** Name
+* Order
+** ID
+** State (one of 'Pending', 'Ready', 'Delivered, 'Closed')
+** Customer (by ID)
+** Set of Order lines
+* Order line
+** Order (by ID)
+** Line no. (sequential)
+** Product (by ID)
+** Quantity
+** Amount
+
+
+
 
 h2. Notes
 

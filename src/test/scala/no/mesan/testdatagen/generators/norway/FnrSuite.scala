@@ -1,12 +1,11 @@
 package no.mesan.testdatagen.generators.norway
 
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import org.scalatest.FunSuite
-import no.mesan.testdatagen.generators.Dates
-
 import no.mesan.testdatagen.Printer
+import no.mesan.testdatagen.generators.Dates
 
 @RunWith(classOf[JUnitRunner])
 class FnrSuite extends FunSuite with Printer {
@@ -26,7 +25,7 @@ class FnrSuite extends FunSuite with Printer {
 
   print(false) {
     val dg = Dates().from(y = 1968, m = 9, d = 20).to(y = 1968, m = 9, d = 20)
-    println(Fnr(dg).withDnr.boysOnly.get(1200))
+    println(Fnr(dg) withDnr(50) boysOnly() get(1200))
   }
 
   test("negative get") {
@@ -42,11 +41,31 @@ class FnrSuite extends FunSuite with Printer {
     assert(Fnr().get(120).size === 120)
   }
 
-  ignore("contents") {
-    val res= Fnr().boysOnly.withDnr.get(100) ++
-             Fnr().girlsOnly.get(100) ++
-             Fnr().get(100)
+  test("contents checksum") {
+    val res= (Fnr() boysOnly() withDnr(100) get(100)) ++
+             (Fnr() girlsOnly() get(100)) ++
+             (Fnr() get(100))
     for (fnr<-res) assert(sjekkFnr(fnr), fnr)
+  }
+
+  test("only dnr") {
+    val res= Fnr() withDnr(100) get(200)
+    for (fnr<-res) assert(fnr.matches("^[4-7].*"), fnr)
+  }
+
+  test("no dnr") {
+    val res= Fnr() withDnr(0) get(200)
+    for (fnr<-res) assert(fnr.matches("^[0-3].*"), fnr)
+  }
+
+  test("girls") {
+    val res= Fnr() girlsOnly() get(200)
+    for (fnr<-res) assert(fnr.matches("^........[02468].*"), fnr)
+  }
+
+  test("boys") {
+    val res= Fnr() boysOnly() get(200)
+    for (fnr<-res) assert(fnr.matches("^........[13579].*"), fnr)
   }
 
   test("empty") {

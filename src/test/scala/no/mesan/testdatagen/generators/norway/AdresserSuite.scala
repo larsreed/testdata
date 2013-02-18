@@ -1,9 +1,10 @@
 package no.mesan.testdatagen.generators.norway
 
-import org.scalatest.FunSuite
-import no.mesan.testdatagen.Printer
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+
+import no.mesan.testdatagen.Printer
 
 @RunWith(classOf[JUnitRunner])
 class AdresserSuite extends FunSuite with Printer {

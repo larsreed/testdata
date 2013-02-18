@@ -11,7 +11,7 @@ object SimpleSample extends App {
     add("productName", WeightedGenerator().
                          add(60, Names(1)).
                          add(40, Names(2))).
-    add("qty", SomeNulls(3,
+    add("qty", SomeNulls(33,
                  FieldConcatenator().
                    add(Doubles() from(1) to(300) format("%5.2f")).
                    add(Fixed(" ")).

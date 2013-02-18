@@ -4,7 +4,7 @@ import no.mesan.testdatagen.aggreg.{FieldConcatenator, SomeNulls, TextWrapper, W
 import no.mesan.testdatagen.generators.{Dates, Doubles, Fixed, FromList, Ints}
 import no.mesan.testdatagen.generators.misc.Names
 import no.mesan.testdatagen.generators.norway.{Adresser, Fnr, Poststeder}
-import no.mesan.testdatagen.recordgen.{SkipNull, ToSql, ToXmlElements}
+import no.mesan.testdatagen.recordgen.ToSql
 
 object LongerSample extends App {
   val totalOrders= 200
@@ -22,7 +22,7 @@ object LongerSample extends App {
   val customerGenerator= 
     ToSql("customer")
     .add("id", customerIds)
-    .addQuoted("fnr", SomeNulls(8, Fnr()))
+    .addQuoted("fnr", SomeNulls(12, Fnr()))
     .addQuoted("adr", Adresser())
     .addQuoted("postnr", TextWrapper(postSteder).substring(0, 4))
     .addQuoted("poststed", TextWrapper(postSteder).substring(5))
@@ -47,7 +47,7 @@ object LongerSample extends App {
     .add("product", productIds)
     .add("lineNo", Ints() from(1) sequential)
     .addQuoted("info", 
-        SomeNulls(3, TextWrapper(
+        SomeNulls(33, TextWrapper(
                  FieldConcatenator()
                    .add(Doubles() from(1) to(300) format("%5.2f"))
                    .add(Fixed(" "))

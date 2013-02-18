@@ -1,15 +1,14 @@
 package no.mesan.testdatagen.recordgen
 
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import org.scalatest.FunSuite
+import no.mesan.testdatagen.Printer
 import no.mesan.testdatagen.aggreg.SomeNulls
 import no.mesan.testdatagen.generators.{Booleans, Dates, Doubles, FromList, Ints, Strings}
 import no.mesan.testdatagen.generators.misc.{MailAddresses, Urls}
 import no.mesan.testdatagen.generators.norway.{Fnr, Kjennemerker, NorskeNavn}
-
-import no.mesan.testdatagen.Printer
 
 @RunWith(classOf[JUnitRunner])
 class ToHtmlSuite extends FunSuite with Printer {
@@ -19,13 +18,13 @@ class ToHtmlSuite extends FunSuite with Printer {
     val idGen = Ints().from(1).sequential
     val codeGen = Strings().chars('A' to 'Z').length(4)
     val nameGen = NorskeNavn()
-    val bornGen = SomeNulls(4, FromList(dates).sequential.formatWith(Dates.dateFormatter("yyyy-MM-dd")))
+    val bornGen = SomeNulls(25, FromList(dates).sequential.formatWith(Dates.dateFormatter("yyyy-MM-dd")))
     val fnrGen = Fnr(FromList(dates).sequential)
     val boolGen = Booleans()
-    val scoreGen = SomeNulls(2, Doubles().from(0).to(10000))
-    val urlGen = SomeNulls(3, Urls())
-    val mailGen = SomeNulls(5, MailAddresses())
-    var kjmGen = SomeNulls(6, Kjennemerker())
+    val scoreGen = SomeNulls(50, Doubles().from(0).to(10000))
+    val urlGen = SomeNulls(33, Urls())
+    val mailGen = SomeNulls(20, MailAddresses())
+    var kjmGen = SomeNulls(15, Kjennemerker())
     val recordGen = ToHtml("Brukere").
       add("id", idGen).
       add("userId", codeGen).

@@ -2,7 +2,7 @@ package no.mesan.testdatagen.generators.norway
 
 import org.joda.time.DateTime
 
-import no.mesan.testdatagen.{ExtendedGenerator, GeneratorImpl}
+import no.mesan.testdatagen.{ExtendedGenerator, GeneratorImpl, Percentage}
 import no.mesan.testdatagen.generators.{Dates, Ints}
 
 /**
@@ -11,7 +11,7 @@ import no.mesan.testdatagen.generators.{Dates, Ints}
  *                  boys/girlsOnly
  * Default limits: Always random, the letters IMOQ are never used.
  */
-class Fnr(dateGenerator:ExtendedGenerator[DateTime]) extends GeneratorImpl[String] {
+class Fnr(dateGenerator:ExtendedGenerator[DateTime]) extends GeneratorImpl[String] with Percentage {
 
   private def isOdd(i: Int)= i%2 == 1
   private def isEven(i: Int)= !isOdd(i)
@@ -20,21 +20,21 @@ class Fnr(dateGenerator:ExtendedGenerator[DateTime]) extends GeneratorImpl[Strin
   private lazy val boyGen= Ints().from(0).to(9).filter(isOdd)
   private lazy val girlGen= Ints().from(0).to(9).filter(isEven)
 
-  private var dnrs= false
+  private var dnrFactor= 0
   /**
    * To generate D-numbers (for foreigners, with 40 added to the day of month),
-   * call this with a factor.  If the factor is 1, DNRs are always generated,
-   * otherwise approximately (up to the random generator) each nth dates has
+   * call this with a percentage.  If the factor is 100, DNRs are always generated,
+   * otherwise approximately (up to the random generator) n% of the dates has
    * 40 added to it.
    */
-  def withDnr: this.type = { dnrs= true; this }
+  def withDnr(percent: Int): this.type = { dnrFactor= percent; this }
 
   private var boys= true
   private var girls= true
   /** As the name implies... */
-  def boysOnly: this.type = { boys=true; girls=false;  this }
+  def boysOnly(): this.type = { boys=true; girls=false;  this }
   /** As the name implies... */
-  def girlsOnly: this.type = { boys=false; girls=true; this }
+  def girlsOnly(): this.type = { boys=false; girls=true; this }
 
   private def get3: List[Int]= intGen.get(2) ++ (if (!boys) girlGen.get(1)
     else if (!girls) boyGen.get(1)
@@ -52,7 +52,7 @@ class Fnr(dateGenerator:ExtendedGenerator[DateTime]) extends GeneratorImpl[Strin
     def genPnr(s: String): String = {
       val orgAsInt= s.map(c=> c-'0').toList
       // Transform to DNR
-      val first6= if (dnrs) 4+orgAsInt(0) :: orgAsInt.drop(1)
+      val first6= if (hit(dnrFactor)) 4+orgAsInt(0) :: orgAsInt.drop(1)
                   else orgAsInt
 
       def genNext(soFar: List[Int], fakt:List[Int]): List[Int]= {

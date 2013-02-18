@@ -17,8 +17,8 @@ class XmlGeneratorSuite extends FunSuite with Printer {
     val idGen= Ints().from(1).sequential
     val codeGen= Strings().chars('A' to 'Z').length(4)
     val nameGen= Names(2)
-    val bornGen= SomeNulls(4, Dates().from(y=1950).to(y=2012).format("yyyy-MM-dd"))
-    val urlGen= SomeNulls(3, Urls())
+    val bornGen= SomeNulls(25, Dates().from(y=1950).to(y=2012).format("yyyy-MM-dd"))
+    val urlGen= SomeNulls(35, Urls())
   }
 
   trait SetupElement extends Setup {
@@ -163,7 +163,7 @@ class XmlGeneratorSuite extends FunSuite with Printer {
   test("keepNulls elem") {
     new SetupElement {
       val gen = ToXmlElements(recordName = "data", nulls = KeepNull).
-          add("id", SomeNulls(1, idGen))
+          add("id", SomeNulls(100, idGen))
       val res = gen.get(1)(0).toString()
       assert(res.matches("(?s)^\\s*<data>\\s*<id>\\s*null\\s*</id>\\s*</data>\\s*$"), res)
     }
@@ -171,7 +171,7 @@ class XmlGeneratorSuite extends FunSuite with Printer {
   test("keepNulls attr") {
     new SetupAttribute {
       val gen = ToXmlAttributes(recordName = "data", nulls = KeepNull).
-          add("id", SomeNulls(1, idGen))
+          add("id", SomeNulls(100, idGen))
       val res = gen.get(1)(0).toString()
       assert(res.matches("(?s)^\\s*<data\\s*id=.null.\\s*(/>|></data>)\\s*$"), res)
     }
@@ -180,7 +180,7 @@ class XmlGeneratorSuite extends FunSuite with Printer {
   test("skipNulls elem") {
     new SetupElement {
       val gen = ToXmlElements(recordName = "data", nulls = SkipNull).
-          add("id", SomeNulls(1, idGen))
+          add("id", SomeNulls(100, idGen))
       val res = gen.get(1)(0).toString()
       assert(res.matches("(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"), res)
     }
@@ -188,7 +188,7 @@ class XmlGeneratorSuite extends FunSuite with Printer {
   test("skipNulls attr") {
     new SetupAttribute {
       val gen = ToXmlAttributes(recordName = "data", nulls = SkipNull).
-          add("id", SomeNulls(1, idGen))
+          add("id", SomeNulls(100, idGen))
       val res = gen.get(1)(0).toString()
       assert(res.matches("(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"), res)
     }
@@ -197,7 +197,7 @@ class XmlGeneratorSuite extends FunSuite with Printer {
   test("emptyNulls elem") {
     new SetupElement {
       val gen = ToXmlElements(recordName = "data", nulls = EmptyNull).
-          add("id", SomeNulls(1, idGen))
+          add("id", SomeNulls(100, idGen))
       val res = gen.get(1)(0).toString()
       assert(res.matches("(?s)^\\s*<data>\\s*(<id>\\s*</id>|<id/>)\\s*</data>\\s*$"), res)
     }
@@ -205,7 +205,7 @@ class XmlGeneratorSuite extends FunSuite with Printer {
   test("emptyNulls attr") {
     new SetupAttribute {
       val gen = ToXmlAttributes(recordName = "data", nulls = EmptyNull).
-          add("id", SomeNulls(1, idGen))
+          add("id", SomeNulls(100, idGen))
       val res = gen.get(1)(0).toString()
       assert(res.matches("(?s)^\\s*<data\\s*id=..\\s*(/>|></data>)\\s*$"), res)
     }

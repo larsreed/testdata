@@ -16,7 +16,7 @@ Furthermore, there are some utility classes like {{FieldConcatenator}} and {{Wei
 And finally, there are a set of classes to assist in creating complete data records, like {{ToSql}} for generating SQL inserts, and {{ToCsv}} to create simple flat file records.
 
 h3. Sample usage
-Here is an introductry example to show you what it's all about:
+Here is an introductory example to give you a sense of what it's all about:
 {anchor:sample1}{code:scala|title=SimpleSample.scala}
 package net.kalars.testgen.generators.sample
 
@@ -287,7 +287,7 @@ FieldConcatenator().
 The FieldConcatenator is given a set of generators with the {{add}} method. When {{get}} is called, it calls {{getString}} on each of its generators, and concatenates the output from each generator (in the same order as the {{add}} calls), and returns the list of concatenated strings (in the above example strings like "12.04 kg").
 
 h3. SomeNulls
-This generator takes another generator and a frequency factor as input.  Both the {{get}} and the {{getStrings}} method calls the original generator to retrieve its values, and then replaces approximately each Nth occurrence (decided by a random generator) with {{null}}.  N==0 means no nulls, N==1 means only nulls, N==2 50% nulls etc.
+This generator takes another generator and a percentage as input.  Both the {{get}} and the {{getStrings}} method calls the original generator to retrieve its values, and then replaces approximately each N % of the occurrences (decided by a random generator) with {{null}}.  N==0 means no nulls, N==100 means only nulls, N==50 50% nulls etc.
 
 Methods:
 * {{nullFactorN)}} as described above
@@ -343,8 +343,8 @@ Generates a legal "fodselsnummer", Norwegian "social security IDs". These are st
 
 There are several rules pertaining to these numbers, some of which are supported by the generator.
 # The date part usually starts with 01-31.  However, temporary numbers called D-numbers are issued, they add 40 to the birth day (i.e. 41-71).
+Add a call to {{withDnr(n)}} to generate such numbers -- n is a percentage between 0 (default, no dnrs) and 100 (all D-numbers).
 # If you only want certain dates, use the apply method or constructor with an {{ExtendedGenerator[DateTime]}} argument (e.g. a {{Dates}} generator).
-Add a call to {{withDnr}} to generate such numbers.
 # The 3-digit ID is given in intervals signifying century.  This is not supported by the generator.
 # The 3-digit ID is odd for men, even for women.  Call {{boysOnly}} og {{girlsOnly}} if you are a sexist.
 # The algorithm for the check numbers leads to not all IDs being valid.  The generator ensures that all values are valid.

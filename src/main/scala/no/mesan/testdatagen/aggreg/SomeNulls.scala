@@ -1,16 +1,16 @@
 package no.mesan.testdatagen.aggreg
 
 import scala.collection.immutable.List
-import scala.util.Random
 
-import no.mesan.testdatagen.{Generator, GeneratorImpl}
+import no.mesan.testdatagen.{Generator, GeneratorImpl, Percentage}
 
-class SomeNulls[T](gen: Generator[T]) extends GeneratorImpl[T] {
+class SomeNulls[T](gen: Generator[T]) extends GeneratorImpl[T] with Percentage {
 
-  private var nullFact= 0
-  def nullFactor(nth: Int): SomeNulls[T]= { nullFact= nth; this }
+  private var nullPct= 0
+  /** insert null in n% of the cases. */
+  def nullFactor(percent: Int): SomeNulls[T]= { nullPct= percent; this }
 
-  private def kill = ( nullFact>0  && Random.nextInt(nullFact)== 0)
+  private def kill = hit(nullPct)
 
   override def get(n: Int): List[T] = {
     val org= gen.get(n)

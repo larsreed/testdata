@@ -1,15 +1,14 @@
 package no.mesan.testdatagen.recordgen
 
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import org.scalatest.FunSuite
+import no.mesan.testdatagen.Printer
 import no.mesan.testdatagen.aggreg.SomeNulls
 import no.mesan.testdatagen.generators.{Booleans, Chars, Dates, Fixed, FromList, Ints, Strings}
 import no.mesan.testdatagen.generators.misc.MailAddresses
 import no.mesan.testdatagen.generators.norway.Fnr
-
-import no.mesan.testdatagen.Printer
 
 @RunWith(classOf[JUnitRunner])
 class ToJsonSuite extends FunSuite with Printer {
@@ -20,7 +19,7 @@ class ToJsonSuite extends FunSuite with Printer {
     val codeGen = Strings().chars('A' to 'Z').length(4)
     val fnrGen = Fnr(FromList(dates).sequential)
     val boolGen = Booleans()
-    val mailGen = SomeNulls(2, MailAddresses())
+    val mailGen = SomeNulls(50, MailAddresses())
     val recordGen = ToJson("data", nulls=KeepNull).
       add("id", idGen).
       addQuoted("userId", codeGen).

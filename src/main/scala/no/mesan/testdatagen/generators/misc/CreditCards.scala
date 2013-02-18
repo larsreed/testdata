@@ -1,12 +1,9 @@
 package no.mesan.testdatagen.generators.misc
 
-import no.mesan.testdatagen.Generator
-import no.mesan.testdatagen.aggreg.{FieldConcatenator, WeightedGenerator}
-import no.mesan.testdatagen.generators.{Fixed, FromList, Strings}
-import no.mesan.testdatagen.GeneratorImpl
-import no.mesan.testdatagen.SingleGenerator
 import scala.annotation.tailrec
-import no.mesan.testdatagen.generators.Ints
+
+import no.mesan.testdatagen.GeneratorImpl
+import no.mesan.testdatagen.generators.{FromList, Ints}
 
 /**
  * Generate credit card numbers.
@@ -30,7 +27,7 @@ class CreditCards (prefixes: List[Long], length:Int) extends GeneratorImpl[Long]
   }
   // private def isValid(cardNo: Long)= checkDigit(cardNo) == cardNo%10
 
-  override def get(n:Int) = {
+  override def get(n:Int): List[Long] = {
     require(n>=0, "cannot get negative count")
     val pfxGen= FromList(prefixes)
     val ints= Ints() from(0) to (9)
@@ -57,5 +54,5 @@ object CreditCards {
   def apply(): CreditCards = new CreditCards(masterCard ::: visa, stdLength)
   def visas : CreditCards = new CreditCards(visa, stdLength)
   def masterCards: CreditCards= new CreditCards(masterCard, stdLength)
-  def apply(prefixes: List[Long], length: Int)= new CreditCards(prefixes, length)
+  def apply(prefixes: List[Long], length: Int): CreditCards= new CreditCards(prefixes, length)
 }

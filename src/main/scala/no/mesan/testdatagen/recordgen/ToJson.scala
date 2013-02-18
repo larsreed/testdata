@@ -1,7 +1,6 @@
 package no.mesan.testdatagen.recordgen
 
 import no.mesan.testdatagen.Generator
-import java.util.regex.Pattern
 
 class ToJson(nulls:NullHandler, header:String, bare:Boolean) extends StringRecordGenerator(nulls) {
 
@@ -10,24 +9,26 @@ class ToJson(nulls:NullHandler, header:String, bare:Boolean) extends StringRecor
     this
   }
 
-  override def recordPrefix = NL + "  " + (if (!bare) "\"" + header + "\": " else "") + " { "
-  override def recordSuffix = NL + "  }" + (if (bare) "" else ",")
+  override def recordPrefix: String =
+    newline + "  " + (if (!bare) "\"" + header + "\": " else "") + " { "
+  override def recordSuffix: String =
+    newline + "  }" + (if (bare) "" else ",")
 
-  override def get(n:Int) = {
+  override def get(n:Int): List[String] = {
     val orgVals= super.get(n)
     if (bare) orgVals
     else List("{") :::
          (orgVals(n-1).replaceAll(",$", "") :: orgVals.take(n-1).reverse).reverse :::
-         List((NL + "}"))
+         List((newline + "}"))
   }
 
   override def makeFields(rec: DataRecord): String=
     rec.foldLeft(""){
       (str, rec)=> rec match {
         case null => str
-        case (key, null) => str + (if (str>"") "," else "") + NL +
+        case (key, null) => str + (if (str>"") "," else "") + newline +
                              "    \"" + key + "\": null"
-        case (key, value) => str + (if (str>"") "," else "") + NL +
+        case (key, value) => str + (if (str>"") "," else "") + newline +
                              "    \"" + key + "\": " + value
      }
     }

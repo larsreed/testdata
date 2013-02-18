@@ -15,9 +15,11 @@ abstract class DataRecordGenerator[T](nulls: NullHandler) extends GeneratorImpl[
   def add(fieldName: String, gen:Generator[_]): this.type =
     add(new DataField(fieldName, gen))
 
-  def toFile(fileName: String): Generator[T]= ToFile(fileName, this, false)
+  def toFile(fileName: String, charSet:String=ToFile.defaultCharSet): Generator[T]= 
+    ToFile(fileName, this, false, charSet)
 
-  def appendToFile(fileName: String): Generator[T]= ToFile(fileName, this, true)
+  def appendToFile(fileName: String, charSet:String=ToFile.defaultCharSet): Generator[T]= 
+    ToFile(fileName, this, true, charSet)
 
   protected def getRecords(n: Int, recordNulls:NullHandler): List[DataRecord] = {
     val fieldList= fields.reverse
@@ -30,7 +32,7 @@ abstract class StringRecordGenerator(nulls: NullHandler)
   protected def recordPrefix: String= ""
   protected def recordSuffix: String= ""
 
-  protected def NL= util.Properties.lineSeparator
+  protected def newline= util.Properties.lineSeparator
 
   protected def makeFields(rec: DataRecord): String
 

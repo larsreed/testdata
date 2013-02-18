@@ -32,6 +32,6 @@ class Adresser(withNumbers:Boolean) {
     else streetGenerator
 }
 object Adresser {
-  def apply(withNumbers:Boolean= true): Generator[String] = 
+  def apply(withNumbers:Boolean= true): Generator[String] =
     new Adresser(withNumbers).generator
 }

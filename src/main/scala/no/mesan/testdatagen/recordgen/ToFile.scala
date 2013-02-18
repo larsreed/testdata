@@ -1,23 +1,32 @@
 package no.mesan.testdatagen.recordgen
 
-import java.io.{File, PrintWriter}
+import java.io.{BufferedWriter, FileOutputStream, IOException, OutputStreamWriter}
+import java.nio.charset.Charset
+
 import no.mesan.testdatagen.Generator
-import java.io.FileWriter
 
 class ToFile[T](fileName:String,
                          generator: Generator[T],
                          append:Boolean,
                          charSet:String) extends Generator[T] {
 
-  def printToFile(f: java.io.FileWriter)(op: PrintWriter => Unit) {
-    val p = new PrintWriter(f)
-    try { op(p) } finally { p.close() }
-  }
-
   protected def toFile(list: List[String]) {
-    printToFile(new FileWriter(fileName, append))(p => {
-      list.foreach(p.println)
-    })
+    val writer = new OutputStreamWriter(
+                   new FileOutputStream(fileName, append), 
+                   Charset.forName(charSet).newEncoder())
+    val bufWriter= new BufferedWriter(writer)
+    try {
+      list.foreach{ s=>
+        bufWriter.append(s)
+        bufWriter.newLine
+      }
+    }
+    catch {
+      case e: IOException => println("Error: " + e)
+    }
+    finally {
+      bufWriter.close
+    }
   }
 
   /** Get the next n entries. */
@@ -39,9 +48,11 @@ class ToFile[T](fileName:String,
 }
 
 object ToFile {
+  val defaultCharSet="ISO-8859-1"
+
   def apply[T](fileName:String,
                generator: Generator[T],
                append:Boolean=false,
-               charSet:String="ISO-8859-1"): ToFile[T]=
+               charSet:String=defaultCharSet): ToFile[T]=
     new ToFile(fileName, generator, append, charSet)
 }

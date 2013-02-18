@@ -35,19 +35,19 @@ class NorskeNavn(allLines: Boolean) extends Generator[String] {
     this
   }
 
-  override def formatWith(f: String=>String) = {
+  override def formatWith(f: String=>String): this.type = {
     generator.formatWith(f)
     this
   }
 
-  override def filter(f: String=>Boolean) = {
+  override def filter(f: String=>Boolean): this.type = {
     generator.filter(f)
     this
   }
 
-  override def get(n:Int) = generator.get(n)
+  override def get(n:Int): List[String] = generator.get(n)
 
-  override def getStrings(n:Int) = generator.getStrings(n)
+  override def getStrings(n:Int): List[String] = generator.getStrings(n)
 
   private def create(antFor: Int, antEtter:Int, allLines:Boolean): Generator[String] = {
    val gen= new FieldConcatenator()

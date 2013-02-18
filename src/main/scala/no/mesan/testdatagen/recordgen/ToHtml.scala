@@ -1,8 +1,7 @@
 package no.mesan.testdatagen.recordgen
 
-import scala.xml.{Attribute, NodeSeq, Null, Text}
-import no.mesan.testdatagen.Generator
 import scala.xml.NodeSeq
+import scala.xml.NodeSeq.seqToNodeSeq
 
 /**
  * Generate HTML, either a simple table or a complete page (the latter if a title is given).

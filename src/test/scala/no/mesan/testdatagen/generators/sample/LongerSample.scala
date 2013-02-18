@@ -15,6 +15,7 @@ object LongerSample extends App {
   val resultFile= "orders.sql"
 
   val customerIds= FromList(Ints() from (1) to(10000) unique() get(totalCustomers))
+  val birthDates= Dates() from (y=1921) to (y=1996) get(totalCustomers)
   val productIds= FromList(Ints() from (1) to(100000) unique() get(totalProducts))
   val orderIds= FromList(Ints() from (1) to(1000) unique() get(totalOrders)) sequential
   val postSteder= FromList(Poststeder() get(totalCustomers)) sequential
@@ -22,7 +23,8 @@ object LongerSample extends App {
   val customerGenerator= 
     ToSql("customer")
     .add("id", customerIds)
-    .addQuoted("fnr", SomeNulls(12, Fnr()))
+    .addQuoted("fnr", SomeNulls(25, Fnr(FromList(birthDates) sequential)))
+    .addQuoted("born", FromList(birthDates) formatWith(Dates.dateFormatter("yyyy-MM-dd")) sequential)
     .addQuoted("adr", Adresser())
     .addQuoted("postnr", TextWrapper(postSteder).substring(0, 4))
     .addQuoted("poststed", TextWrapper(postSteder).substring(5))
@@ -46,12 +48,16 @@ object LongerSample extends App {
     .add("order", orderIds)
     .add("product", productIds)
     .add("lineNo", Ints() from(1) sequential)
-    .addQuoted("info", 
-        SomeNulls(33, TextWrapper(
-                 FieldConcatenator()
-                   .add(Doubles() from(1) to(300) format("%5.2f"))
-                   .add(Fixed(" "))
-                   .add(FromList("l", "kg", "", "m"))).trim))
+    .addQuoted("info",
+        SomeNulls(60,
+            WeightedGenerator()
+              .add(10, Fixed("Restock"))
+              .add(5, Fixed("Check!"))
+              .add(20,  TextWrapper(FieldConcatenator()
+                        .add(Fixed("Amount: "))
+                        .add(Doubles() from (1) to (300) format("%5.2f"))
+                        .add(FromList(" l", " kg", "", " m")))
+                        .trim)))
 
   customerGenerator toFile(resultFile) get(totalCustomers)
   productGenerator appendToFile(resultFile) get(totalProducts)

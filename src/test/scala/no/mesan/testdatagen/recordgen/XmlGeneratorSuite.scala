@@ -1,14 +1,13 @@
 package no.mesan.testdatagen.recordgen
 
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import org.scalatest.FunSuite
+import no.mesan.testdatagen.Printer
 import no.mesan.testdatagen.aggreg.SomeNulls
 import no.mesan.testdatagen.generators.{Chars, Dates, Ints, Strings}
 import no.mesan.testdatagen.generators.misc.{Names, Urls}
-
-import no.mesan.testdatagen.Printer
 
 @RunWith(classOf[JUnitRunner])
 class XmlGeneratorSuite extends FunSuite with Printer {

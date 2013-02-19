@@ -324,6 +324,16 @@ Builds email addresses using this pattern:
 # "."
 # com/no/org/net/co.uk/gov
 
+h3. Guids
+This generator is a (perhaps too) simple generator for GUIDs, basically 128-bits integers, NOT following the rules laid out in [http://www.ietf.org/rfc/rfc4122.txt] etc.
+There are 3 get-methods (and only a default apply method):
+# {{get(n)}}: returns a list of {quote}Seq[Int]{quote}, with 4 positive longs; with 32, 16, 16 and 64 bits respectively (negative numbers are not generated)
+# {{getStrings(n)}}: the numbers are formatted as hex strings in the format "hhhhhhhh-hhhh-hhhh-hhhhhhhhhhhhhhhh" (unless you call {{formatWith}} with another formatter)
+#* If you need something like the standard Windows references, you can use a {{TextWrapper}}, e.g. {qc}TextWrapper(Guids()) surroundWith("{", "}") toUpper{qc}, which returns strings like {qc}{0B9F2CC4-7A26-DF88-57BFACEB0A6152C3}{qc}
+# {{getBigInts(n)}}: the values are returned as actual 128-bit ints, like {{135552048303739552162038533024056166383}}
+
+The {{filter}} method is _not_ supported for this generator.
+
 h3. CreditCards
 This generator by default generates 16-digit credit card numbers from Visa or MasterCard, but you can instruct it otherwise through its generic apply method. The last digit is generated using Luhn's algorithm ([http://en.wikipedia.org/wiki/Luhn_algorithm], see also [http://en.wikipedia.org/wiki/Credit_card_number]).
 There are 4 different "apply" methods:

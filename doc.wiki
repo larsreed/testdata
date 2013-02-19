@@ -342,7 +342,7 @@ No class, just an apply method without parameters.
 Generates strings resembling Norwegian car license plates -- 2 uppercase letters (not I, M, O or Q) followed by 5 digits (use a TextWrapper to shorten them if you need).
 
 h4. Fnr
-Generates a legal "fodselsnummer", Norwegian "social security numbers" ([http://no.wikipedia.org/wiki/F%C3%B8dselsnummer]). These are strings of 11 digits:
+Generates legal "fodselsnummer", Norwegian "social security numbers" ([http://no.wikipedia.org/wiki/F%C3%B8dselsnummer]). These are strings of 11 digits:
 # Birth date -- "ddmmyy"
 # A random 3-digit ID code
 # 2 check digits (using two mod11 algorithms)
@@ -358,6 +358,14 @@ Add a call to {{withDnr(n)}} to generate such numbers -- n is a percentage betwe
 *Apply methods*
 # Standard no-args
 # {qc}Fnr(ExtendedGenerator[DateTime]){qc}: (e.g. {{Dates}}) to govern which dates are produced.  See the long sample at the end of the article.
+
+h4. Orgnr
+Generates legal "organisasjonsnummer", Norwegian "organization numbers" ([http://www.brreg.no/samordning/organisasjonsnummeret.html]). These are strings of 9 digits:
+# The first digit is 8 or 9
+# The last digit is a mod11 check digit
+
+*Apply methods*
+# Standard no-args
 
 h4. Land
 (Country generator.)

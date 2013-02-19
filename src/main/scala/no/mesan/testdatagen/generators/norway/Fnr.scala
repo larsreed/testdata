@@ -9,7 +9,6 @@ import no.mesan.testdatagen.generators.{Dates, Ints}
  * Generate Norwegian "foedselsnummer" (social registration numbers).
  * Special methods: withDnr -- add an amount of "D numbers" (see below)
  *                  boys/girlsOnly
- * Default limits: Always random, the letters IMOQ are never used.
  */
 class Fnr(dateGenerator:ExtendedGenerator[DateTime]) extends GeneratorImpl[String] with Percentage {
 
@@ -41,6 +40,7 @@ class Fnr(dateGenerator:ExtendedGenerator[DateTime]) extends GeneratorImpl[Strin
     else intGen.get(1))
 
   override def get(n:Int): List[String]= {
+    require(n>=0, "cannot get negative count")
     val fakt1= List(3, 7, 6, 1, 8, 9, 4, 5, 2)
     val fakt2= List(5, 4, 3, 2, 7, 6, 5, 4, 3, 2)
 

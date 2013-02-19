@@ -179,7 +179,14 @@ returns ints from the entire range.  The only special method is
 * {{step(Int)}} to define step size for sequences
 
 Apply methods (defaults for all parameters):
-* {{Ints(from:Int=Integer.MIN_VALUE, to:Int=Integer.MAX_VALUE, step:Int=1)}}
+* {{Ints(from:Int=Int.MinValue+1, to:Int=Int.MaxValue-1, step:Int=1)}}
+
+h3. Longs
+returns longs from the entire range.  The only special method is
+* {{step(Long)}} to define step size for sequences
+
+Apply methods (defaults for all parameters):
+* {{Longs(from:Long=0, to:Long=Long.MaxValue-1, step:Int=1)}} (note default 0 for start)
 
 h3. Chars
 uses {{ExtendedDelegate}} and a 1-character {{Strings}}-generator to do its work.  It adds

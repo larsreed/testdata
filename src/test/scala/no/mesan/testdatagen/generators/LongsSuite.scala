@@ -3,17 +3,18 @@ package no.mesan.testdatagen.generators
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
-
 import no.mesan.testdatagen.Printer
+import org.scalatest.FunSuite
 
 @RunWith(classOf[JUnitRunner])
-class IntsSuite extends FunSuite with Printer {
+class LongsSuite extends FunSuite with Printer {
   
-  def generator= Ints()
+  def generator= Longs()
 
   print(false) {
-    println(generator.from(4).to(44).get(30))
-    println(generator.step(7).from(4).to(44).reversed.get(30))
+    println(generator from(4) to(44) get(30))
+    println(generator step(7) from(4) to(44) reversed() get(30))
+    println(generator from (Long.MinValue) get(30))
   }
 
   test("from<to") {
@@ -39,39 +40,39 @@ class IntsSuite extends FunSuite with Printer {
 
   test("limits") {
     intercept[IllegalArgumentException] {
-      generator.from(Int.MinValue).get(1)
+      generator.from(Long.MinValue).get(1)
     }
     intercept[IllegalArgumentException] {
-      generator.to(Int.MaxValue).get(1)
+      generator.to(Long.MaxValue).get(1)
     }
   }
 
   test("normal sequence") {
-    assert(generator.sequential.from(-2).to(2).get(5) === List(-2, -1, 0, 1, 2))
+    assert(generator.sequential.from(-2).to(2).get(5) === List(-2L, -1L, 0L, 1L, 2L))
   }
 
   test("sequence that overflows") {
-    assert(generator.step(2).sequential.from(1).to(6).get(5) === List(1, 3, 5, 1, 3))
+    assert(generator.step(2).sequential.from(1).to(6).get(5) === List(1L, 3L, 5L, 1L, 3L))
   }
 
   test("wrap the edge") {
-    assert(generator.sequential.from(Int.MaxValue-3).get(5) === 
-      List(Int.MaxValue-3, Int.MaxValue-2, Int.MaxValue-1, Int.MaxValue-3, Int.MaxValue-2))
-    assert(generator.reversed.to(Int.MinValue+3).get(5) === 
-      List(Int.MinValue+3, Int.MinValue+2, Int.MinValue+1, Int.MinValue+3, Int.MinValue+2))
+    assert(generator.sequential.from(Long.MaxValue-3).get(5) === 
+      List(Long.MaxValue-3, Long.MaxValue-2, Long.MaxValue-1, Long.MaxValue-3, Long.MaxValue-2))
+    assert(generator.reversed.from(Long.MinValue+1).to(Long.MinValue+3).get(5) === 
+      List(Long.MinValue+3, Long.MinValue+2, Long.MinValue+1, Long.MinValue+3, Long.MinValue+2))
   }
 
   test("reverted sequence") {
-    assert(generator.from(1).to(6).reversed.get(5) === List(6, 5, 4, 3, 2))
+    assert(generator.from(1).to(6).reversed.get(5) === List(6L, 5L, 4L, 3L, 2L))
   }
 
   test("negative step ignored") {
-    assert(generator.step(-3).sequential.from(1).to(6).get(5) === List(1, 4, 1, 4, 1))
+    assert(generator.step(-3).sequential.from(1).to(6).get(5) === List(1L, 4L, 1L, 4L, 1L))
   }
 
   test("sequence of 1 & 2") {
-    assert(generator.sequential.from(19278).to(19278).get(2) === List(19278, 19278))
-    assert(generator.sequential.from(19278).to(19279).get(2) === List(19278, 19279))
+    assert(generator.sequential.from(19278).to(19278).get(2) === List(19278L, 19278L))
+    assert(generator.sequential.from(19278).to(19279).get(2) === List(19278L, 19279L))
   }
 
   test("0 sequential elements") {

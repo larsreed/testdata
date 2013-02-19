@@ -6,36 +6,37 @@ import scala.util.Random
 import no.mesan.testdatagen.SingleGenerator
 
 /**
- * Generate ints.
+ * Generate longs.
  * Special methods: step(n) -- only used for sequential generation -- sets the step size (default 1)
- * Default limits: Int.MinValue .. Int.MaxValue-1
+ * Default limits: 0 .. Long.MaxValue
  */
-class Ints extends SingleGenerator[Int] {
+class Longs extends SingleGenerator[Long] {
 
   filter(x=> lower match { case Some(low)=>  x>=low;  case _=> true })
   filter(x=> upper match { case Some(high)=> x<=high; case _=> true })
 
-  private var stepSize: Int= 1
+
+  private var stepSize: Long= 1
   /** Step size, used only for sequential values. */
-  def step(s: Int): Ints= {
+  def step(s: Long): this.type= {
     require(s!=0, "Step cannot be 0")
     stepSize= math.abs(s)
     this
   }
 
-  override def get(n: Int): List[Int] = {
+  override def get(n: Int): List[Long] = {
     require(n>=0, "cannot get negative count")
-    val min= lower.getOrElse(Int.MinValue+1)
-    val max= upper.getOrElse(Int.MaxValue-1)
+    val min= lower.getOrElse(0L)
+    val max= upper.getOrElse(Long.MaxValue-1)
     require(max>=min, "from >= to")
-    require(max<Int.MaxValue, "max < " + Int.MaxValue)
-    require(min>Int.MinValue, "min > " + Int.MinValue)
+    require(max<Long.MaxValue, "max < " + Long.MaxValue)
+    require(min>Long.MinValue, "min > " + Long.MinValue)
 
+    val span= BigInt(max) - BigInt(min)
     var step= if (isReversed) -stepSize else stepSize
-    val span= (max+0L)-(min+0L)
 
-    def getSequentially(): List[Int]= {
-      @tailrec def next(last: Int, soFar:List[Int]): List[Int]=
+    def getSequentially(): List[Long]= {
+      @tailrec def next(last: Long, soFar:List[Long]): List[Long]=
         if (soFar.length>=n) soFar
         else {
           val k= if (last>max) min else if (last<min) max else last
@@ -47,11 +48,10 @@ class Ints extends SingleGenerator[Int] {
     }
 
     @tailrec
-    def getRandomly(soFar: List[Int]): List[Int]=
+    def getRandomly(soFar: List[Long]): List[Long]=
       if (soFar.length>=n) soFar
       else {
-        val nxt= min + (if (span<=Int.MaxValue) Random.nextInt(span.toInt)
-                        else Random.nextInt())
+        val nxt= (min + (BigInt(Random.nextLong()) mod span)).toLong
         if (filterAll(nxt)  && (!isUnique || !(soFar contains nxt)))
           getRandomly(nxt::soFar)
         else getRandomly(soFar)
@@ -63,7 +63,7 @@ class Ints extends SingleGenerator[Int] {
 
 }
 
-object Ints {
-  def apply(from:Int=Int.MinValue+1, to:Int=Int.MaxValue-1, step:Int=1): Ints=
-    new Ints().from(from).to(to).step(step)
+object Longs {
+  def apply(from:Long=0, to:Long=Long.MaxValue-1, step:Long=1): Longs=
+    new Longs() from(from) to(to) step(step)
 }

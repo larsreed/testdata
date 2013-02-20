@@ -6,7 +6,13 @@ import no.mesan.testdatagen.GeneratorImpl
 import no.mesan.testdatagen.generators.{FromList, Ints}
 
 /**
- * Generate credit card numbers.
+ * This generator by default generates 16-digit credit card numbers from Visa or MasterCard,
+ * but you can instruct it otherwise through its generic apply method.
+ * The last digit is generated using Luhn's algorithm
+ * (http://en.wikipedia.org/wiki/Luhn_algorithm], see also 
+ * http://en.wikipedia.org/wiki/Credit_card_number).
+ *
+ * @author lre
  */
 class CreditCards (prefixes: List[Long], length:Int) extends GeneratorImpl[Long] {
 
@@ -52,7 +58,9 @@ object CreditCards {
   private val masterCard= (51L to 55L).toList
   private val visa= List(4L)
   def apply(): CreditCards = new CreditCards(masterCard ::: visa, stdLength)
-  def visas : CreditCards = new CreditCards(visa, stdLength)
-  def masterCards: CreditCards= new CreditCards(masterCard, stdLength)
   def apply(prefixes: List[Long], length: Int): CreditCards= new CreditCards(prefixes, length)
+  /** Generate Visa numbers only. */
+  def visas : CreditCards = new CreditCards(visa, stdLength)
+  /** Generate Mastercard numbers only. */
+  def masterCards: CreditCards= new CreditCards(masterCard, stdLength)
 }

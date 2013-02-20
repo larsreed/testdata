@@ -5,6 +5,15 @@ import scala.util.Random
 
 import no.mesan.testdatagen.{Generator, GeneratorImpl}
 
+/**
+ * This generator takes one or more generators as input, and selects randomly between
+ * them for each value to generate. It is typed as a Generator[Any], since it can wrap
+ * a free mix of generator types.
+ * Each generator is given a weight -- the probability for each one is its own weight
+ * relative to the sum of all weights.
+ *
+ * @author lre
+ */
 class WeightedGenerator extends GeneratorImpl[Any] {
 
   type GenList= List[(Int,Generator[_])]
@@ -12,13 +21,14 @@ class WeightedGenerator extends GeneratorImpl[Any] {
 
   private var generators: GenList= Nil
 
+  /** Add a generator with a relative weight. */
   def add(weight: Int, gen: Generator[_]): WeightedGenerator= {
     generators ::= (weight, gen)
     this
   }
 
 
-  def getList(strings: Boolean, n: Int): List[Any] = {
+  private def getList(strings: Boolean, n: Int): List[Any] = {
     val weightedList: ExpandedList= {
       def create(sum: Int, soFar: ExpandedList, left: GenList): ExpandedList= {
         if ( left.isEmpty ) soFar
@@ -46,8 +56,9 @@ class WeightedGenerator extends GeneratorImpl[Any] {
   }
 
   override def get(n: Int): List[Any] = getList(false, n)
+
   override def getStrings(n: Int): List[String] =
-    getList(true, n).map(x=> if (x==null) "" else x.toString)
+    getList(true, n).map(x=> if (x==null) null else x.toString)
 
 }
 

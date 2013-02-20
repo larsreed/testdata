@@ -6,8 +6,9 @@ import no.mesan.testdatagen.generators.{Ints, Strings}
 
 /**
  * Generate Norwegian car number plates.
- * Special methods:
- * Default limits: Always random, the letters IMOQ are never used.
+ * Always random, the letters IMOQ are never used.
+ *
+ * @author lre
  */
 object Kjennemerker {
   def apply(): Generator[String] = new FieldConcatenator().

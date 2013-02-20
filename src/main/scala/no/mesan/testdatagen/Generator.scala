@@ -4,18 +4,35 @@ package no.mesan.testdatagen
  * This is the main testdata generator interface.
  * For default implementation -- see GeneratorImpl.
  * For more functions, see ExtendedGenerator.
+ * 
+ * Most methods return this.type (ending up in the type of the
+ * class implementing the trait), to allow _builders_ like
+ * Ints() from(1) to(10) reversed.
+ *
+ * @author lre
  */
 trait Generator[+T] {
-  /** Get the next n entries. */
+  /** The main function - provide a list of n entries. */
   def get(n: Int): List[T]
 
   /** Get n entries converted to strings and formatted. */
   def getStrings(n: Int): List[String]
 
-  /** Add a filter function. */
+  /** 
+   * Add a filter function that takes an instance of the 
+   *  generator's type and returns  true if the instance should be 
+   *  included in the list. Should be applied before constructing
+   *  the final list (to ensure that get(n) actually contains n
+   *  elements). The function may be called several times to add
+   *  multiple filters to apply -- each filter must accept the
+   *  instance to include it in the final list.
+   */
   def filter(f: T => Boolean): this.type
 
-  /** Set a formatting function. */
+  /** 
+   * Adds a formatting function that takes an instance of the given
+   *  type T and formats it as a string.
+   */
   def formatWith(f: T => String): this.type
 }
 
@@ -23,10 +40,26 @@ trait Generator[+T] {
 /**
  * An extended generator interface for limiting and ordering output.
  * SingleGenerator implements this interface.
+ *
+ * As the method definitions imply, generators will by default
+ * pick _random_ sequences from their value space (the range of
+ * the underlying data type(s), possibly limited by from/to-arguments).
+ * When unique() is added, it will check to see that the same value is
+ * never drawn twice.  For generators with a limited value space, you
+ * should be careful with this setting -- FromList(1,2).unique.get(3)
+ * will probably crash or run forever...
+ * The methods sequential and reversed (and for some subclasses, a step
+ * method) change this behaviour -- instead a series of increasing
+ * (or decreasing) values will be produced.
+ *
+ * @author lre
  */
 trait ExtendedGenerator[T] extends Generator[T] {
 
-  /** Set a formatting string. */
+  /**
+   * A simpler way to define a formatting function, by providing a
+   * simple format string for java.lang.String.format.
+   */
   def format(f: String): this.type
 
   /** Lower bound.  */
@@ -35,43 +68,64 @@ trait ExtendedGenerator[T] extends Generator[T] {
   /** Upper bound. */
   def to(max: T): this.type
 
-  /** Generate sequential, not random. */
+  /**
+   * Signals that sequential values are to be generated (subclasses may
+   *  define a step size) -- by default, random values are generated.
+   * Generation starts at the lower bound, generating towards the upper.
+   * If the upper bound is reached without providing the wanted _n_ occurrences,
+   * it wraps around from the start.
+   */
   def sequential: this.type
 
-  /** Generate unique, random values. */
+  /** 
+   * Calling this sets the generation to random, and then checks to see
+   * that each generated value is unique.
+   */
   def unique: this.type
 
-  /** Generate reversed sequential values. */
+  /**
+   * Calling this implies a call to sequential();
+   * additionally, generation starts at the upper bound, stepping towards
+   * the lower. 
+   */
   def reversed: this.type
 }
 
 
-/** A default implementation of the Generator interface. */
+/** 
+ * A default implementation of the Generator interface.
+ *
+ * @author lre
+ */
 trait GeneratorImpl[T] extends Generator[T] {
 
   private var filterFuns: List[T => Boolean] = List((t => true))
-  /** Add a filter function. */
   override def filter(f: T => Boolean): this.type = { filterFuns ::= f; this }
 
   /** Check that all filters are satisfied. */
   protected def filterAll(t: T): Boolean = filterFuns.forall(f => f(t))
 
   private var formatFun: T => String = (t => if (t==null) null else t.toString)
-  /** Set a formatting function. */
   override def formatWith(f: T => String): this.type = { formatFun = f; this }
 
-  /** Get n entries converted to strings and formatted. */
   override def getStrings(n: Int): List[String] = get(n).map(formatFun)
 }
 
-/** A trait to help build delegates for ExtendedGenerators. */
+/** 
+ * A trait to help build delegates for ExtendedGenerators.
+ *
+ * @author lre
+ */
 trait ExtendedDelegate[G, T]   {
   self: ExtendedGenerator[T] =>
 
+  /** The delegate. */
   protected var generator: ExtendedGenerator[G]
 
-  def conv2gen(f: T): G = f.asInstanceOf[G]
-  def conv2result(f: G): T= f.asInstanceOf[T]
+  /** Convert from this type to the generator's type. */
+  protected def conv2gen(f: T): G = f.asInstanceOf[G]
+  /** Convert from the generator's type to thiss type. */
+  protected def conv2result(f: G): T= f.asInstanceOf[T]
 
   override def format(f: String): self.type = { generator.format(f); this }
   override def formatWith(f: T => String): self.type= { generator.formatWith(v=> f(conv2result(v))); this }

@@ -5,7 +5,11 @@ import scala.collection.immutable.List
 import no.mesan.testdatagen.{Generator, GeneratorImpl}
 
 /**
- * Transform to text output, optionally transform the result.
+ * This generator takes any other generator as input, always uses its 
+ * getStrings(n) as input, thus acting as "text converter", and adds methods to 
+ * manipulate the resulting text.
+ *
+ * @author lre
  */
 class TextWrapper(generator:Generator[_]) extends GeneratorImpl[String] {
 

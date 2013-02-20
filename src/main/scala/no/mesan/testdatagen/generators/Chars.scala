@@ -5,9 +5,9 @@ import no.mesan.testdatagen.ExtendedDelegate
 
 /**
  * Generate Chars.
- * Special methods: chars(seq) -- accepted characters
- * Defaults: length 1, from a(s) to z(s)
+ * Defaults: length 1, from a to z
  *
+ * @author lre
  */
 class Chars extends ExtendedGenerator[Char] with ExtendedDelegate[String, Char] {
 

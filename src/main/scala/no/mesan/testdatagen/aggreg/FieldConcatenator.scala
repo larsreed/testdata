@@ -4,9 +4,18 @@ import scala.collection.immutable.List
 
 import no.mesan.testdatagen.{Generator, GeneratorImpl}
 
+/**
+ * The FieldConcatenator is given a set of generators with the add method.
+ *  When get is called, it calls getString on each of its generators, and
+ *  concatenates the output from each generator (in the same order as the
+ *  add calls), and returns the list of concatenated strings.
+ *
+ * @author lre
+ */
 class FieldConcatenator extends GeneratorImpl[String] {
   private var generators: List[Generator[_]] = Nil
 
+  /** Add another field. */
   def add(g: Generator[_]): FieldConcatenator = { generators ::= g; FieldConcatenator.this }
 
   override def get(n: Int): List[String] = {

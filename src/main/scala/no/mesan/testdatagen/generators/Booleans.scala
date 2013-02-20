@@ -5,15 +5,16 @@ import scala.util.Random
 
 import no.mesan.testdatagen.SingleGenerator
 
-/**
+/** 
  * Generate booleans.
- * Special methods: format(falseString, trueString) -- alternative string representations
- * Default limits: false, true
+ *
+ * @author lre
  */
 class Booleans extends FromList[Boolean] {
 
   fromList(List(false, true))
 
+  /** How to format true/false in strings. */
   def format(falseString: String, trueString:String): this.type =
     formatWith((t:Boolean) => if (t) trueString else falseString)
 }

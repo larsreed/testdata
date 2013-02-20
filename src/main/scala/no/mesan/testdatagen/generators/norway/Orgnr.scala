@@ -4,7 +4,11 @@ import no.mesan.testdatagen.GeneratorImpl
 import no.mesan.testdatagen.generators.Ints
 
 /**
- * Generate Norwegian "organisasjonsnummer" (organization numbers).
+ * Generates legal "organisasjonsnummer", Norwegian "organization numbers"
+ * (http://www.brreg.no/samordning/organisasjonsnummeret.html).
+ * These are integers with 9 digits.
+ *
+ * @author lre
  */
 class Orgnr() extends GeneratorImpl[Int] {
 

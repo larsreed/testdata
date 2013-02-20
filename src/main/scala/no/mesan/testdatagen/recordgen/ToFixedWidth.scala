@@ -2,6 +2,11 @@ package no.mesan.testdatagen.recordgen
 
 import no.mesan.testdatagen.Generator
 
+/**
+ * This generator produces data in fixed width fields, where each value is padded 
+ * with blanks (or truncated) to a fixed width.
+ * The inherited add method cannot be used.
+ */
 class ToFixedWidth(withHeaders:Boolean) extends StringRecordGenerator(EmptyNull) {
   private def fix(s:String, width:Int)=
     if (s==null) " " * width
@@ -27,6 +32,7 @@ class ToFixedWidth(withHeaders:Boolean) extends StringRecordGenerator(EmptyNull)
 
   override def add(fieldName: String, gen: Generator[_])= throw new UnsupportedOperationException
 
+  /** Add a field, and specify width. */
   def add(fieldName: String, gen: Generator[_], width: Int): ToFixedWidth.this.type = {
     add(new FixedDataField(fieldName, gen, width))
     ToFixedWidth.this

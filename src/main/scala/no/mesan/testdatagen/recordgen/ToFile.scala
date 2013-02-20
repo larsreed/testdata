@@ -5,11 +5,19 @@ import java.nio.charset.Charset
 
 import no.mesan.testdatagen.Generator
 
+/**
+ * This generator is typically the end of a chain, and called implicitly
+ * by either toFile or appendToFile from a record generator,
+ * but may also be called through the apply method.
+ *
+ * @author lre
+ */
 class ToFile[T](fileName:String,
                          generator: Generator[T],
                          append:Boolean,
                          charSet:String) extends Generator[T] {
 
+  /** Writes a list of strings to a named file. */
   protected def toFile(list: List[String]) {
     val writer = new OutputStreamWriter(
                    new FileOutputStream(fileName, append), 
@@ -29,14 +37,12 @@ class ToFile[T](fileName:String,
     }
   }
 
-  /** Get the next n entries. */
   override def get(n: Int): List[T]= {
     var res= generator.get(n)
     toFile(res map {_.toString})
     res
   }
 
-  /** Get n entries converted to strings and formatted. */
   override def getStrings(n: Int): List[String]= {
     var res= generator.getStrings(n)
     toFile(res)

@@ -7,8 +7,9 @@ import no.mesan.testdatagen.SingleGenerator
 
 /**
  * Generate doubles.
- * Special methods: step(n) -- only used for sequential generation -- sets the step size (default 1)
  * Default limits: Double.MIN/MAX_VALUE
+ *
+ * @author lre
  */
 class Doubles extends SingleGenerator[Double] {
 

@@ -7,11 +7,14 @@ import scala.xml.NodeSeq.seqToNodeSeq
  * Generate HTML, either a simple table or a complete page (the latter if a title is given).
  * The get method returns NodeSeqs, while getStrings
  * converts the result to a somewhat indented string format...
+ *
+ * @author lre
  */
 class ToHtml(pageTitle: String, nulls:NullHandler) extends XmlGenerator(nulls) {
 
   override def get(n: Int): List[NodeSeq] = {
     require(fields.size>0, "at least one  must be given")
+
     def getRecord(rec: DataRecord)=  List[NodeSeq] {
       rec.map{
         case (tag, null)=> nulls match {

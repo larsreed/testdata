@@ -13,16 +13,10 @@ import no.mesan.testdatagen.SingleGenerator
 
 /**
  * Generate dates.
- * Special methods: from/to(y, m, d) -- with integer parts
- *                  from/to(java.util.Date)
- *                  from/to(h,m,s,ms) -- integers
- *                  step(y,m,d) -- integers
- *                  step(h,m,s,ms) -- integers
- *                  step(Period)
- *                  format(DateTomeFormat)
- *                  withDate/Time(boolean) to show date/time
  * Default limits: 1 day sequential steps
  *                 dates between 1753.01.01 and 9999.12.31
+ *
+ * @author lre
  */
 class Dates extends SingleGenerator[DateTime] {
 
@@ -32,7 +26,6 @@ class Dates extends SingleGenerator[DateTime] {
   filter(x=> upper match { case Some(high)=> x<=high; case _=> true })
 
   private var stepPeriod: Period= new Period(0, 0, 0, 1, 0, 0, 0, 0)
-
   private var showDate= true
   private var showTime= false
 
@@ -104,7 +97,7 @@ class Dates extends SingleGenerator[DateTime] {
     sequential
   }
 
-  /* Steps for sequential dates. */
+  /* Steps for sequential dates givens as a Joda Period. */
   def step(p: Period): this.type = { stepPeriod= p; this }
 
   /* Format using a Joda-Time formatter. */

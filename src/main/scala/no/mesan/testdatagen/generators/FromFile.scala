@@ -7,27 +7,35 @@ import scala.io.Source
 import no.mesan.testdatagen.{ExtendedDelegate, ExtendedGenerator}
 
 /**
- * Generate values based on lists.
+ * This generator reads lines from an input file and creates a list of values,
+ * from which a delegate FromList can take its values. The values may be typed
+ * (does not currently work as expected...), even though they are read as strings.
+ *
  * Special methods: from/to/unique -- not supported
  * Default limits: n/a
+ *
+ * @author lre
  */
 class FromFile[T](fileName: String, encoding:String) extends ExtendedGenerator[T]
   with ExtendedDelegate[T, T] {
 
   private var listGen=new FromList[T]()
-  var generator: ExtendedGenerator[T]= listGen // For the trait
+  protected var generator: ExtendedGenerator[T]= listGen // For the trait
 
+  /** Not supported. */
   override def from(f:T) = throw new UnsupportedOperationException
+  /** Not supported. */
   override def to(f:T) = throw new UnsupportedOperationException
 
   private var filterFuns: List[T => Boolean] = List((t => true))
   override def filter(f: T => Boolean): this.type = { filterFuns ::= f; this }
 
   private var readAll= false
+  /** Choose if only N, or all lines, are read when generating N values. */
   def allLines(all:Boolean=true): this.type = { readAll= all; this }
 
   private def fileAsStream(fileName:String) = {
-    try {
+    try { // Try direct file access first, otherwise class path
       Source.fromFile(fileName, encoding)
     }
     catch {

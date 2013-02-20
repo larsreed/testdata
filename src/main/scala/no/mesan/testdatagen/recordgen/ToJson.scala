@@ -2,8 +2,24 @@ package no.mesan.testdatagen.recordgen
 
 import no.mesan.testdatagen.Generator
 
+/**
+ * No prize for guessing the output format from this generator...
+ *
+ * There are two different add methods, the familiar add method, and a similar
+ * addQuoted, the latter should be used for any values that need double-quoted
+ * output (almost anything but ints, booleans and nested JSON; nulls are not quoted).
+ *
+ * The apply method has 3 parameters:
+ * 1. header: This is the label for each record (ignored if bare, see below)
+ * 2. bare: This is intended for nesting JSON-generators.
+ *    If you want to generate embedded records, use bare=true for the inner generators
+ * 3. null handler
+ *
+ * @author lre
+ */
 class ToJson(nulls:NullHandler, header:String, bare:Boolean) extends StringRecordGenerator(nulls) {
 
+  /** Add a field that needs quoting of values. */
   def addQuoted(fieldName: String, gen: Generator[_]): this.type = {
     add(new DoubleQuoteWithEscapeDataField(fieldName, gen))
     this

@@ -8,7 +8,9 @@ import no.mesan.testdatagen.SingleGenerator
 /**
  * Generate longs.
  * Special methods: step(n) -- only used for sequential generation -- sets the step size (default 1)
- * Default limits: 0 .. Long.MaxValue
+ * Default limits: 0 .. Long.MaxValue-1
+ *
+ * @author lre
  */
 class Longs extends SingleGenerator[Long] {
 
@@ -60,7 +62,6 @@ class Longs extends SingleGenerator[Long] {
     if (isSequential) getSequentially
     else getRandomly(Nil)
   }
-
 }
 
 object Longs {

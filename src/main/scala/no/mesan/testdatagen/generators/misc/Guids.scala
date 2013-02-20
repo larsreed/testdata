@@ -6,6 +6,8 @@ import no.mesan.testdatagen.generators.{Ints, Longs}
 /**
  * Generate simple GUIDs.  The rules of http://www.ietf.org/rfc/rfc4122.txt are NOT followed,
  * these are only random 128-bit integers.
+ *
+ * @author lre
  */
 class Guids extends GeneratorImpl[Seq[Long]] {
   private val p1Gen= Ints() from(0)

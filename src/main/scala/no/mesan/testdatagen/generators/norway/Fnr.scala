@@ -9,6 +9,8 @@ import no.mesan.testdatagen.generators.{Dates, Ints}
  * Generate Norwegian "foedselsnummer" (social registration numbers).
  * Special methods: withDnr -- add an amount of "D numbers" (see below)
  *                  boys/girlsOnly
+ *
+ * @author lre
  */
 class Fnr(dateGenerator:ExtendedGenerator[DateTime]) extends GeneratorImpl[String] with Percentage {
 

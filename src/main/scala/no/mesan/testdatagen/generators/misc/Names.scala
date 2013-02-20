@@ -5,8 +5,13 @@ import no.mesan.testdatagen.aggreg.FieldConcatenator
 import no.mesan.testdatagen.generators.Strings
 
 /**
- * Generate name-like strings...
+ * Creates "name-like" strings -- words containing A-Zs with random length between
+ * 3 and 20 with an uppercase first letter.  This is only a wrapper object around
+ * a Strings generator, its only parameter is an int telling how many
+ * space-separated words to create in each string.
  * Default limits: name length from 3 to 18, first letter upper case
+ *
+ * @author lre
  */
 object Names {
   private val pfxChars= "ABDEFGHIJKLMNOPRSTUVY"*12 +

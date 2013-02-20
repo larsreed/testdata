@@ -6,9 +6,11 @@ import scala.util.Random
 import no.mesan.testdatagen.SingleGenerator
 
 /**
- * Generate ints.
+ * Generate Ints.
  * Special methods: step(n) -- only used for sequential generation -- sets the step size (default 1)
- * Default limits: Int.MinValue .. Int.MaxValue-1
+ * Default limits: Int.MinValue+1 .. Int.MaxValue-1
+ *
+ * @author lre
  */
 class Ints extends SingleGenerator[Int] {
 
@@ -60,7 +62,6 @@ class Ints extends SingleGenerator[Int] {
     if (isSequential) getSequentially
     else getRandomly(Nil)
   }
-
 }
 
 object Ints {

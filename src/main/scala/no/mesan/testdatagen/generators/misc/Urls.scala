@@ -6,8 +6,9 @@ import no.mesan.testdatagen.generators.{FromList, Strings}
 
 /**
  * Generate URL-like strings...
- * Special methods:
- * Default limits: Pattern: http(s)://(www.)4-10.dom
+ * Pattern: http(s)://(www.)4-10.dom
+ *
+ * @author lre
  */
 object Urls {
   def apply(): Generator[String] = {

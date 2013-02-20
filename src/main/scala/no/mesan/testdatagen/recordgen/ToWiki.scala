@@ -2,6 +2,11 @@ package no.mesan.testdatagen.recordgen
 
 import no.mesan.testdatagen.Generator
 
+/**
+ * A data field with special handling of pipes and line feeds.
+ *
+ * @author lre
+ */
 class WikiDataField(name: String, generator: Generator[_])
       extends DataField(name, generator) {
   override def transform(s: String): String =
@@ -10,6 +15,11 @@ class WikiDataField(name: String, generator: Generator[_])
            replaceAll("[\n\r]+" , """\\\\""")
 }
 
+/**
+ * Outputs data as a wiki table (Confluence wiki markup).
+ *
+ * @author lre
+ */
 class ToWiki() extends StringRecordGenerator(EmptyNull) {
   override protected def recordPrefix = "| "
   override protected def recordSuffix = " |"

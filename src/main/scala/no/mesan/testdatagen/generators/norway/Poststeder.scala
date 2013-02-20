@@ -6,15 +6,18 @@ import no.mesan.testdatagen.generators.FromFile
 
 /**
  * Generate Norwegian postal codes -- format NNNN Name, where NNNN is an integer.
- * Use TextWrapper to get at the code/name parts separately.
+ *
+ * @author lre
  */
 object Poststeder {
   def apply(allLines:Boolean=true): ExtendedGenerator[String]=
     FromFile("postnr.txt", allLines)
 
+  /** Return the number part part only. */
   def postnr(allLines:Boolean=true): Generator[String] =
     TextWrapper(apply(allLines)).substring(0, 4)
 
+  /** Return the name part part only. */
   def poststed(allLines:Boolean=true): Generator[String] =
     TextWrapper(apply(allLines)).substring(5)
 }

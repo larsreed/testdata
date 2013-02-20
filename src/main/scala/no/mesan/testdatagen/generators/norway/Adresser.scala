@@ -4,8 +4,15 @@ import no.mesan.testdatagen.Generator
 import no.mesan.testdatagen.aggreg.{FieldConcatenator, WeightedGenerator}
 import no.mesan.testdatagen.generators.{Chars, Fixed, FromList, Ints}
 
+/**
+ * A generator to create strings that look like Norwegian street addresses.
+ * It uses surnames (from NorskeNavn.kunEtternavn) and places (from
+ * Poststeder.poststed), and optionally a house number (sometimes with a letter suffix).
+ *
+ * @author lre
+ */
 class Adresser(withNumbers:Boolean) {
-  val streetGenerator=
+  private val streetGenerator=
     FieldConcatenator()
       .add(WeightedGenerator()
            .add(3, FieldConcatenator()
@@ -19,7 +26,7 @@ class Adresser(withNumbers:Boolean) {
                    add(FromList("gate", "vei", "plass"))
                )
           )
-  val numberGenerator=
+  private val numberGenerator=
     FieldConcatenator()
        .add(Fixed(" "))
        .add(Ints() from(1) to(120))

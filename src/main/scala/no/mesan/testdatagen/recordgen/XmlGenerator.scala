@@ -1,17 +1,15 @@
 package no.mesan.testdatagen.recordgen
 
-import scala.xml.{Attribute, NodeSeq, Null, Text}
-import no.mesan.testdatagen.Generator
-import scala.xml.NodeSeq
-import scala.xml.PrettyPrinter
+import scala.xml.{Attribute, NodeSeq, Null, PrettyPrinter, Text}
 
 /**
  * Generate XML, either a record sequence or records collected under
  * one common root.  The get method returns NodeSeqs, while getStrings
  * converts the result to a somewhat indented string format...
+ *
+ * @author lre
  */
 abstract class XmlGenerator(nulls:NullHandler) extends DataRecordGenerator[NodeSeq](nulls) {
-
   override def getStrings(n: Int): List[String] = {
     val data= get(n)
     val printer= new PrettyPrinter(1000, 3)
@@ -19,11 +17,12 @@ abstract class XmlGenerator(nulls:NullHandler) extends DataRecordGenerator[NodeS
   }
 }
 
-
 /**
  * Generate XML, either a record sequence or records collected under
  * one common root.  The get method returns NodeSeqs, while getStrings
  * converts the result to a somewhat indented string format...
+ *
+ * @author lre
  */
 class ToXmlAttributes(rootName: String, recordName: String,
     nulls:NullHandler) extends XmlGenerator(nulls) {
@@ -61,6 +60,8 @@ class ToXmlAttributes(rootName: String, recordName: String,
  * converts the result to a somewhat indented string format...
  *
  * Possible extension: generate attributes, not elements
+ *
+ * @author lre
  */
 class ToXmlElements(rootName: String, recordName: String,
     nulls:NullHandler) extends XmlGenerator(nulls) {

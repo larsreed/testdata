@@ -301,6 +301,13 @@ Methods:
 Apply methods:
 * {{SomeNulls(percent, generator)}}: supply both the factor and the generator
 
+h3. WeightedGenerator
+This generator takes one or more generators as input, and selects randomly between them for each value to generate. It is typed as a {qc}Generator[Any]{qc}, since it can wrap a free mix of generator types.
+Each generator is given a weight -- the probability for each one is its own weight relative to the sum of all weights.
+
+* {qc}add(weight: Int, gen: Generator[_]){qc}
+* Apply: noargs
+
 
 h2. Specialized generators
 
@@ -308,7 +315,7 @@ h3. Names
 Creates "name-like" strings -- words containing A-Zs with random length between 3 and 20 with an uppercase first letter.  You can see some sample output in the product names in the introductory example.  This is only a wrapper object around a {{Strings}} generator, its only parameter is an int telling how many space-separated words to create in each string.
 
 h3. CarMakes
-This generator selects from a list of about a 100 manufactureres of cars, motor cycles etc, like "Porsche" and "Toyota".
+This generator selects from a list of about a 100 manufacturers of cars, motor cycles etc, like "Porsche" and "Toyota".
 No class, just an apply method without parameters returning a {{FromList}}.
 
 h3. Urls
@@ -327,10 +334,10 @@ Builds email addresses using this pattern:
 h3. Guids
 This generator is a (perhaps too) simple generator for GUIDs, basically 128-bits integers, NOT following the rules laid out in [http://www.ietf.org/rfc/rfc4122.txt] etc.
 There are 3 get-methods (and only a default apply method):
-# {{get(n)}}: returns a list of {quote}Seq[Int]{quote}, with 4 positive longs; with 32, 16, 16 and 64 bits respectively (negative numbers are not generated)
-# {{getStrings(n)}}: the numbers are formatted as hex strings in the format "hhhhhhhh-hhhh-hhhh-hhhhhhhhhhhhhhhh" (unless you call {{formatWith}} with another formatter)
+# {qc}get(n){qc}: returns a list of {qc}Seq[Int]{qc}, with 4 positive longs; with 32, 16, 16 and 64 bits respectively (negative numbers are not generated)
+# {qc}getStrings(n){qc}: the numbers are formatted as hex strings in the format "hhhhhhhh-hhhh-hhhh-hhhhhhhhhhhhhhhh" (unless you call {{formatWith}} with another formatter)
 #* If you need something like the standard Windows references, you can use a {{TextWrapper}}, e.g. {qc}TextWrapper(Guids()) surroundWith("{", "}") toUpper{qc}, which returns strings like {qc}{0B9F2CC4-7A26-DF88-57BFACEB0A6152C3}{qc}
-# {{getBigInts(n)}}: the values are returned as actual 128-bit ints, like {{135552048303739552162038533024056166383}}
+# {qc}getBigInts(n){qc}: the values are returned as actual 128-bit ints, like {{135552048303739552162038533024056166383}}
 
 The {{filter}} method is _not_ supported for this generator.
 
@@ -359,7 +366,7 @@ Generates legal "fodselsnummer", Norwegian "social security numbers" ([http://no
 
 There are several rules pertaining to these numbers, some of which are supported by the generator.
 # The date part usually starts with 01-31.  However, temporary numbers called D-numbers are issued, they add 40 to the birth day (i.e. 41-71).
-Add a call to {{withDnr(n)}} to generate such numbers -- n is a percentage between 0 (default, no dnrs) and 100 (all D-numbers).
+Add a call to {qc}withDnr(n){qc} to generate such numbers -- n is a percentage between 0 (default, no dnrs) and 100 (all D-numbers).
 # If you only want certain dates, use the apply method or constructor with an {qc}ExtendedGenerator[DateTime]{qc} argument (e.g. a {{Dates}} generator).
 # The 3-digit ID is given in intervals signifying century.  This is not supported by the generator.
 # The 3-digit ID is odd for men, even for women.  Call {{boysOnly}} og {{girlsOnly}} if you are a sexist.
@@ -404,7 +411,7 @@ h4. NorskeNavn
 (Generator for Norwegian names.)
 First a bit about the background for this generator...
 
-Over the years, I have "scraped" lists of names from the net -- tax lists, participants in conferences and sports events etc, and tried to normalize and uniquify these lists (this bears the risk of having first and last names mixed up, and wrong capitalization...).  Then I removed first and last names that only appeared once in any combination, to avoid generating names that identifies a single person.  To these lists, I added the list from Norwegian SSB (Staistics Norway) of the most popular names, from these I have extracted the lists of names in "fornavn.txt" (a little short of 5000 first names) and "etternavn.txt" (about 8300 last names).  The lists have no notion of gender, so you might well end up with names like "Ann Abdul Hansen"...
+Over the years, I have "scraped" lists of names from the net -- tax lists, participants in conferences and sports events etc, and tried to normalize and uniquify these lists (this bears the risk of having first and last names mixed up, and wrong capitalization...).  Then I removed first and last names that only appeared once in any combination, to avoid generating names that identifies a single person.  To these lists, I added the list from Norwegian SSB (Statistics Norway) of the most popular names, from these I have extracted the lists of names in "fornavn.txt" (a little short of 5000 first names) and "etternavn.txt" (about 8300 last names).  The lists have no notion of gender, so you might well end up with names like "Ann Abdul Hansen"...
 
 To generate names
 # You start with the the apply method -- {{NorskeNavn(allLines:Boolean=true)}} (with {{allLines=true}}, all 12500 names are read at least once)
@@ -417,6 +424,7 @@ It supports the {{allLines}} parameter of {{FromFile}}.
 
 h4. Adresser
 A generator to create strings that look like Norwegian street addresses.  It uses surnames (from {{NorskeNavn.kunEtternavn}}) and places (from {{Poststeder.poststed}}), and optionally a house number (sometimes with a letter suffix).
+Note that the class itself does _not_ implement a generator interface, but its {qc}generator(withNumbers:Boolean){qc} returns a generator (as does the apply method).
 
 Apply method:
 * {qc}Adresser(withNumbers: Boolean=true){qc}

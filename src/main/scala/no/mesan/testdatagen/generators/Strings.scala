@@ -12,6 +12,8 @@ import no.mesan.testdatagen.SingleGenerator
  *                  chars(seq) -- accepted characters
  * Defaults: length 1, from a(s) to z(s)
  *
+ *
+ * @author lre
  */
 class Strings extends SingleGenerator[String] {
 

@@ -6,6 +6,8 @@ import no.mesan.testdatagen.generators.{Fixed, FromList, Strings}
 
 /**
  * Generate mail-like strings...
+ *
+ * @author lre
  */
 object MailAddresses {
   def apply(): Generator[String] = {

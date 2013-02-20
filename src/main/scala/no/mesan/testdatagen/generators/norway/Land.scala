@@ -5,6 +5,8 @@ import no.mesan.testdatagen.generators.FromFile
 
 /**
  * Generate Norwegian country names.
+ *
+ * @author lre
  */
 object Land {
   def apply(allLines:Boolean=true): ExtendedGenerator[String]=

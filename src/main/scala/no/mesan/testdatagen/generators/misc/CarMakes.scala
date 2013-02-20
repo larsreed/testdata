@@ -4,9 +4,12 @@ import no.mesan.testdatagen.ExtendedGenerator
 import no.mesan.testdatagen.generators.FromList
 
 /**
- * Generate car makes.
- * Special methods: from/to/unique -- not supported
- * Default limits: 102 given makes
+ * This generator selects from a list of about a 100 manufacturers of cars,
+ * motor cycles etc, like "Porsche" and "Toyota".
+
+ * from/to/unique are not supported
+ *
+ * @author lre
  */
 object CarMakes {
   lazy val makes= List("Alfa Romeo", "Aston Martin", "Atlas", "Audi", "Austin",
@@ -26,5 +29,5 @@ object CarMakes {
      "Steyr", "Studebaker", "Subaru", "Suzuki", "Talbot", "Tempo", "Tesla",
      "Toyota", "Trabant", "Triumph", "Unimog", "Vauxhall", "Volga",
      "Volkswagen", "Volvo", "Yamaha", "Zundapp")
-  def apply(): ExtendedGenerator[String] = new FromList[String]().fromList(makes)
+  def apply(): ExtendedGenerator[String] = FromList(makes)
 }

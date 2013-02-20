@@ -6,15 +6,20 @@ import scala.util.Random
 import no.mesan.testdatagen.SingleGenerator
 
 /**
- * Generate values based on lists.
- * Special methods: from/to/unique -- not supported
+ * Probably the most versatile of all the generators, the FromList takes a list of
+ * "anything" as input and generates its values from that, it is typed (FromList[T]),
+ * so you keep the type of the input list.
+
+ * from/to/unique are not supported.
+ *
+ * @author lre
  */
 class FromList[T] extends SingleGenerator[T] {
 
   override def from(f:T) = throw new UnsupportedOperationException
   override def to(f:T) = throw new UnsupportedOperationException
 
-  var inputList: List[T]= null
+  protected var inputList: List[T]= null
   /** Enter the list of values. */
   def fromList(l: List[T]): this.type= { inputList= l; this }
 

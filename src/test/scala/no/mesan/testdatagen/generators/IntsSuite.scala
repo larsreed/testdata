@@ -37,15 +37,6 @@ class IntsSuite extends FunSuite with Printer {
     }
   }
 
-  test("limits") {
-    intercept[IllegalArgumentException] {
-      generator.from(Int.MinValue).get(1)
-    }
-    intercept[IllegalArgumentException] {
-      generator.to(Int.MaxValue).get(1)
-    }
-  }
-
   test("normal sequence") {
     assert(generator.sequential.from(-2).to(2).get(5) === List(-2, -1, 0, 1, 2))
   }

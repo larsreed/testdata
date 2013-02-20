@@ -11,7 +11,7 @@ import no.mesan.testdatagen.ExtendedDelegate
  */
 class Chars extends ExtendedGenerator[Char] with ExtendedDelegate[String, Char] {
 
-  var generator: ExtendedGenerator[String]= Strings(1)
+  protected var generator: ExtendedGenerator[String]= Strings(1)
 
   /** Set character range. */
   def chars(seq: Seq[Char]): this.type = { generator.asInstanceOf[Strings].chars(seq); this }

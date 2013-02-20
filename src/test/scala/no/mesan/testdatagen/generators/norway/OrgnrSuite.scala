@@ -21,8 +21,8 @@ class OrgnrSuite extends FunSuite with Printer {
     sjekk(digits, List(3, 2, 7, 6, 5, 4, 3, 2), 0)
   }
 
-  print(true) {
-    println(Orgnr() get(1200))
+  print(false) {
+    println(Orgnr() get(120))
   }
 
   test("negative get") {

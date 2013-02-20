@@ -14,10 +14,10 @@ object LongerSample extends App {
 
   val resultFile= "orders.sql"
 
-  val customerIds= FromList(Ints() from (1) to(10000) unique() get(totalCustomers))
+  val customerIds= FromList(Ints().from(1).to(10000).unique.get(totalCustomers))
   val birthDates= Dates() from (y=1921) to (y=1996) get(totalCustomers)
-  val productIds= FromList(Ints() from (1) to(100000) unique() get(totalProducts))
-  val orderIds= FromList(Ints() from (1) to(1000) unique() get(totalOrders)) sequential
+  val productIds= FromList(Ints().from(1).to(100000).unique.get(totalProducts))
+  val orderIds= FromList(Ints().from(1).to(1000).unique.get(totalOrders)) sequential
   val postSteder= FromList(Poststeder() get(totalCustomers)) sequential
 
   val customerGenerator= 

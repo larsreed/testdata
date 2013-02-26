@@ -351,6 +351,11 @@ There are 4 different "apply" methods:
 
 Additionally, you may add a call to {{unique()}}, to ensure unique values.
 
+h3. Fibonaccis
+You cannot write a set of generators in a functional language without a Fibonacci sequence generator. Thus...
+This generator is written in a tail recursive manner, supported by {{BigInt}}, thus calculating Fibonacci(500)==139423224561697880139724382870407283950070256587697307264108962948325571622863290691557658876222521294125, seemingly correct.
+You may use {{filter}} and {{formatWith}} as for other generators.
+
 h3. Norwegian custom generators
 These generators create data specific to Norwegian domains.  They use Norwegian names, as they are of limited value outside of Norway anyway.
 

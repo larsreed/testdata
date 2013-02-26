@@ -650,19 +650,25 @@ import no.mesan.testdatagen.generators.norway.{Adresser, Fnr, Poststeder}
 import no.mesan.testdatagen.recordgen.ToSql
 
 object LongerSample extends App {
+  // These are the total of numbers we will generate for the different categories
   val totalOrders= 200
   val totalProducts= totalOrders/2
   val totalCustomers= totalOrders/3
   val totalOrderLines= totalOrders*3
 
+  // We generate one script for all data
   val resultFile= "orders.sql"
 
+  // To be able to reuse values between records, we generate some values in advance,
+  // specifically IDs (for foreign keys) and dates (for correlation between birth dates
+  // and "fodselsnummer"
   val customerIds= FromList(Ints().from(1).to(10000).unique.get(totalCustomers))
   val birthDates= Dates() from (y=1921) to (y=1996) get(totalCustomers)
   val productIds= FromList(Ints().from(1).to(100000).unique.get(totalProducts))
   val orderIds= FromList(Ints().from(1).to(1000).unique.get(totalOrders)) sequential
   val postSteder= FromList(Poststeder() get(totalCustomers)) sequential
 
+  // Populating the customer table - no dependencies
   val customerGenerator=
     ToSql("customer")
     .add("id", customerIds)
@@ -672,6 +678,7 @@ object LongerSample extends App {
     .addQuoted("postnr", TextWrapper(postSteder).substring(0, 4))
     .addQuoted("poststed", TextWrapper(postSteder).substring(5))
 
+  // and products - no dependencies either
   val productGenerator=
     ToSql("product")
     .add("id", productIds)
@@ -679,6 +686,7 @@ object LongerSample extends App {
                          .add(60, Names(1))
                          .add(40, Names(2)))
 
+  // Orders are connected to customers through customerIds
   val orderGenerator=
     ToSql("order")
     .add("id", orderIds)
@@ -686,6 +694,7 @@ object LongerSample extends App {
     .add("customer", customerIds)
     .addQuoted("orderDate", Dates() from(y=2010) to(y=2013) format("yyyy-MM-dd"))
 
+  // And order_lines connected to orders and products
   val orderLineGenerator=
     ToSql("order_line")
     .add("order", orderIds)
@@ -702,6 +711,7 @@ object LongerSample extends App {
                         .add(FromList(" l", " kg", "", " m")))
                         .trim)))
 
+  // The generators are all set -- create result
   customerGenerator toFile(resultFile) get(totalCustomers)
   productGenerator appendToFile(resultFile) get(totalProducts)
   orderGenerator appendToFile(resultFile) get(totalOrders)
@@ -709,12 +719,57 @@ object LongerSample extends App {
 }
 {code}
 
-xxxxxxxxxxx Explanation
-
+The output looks like this (excerpt):
+{noformat}
+insert into customer (id, fnr, born, adr, postnr, poststed)
+values (9399, '11109252079', '1992-10-11', 'Kuvens plass 81', '8733', 'Stuvland');
+insert into customer (id, fnr, born, adr, postnr, poststed)
+values (6370, null, '1990-06-16', 'Oddassvingen 119', '0903', 'Oslo');
+insert into customer (id, fnr, born, adr, postnr, poststed)
+values (4674, '15028313397', '1983-02-15', 'Spords plass 77', '4838', 'Arendal');
+insert into customer (id, fnr, born, adr, postnr, poststed)
+values (2542, '06117470669', '1974-11-06', 'Oldens plass 12', '0604', 'Oslo');
+...
+insert into product (id, name) values (78471, 'Jhtb Iktaeyaihjrluso');
+insert into product (id, name) values (91325, 'Zsughfsy Bmpkfag');
+insert into product (id, name) values (76771, 'Uopal');
+insert into product (id, name) values (39087, 'Gbdnypsynojehsj');
+insert into product (id, name) values (24766, 'Kmjh Smyo');
+insert into product (id, name) values (93930, 'Kvjtdasoshbgonsvpl Otu');
+insert into product (id, name) values (60291, 'Ubhemiague');
+...
+insert into order (id, status, customer, orderDate)
+values (673, 'Closed', 5327, '2011-08-10');
+insert into order (id, status, customer, orderDate)
+values (225, 'Ready', 318, '2012-05-30');
+insert into order (id, status, customer, orderDate)
+values (918, 'Pending', 2871, '2012-07-20');
+insert into order (id, status, customer, orderDate)
+values (734, 'Pending', 5468, '2010-03-31');
+insert into order (id, status, customer, orderDate)
+values (769, 'Closed', 3827, '2011-09-05');
+...
+insert into order_line (order, product, lineNo, info)
+values (483, 49561, 11, 'Amount: 296,06');
+insert into order_line (order, product, lineNo, info)
+values (408, 24766, 12, null);
+insert into order_line (order, product, lineNo, info)
+values (297, 47355, 107, 'Restock');
+insert into order_line (order, product, lineNo, info)
+values (898, 18387, 14, null);
+insert into order_line (order, product, lineNo, info)
+values (703, 99956, 15, null);
+insert into order_line (order, product, lineNo, info)
+values (227, 33004, 16, null);
+insert into order_line (order, product, lineNo, info)
+values (319, 32357, 17, null);
+...
+{noformat}
 
 h2. Notes
 
 h3. TODO
-# Could perhaps use {{Stream}} for get(Strings)?
+# Could perhaps use {{Stream}} for get(Strings)? Or maybe not...
 # FromFile -- type checking does not work
-# Xml -- nesting
+# Xml -- nesting not available
+# Analyzing SQL DDL and/or domain classes to generate a skeleton for test data generators

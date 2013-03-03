@@ -1,4 +1,3 @@
-target/
 project/target/
 project/project/
 project/boot/
@@ -13,9 +12,23 @@ project/boot/
 
 .cache
 .target/
+target/
 
+dist/*
 .worksheet/
 
 backup/
 bin/
 /orders.sql
+
+*.class
+*.log
+
+# sbt specific
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Scala-IDE specific
+.scala_dependencies

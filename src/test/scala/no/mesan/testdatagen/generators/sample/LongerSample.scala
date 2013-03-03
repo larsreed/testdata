@@ -18,7 +18,7 @@ object LongerSample extends App {
 
   // To be able to reuse values between records, we generate some values in advance,
   // specifically IDs (for foreign keys) and dates (for correlation between birth dates
-  // and "fodselsnummer"
+  // and "fodselsnummer")
   val customerIds= FromList(Ints().from(1).to(10000).unique.get(totalCustomers))
   val birthDates= Dates() from (y=1921) to (y=1996) get(totalCustomers)
   val productIds= FromList(Ints().from(1).to(100000).unique.get(totalProducts))

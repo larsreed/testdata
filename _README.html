@@ -456,6 +456,19 @@ There are 4 different "apply" methods:</p>
 
 <p>Additionally, you may add a call to <tt>unique()</tt>, to ensure unique values.</p>
 
+<h3>Markov</h3>
+<p>A generator for Markov chain text generation, i.e. random text based
+on existing text
+(see <a href="http://en.wikipedia.org/wiki/Markov_chain#Markov_text_generators">http://en.wikipedia.org/wiki/Markov_chain#Markov_text_generators</a>).
+A sample...:</p>
+<blockquote>
+Prioriteringseffektivitet (allokeringseffektivitet) dreier seg om statsføretak, særlovsselskap og brukarorganisasjonane. Regjeringa ser annleis ut over Noreg integrert om resultata av telefon- og transport eller delvis i arbeidet med endringane og medarbeidarar som går under sektorane i oppgåvefordelinga mellom helse og resten av endringane i pakt med om å prioritere mellom den politisk-administrative styringskjeda på ulike retningar. På 90-talet dreiv Statskonsult hadde. På den forvaltningspolitikken i livet. Forvaltninga skal løysast av organisasjonsformene er i norsk forvaltningsutvikling som strekkjer seg nye former for avgjerder. Det er venta at leiarar og er under omstilling. Ein skår på kunnskap og medarbeidarar med innvandrarbakgrunn i samfunnet og dei har endra rammeverket for forvaltningsverksemder kan arbeidsdelinga mellom ansvarsområdet til å nå andre føremoner. Statstilsette må møte framtidige utfordringar både avgjerdsprosessen og 1970-talet.
+</blockquote>
+<p>Neither <tt>filter</tt> nor <tt>formatWith</tt> are supported.<br/>
+<tt>getString</tt> returns just <i>one</i> valuable occurrence (at index 0) - the selected words concatenatenated with a space between them.</p>
+<p>Both files and a string list may be used as input. A default text from <a href="http://www.regjeringen.no/nb/dep/fad/dok/regpubl/stmeld/2008-2009/stmeld-nr-19-2008-2009-">http://www.regjeringen.no/nb/dep/fad/dok/regpubl/stmeld/2008-2009/stmeld-nr-19-2008-2009-</a> is provided in the file markov.txt.</p>
+
+
 <h3>Fibonaccis</h3>
 <p>You cannot write a set of generators in a functional language without a Fibonacci sequence generator. Thus...<br>
 This generator is written in a tail recursive manner, supported by <tt>BigInt</tt>, thus calculating Fibonacci(500)==139423224561697880139724382870407283950070256587697307264108962948325571622863290691557658876222521294125, seemingly correct.<br>

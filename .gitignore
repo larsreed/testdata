@@ -24,6 +24,8 @@ bin/
 *.class
 *.log
 
+atlassian-ide-plugin.xml
+
 # sbt specific
 lib_managed/
 src_managed/

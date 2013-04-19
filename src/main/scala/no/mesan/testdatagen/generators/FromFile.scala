@@ -5,6 +5,7 @@ import java.io.FileNotFoundException
 import scala.io.Source
 
 import no.mesan.testdatagen.{ExtendedDelegate, ExtendedGenerator}
+import no.mesan.testdatagen.utils.IO
 
 /**
  * This generator reads lines from an input file and creates a list of values,
@@ -19,7 +20,7 @@ import no.mesan.testdatagen.{ExtendedDelegate, ExtendedGenerator}
 class FromFile[T](fileName: String, encoding:String) extends ExtendedGenerator[T]
   with ExtendedDelegate[T, T] {
 
-  private var listGen=new FromList[T]()
+  private val listGen=new FromList[T]()
   protected var generator: ExtendedGenerator[T]= listGen // For the trait
 
   /** Not supported. */
@@ -34,18 +35,8 @@ class FromFile[T](fileName: String, encoding:String) extends ExtendedGenerator[T
   /** Choose if only N, or all lines, are read when generating N values. */
   def allLines(all:Boolean=true): this.type = { readAll= all; this }
 
-  private def fileAsStream(fileName:String) = {
-    try { // Try direct file access first, otherwise class path
-      Source.fromFile(fileName, encoding)
-    }
-    catch {
-      case ugh: FileNotFoundException =>
-        Source.fromInputStream(getClass.getClassLoader().getResourceAsStream(fileName), encoding)
-    }
-  }
-
   private def getContents(n:Int): List[T] = {
-    val source = fileAsStream(fileName).getLines
+    val source = IO.fileAsStream(fileName, encoding).getLines
     var res: List[T]= Nil
     var i= 0
     while (source.hasNext && (i<n || readAll)) {

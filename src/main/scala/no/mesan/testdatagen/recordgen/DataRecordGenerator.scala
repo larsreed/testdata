@@ -2,6 +2,7 @@ package no.mesan.testdatagen.recordgen
 
 import no.mesan.testdatagen.{Generator, GeneratorImpl}
 import java.util.regex.Pattern
+import scala.language.postfixOps
 
 /** 
  * The base class for record generators.

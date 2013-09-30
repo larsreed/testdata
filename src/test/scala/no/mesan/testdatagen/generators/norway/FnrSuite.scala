@@ -6,6 +6,7 @@ import org.scalatest.junit.JUnitRunner
 
 import no.mesan.testdatagen.Printer
 import no.mesan.testdatagen.generators.Dates
+import scala.language.existentials
 
 @RunWith(classOf[JUnitRunner])
 class FnrSuite extends FunSuite with Printer {

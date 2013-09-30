@@ -5,6 +5,7 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
 import no.mesan.testdatagen.Printer
+import scala.language.postfixOps
 
 @RunWith(classOf[JUnitRunner])
 class OrgnrSuite extends FunSuite with Printer {

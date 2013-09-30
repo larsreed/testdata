@@ -4,6 +4,8 @@ import no.mesan.testdatagen.aggreg.{FieldConcatenator, SomeNulls, WeightedGenera
 import no.mesan.testdatagen.generators.{Dates, Doubles, Fixed, FromList, Ints}
 import no.mesan.testdatagen.generators.misc.Names
 import no.mesan.testdatagen.recordgen.{SkipNull, ToXmlElements}
+import scala.language.postfixOps
+
 
 object SimpleSample extends App {
   ToXmlElements("order", "orderLine", SkipNull)

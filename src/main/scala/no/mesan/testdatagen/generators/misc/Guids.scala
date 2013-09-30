@@ -2,6 +2,7 @@ package no.mesan.testdatagen.generators.misc
 
 import no.mesan.testdatagen.GeneratorImpl
 import no.mesan.testdatagen.generators.{Ints, Longs}
+import scala.language.postfixOps
 
 /**
  * Generate simple GUIDs.  The rules of http://www.ietf.org/rfc/rfc4122.txt are NOT followed,

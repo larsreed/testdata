@@ -5,6 +5,8 @@ import no.mesan.testdatagen.generators.{Dates, Doubles, Fixed, FromList, Ints}
 import no.mesan.testdatagen.generators.misc.Names
 import no.mesan.testdatagen.generators.norway.{Adresser, Fnr, Poststeder}
 import no.mesan.testdatagen.recordgen.ToSql
+import scala.language.postfixOps
+
 
 object LongerSample extends App {
   // These are the total of numbers we will generate for the different categories

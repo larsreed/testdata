@@ -142,7 +142,7 @@ class XmlGeneratorSuite extends FunSuite with Printer {
       val nGen= ToXmlAttributes(recordName="data").
                      add("id", idGen).
                      add("born", bornGen)
-      val v= nGen.getStrings(1)(0)
+      val v= nGen.getStrings(1)(0) replaceFirst("born=[^ ]+", "")
       // ?s is dotall-mode, accepts multiline data
       assert(v.matches("(?s)^\\s*<data\\s+id.*(/>|</data>)\\s*$"), "|" + v + "|")
     }

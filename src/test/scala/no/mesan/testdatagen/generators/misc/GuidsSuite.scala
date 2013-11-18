@@ -11,7 +11,7 @@ class GuidsSuite extends FunSuite with Printer {
 
   print(false) {
     println(Guids().get(10))
-    println(TextWrapper(Guids()) surroundWith("{", "}") toUpper() getStrings(120))
+    println(TextWrapper(Guids()) surroundWith("{", "}") toUpper getStrings(120))
     println(Guids().getBigInts(100))
   }
 

@@ -34,13 +34,13 @@ class TextWrapper(generator:Generator[_]) extends GeneratorImpl[String] {
   }
 
   /** trim the string. */
-  def trim(): this.type = transform {s=> s.trim }
+  def trim: this.type = transform {s=> s.trim }
 
   /** Convert to upper case. */
-  def toUpper(): this.type = transform { s=> s.toUpperCase }
+  def toUpper: this.type = transform { s=> s.toUpperCase }
 
   /** Convert to lower case. */
-  def toLower(): this.type = transform { s=> s.toLowerCase }
+  def toLower: this.type = transform { s=> s.toLowerCase }
 
   private def transformAll(s:List[String]): List[String]= {
     val func= transformers reduce(_ compose _)

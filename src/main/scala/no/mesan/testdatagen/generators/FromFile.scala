@@ -28,7 +28,7 @@ class FromFile[T](fileName: String, encoding:String) extends ExtendedGenerator[T
   /** Not supported. */
   override def to(f:T) = throw new UnsupportedOperationException
 
-  private var filterFuns: List[T => Boolean] = List((t => true))
+  private var filterFuns: List[T => Boolean] = List(t => true)
   override def filter(f: T => Boolean): this.type = { filterFuns ::= f; this }
 
   private var readAll= false
@@ -58,5 +58,5 @@ object FromFile {
   // Only String is actually working at the moment
   def apply(resourceName: String, allLines:Boolean=false,
       encoding: String= "ISO-8859-1"): FromFile[String] =
-    (new FromFile[String](resourceName, encoding)).allLines(allLines)
+    new FromFile[String](resourceName, encoding).allLines(allLines)
 }

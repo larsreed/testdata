@@ -34,7 +34,6 @@ class WeightedGenerator extends GeneratorImpl[Any] {
         if ( left.isEmpty ) soFar
         else {
           val w= sum + left.head._1
-          val valGen= left.head._2.filter(filterAll)
           val vals= if(strings) left.head._2.filter(filterAll).getStrings(n)
                     else left.head._2.filter(filterAll).get(n)
           create(w, (w, vals)::soFar, left.tail)

@@ -57,7 +57,7 @@ class Strings extends SingleGenerator[String] {
 
     @tailrec
     def getRandomly(soFar: List[String]): List[String]= {
-      def makeRandomString(): String = {
+      def makeRandomString: String = {
         val width= if (minLength==maxLength) maxLength
                    else minLength + Random.nextInt(maxLength-minLength+1)
         val range= chars.length

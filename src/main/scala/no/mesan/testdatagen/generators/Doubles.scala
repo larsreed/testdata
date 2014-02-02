@@ -30,8 +30,8 @@ class Doubles extends SingleGenerator[Double] {
     val max= upper.getOrElse(Double.MaxValue)
     require(max>=min, "from >= to")
 
-    def getSequentially(): List[Double]= {
-      var step= if (isReversed) -stepSize else stepSize
+    def getSequentially: List[Double]= {
+      val step = if (isReversed) -stepSize else stepSize
       @tailrec def next(last: Double, soFar:List[Double]): List[Double]=
         if (soFar.length>=n) soFar
         else {

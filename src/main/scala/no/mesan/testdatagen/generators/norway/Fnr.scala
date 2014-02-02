@@ -68,7 +68,7 @@ class Fnr(dateGenerator:ExtendedGenerator[DateTime]) extends GeneratorImpl[Strin
         }
       }
       val res= first6 ++ genNext(get3, fakt1)
-      res.foldLeft("")((s,i)=> s + (i+""))
+      res.foldLeft("")((s, i)=> s + (i+""))
     }
     val dates= dateGenerator.formatWith(Dates.dateFormatter("ddMMyy")).getStrings(n)
     dates map genPnr

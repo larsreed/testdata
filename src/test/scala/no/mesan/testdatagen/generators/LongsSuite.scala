@@ -1,7 +1,6 @@
 package no.mesan.testdatagen.generators
 
 import org.junit.runner.RunWith
-import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import no.mesan.testdatagen.Printer
 import org.scalatest.FunSuite
@@ -12,53 +11,57 @@ class LongsSuite extends FunSuite with Printer {
   def generator= Longs()
 
   print(false) {
-    println(generator from(4) to(44) get(30))
-    println(generator step(7) from(4) to(44) reversed() get(30))
-    println(generator from (Long.MinValue) get(30))
+    println(generator from 4 to 44  get 0)
+    println((generator step 7 from 4 to 44).reversed get(30))
+    println(generator from Long.MinValue get 30)
   }
 
   test("from<to") {
     intercept[IllegalArgumentException] {
-      generator.from(10).to(5).get(1)
+      generator from 10 to 5 get 1
     }
   }
 
   test("sequential not step 0") {
     intercept[IllegalArgumentException] {
-      generator.step(0).sequential.get(1)
+      (generator step 0). sequential get 1
     }
   }
 
   test("negative get") {
     intercept[IllegalArgumentException] {
-      generator.get(-1)
+      generator get -1
     }
     intercept[IllegalArgumentException] {
-      generator.getStrings(-1)
+      generator getStrings -1
     }
   }
 
   test("limits") {
     intercept[IllegalArgumentException] {
-      generator.from(Long.MinValue).get(1)
+      generator from Long.MinValue get 1
     }
     intercept[IllegalArgumentException] {
-      generator.to(Long.MaxValue).get(1)
+      generator to Long.MaxValue get 1
     }
   }
 
   test("normal sequence") {
-    assert(generator.sequential.from(-2).to(2).get(5) === List(-2L, -1L, 0L, 1L, 2L))
+    val g= (generator.sequential) from -2 to 2 get 5
+    assert(g === List(-2L, -1L, 0L, 1L, 2L))
   }
 
   test("sequence that overflows") {
-    assert(generator.step(2).sequential.from(1).to(6).get(5) === List(1L, 3L, 5L, 1L, 3L))
+    val g= (generator.sequential) step 2 from 1 to 6 get 5
+    assert(g === List(1L, 3L, 5L, 1L, 3L))
   }
 
   test("wrap the edge") {
-    assert(generator.sequential.from(Long.MaxValue-3).get(5) === 
+    val longs = (generator.sequential) from Long.MaxValue - 3  get 5
+    assert(longs ===
       List(Long.MaxValue-3, Long.MaxValue-2, Long.MaxValue-1, Long.MaxValue-3, Long.MaxValue-2))
-    assert(generator.reversed.from(Long.MinValue+1).to(Long.MinValue+3).get(5) === 
+    val longs1 = (generator.reversed) from Long.MinValue + 1 to Long.MinValue + 3 get 5
+    assert(longs1 ===
       List(Long.MinValue+3, Long.MinValue+2, Long.MinValue+1, Long.MinValue+3, Long.MinValue+2))
   }
 
@@ -90,10 +93,10 @@ class LongsSuite extends FunSuite with Printer {
   }
 
   test("even numbers") {
-    val res = generator.filter(i => (i % 2) == 0).get(10);
+    val res = generator.filter(i => (i % 2) == 0).get(10)
     assert(res.length === 10)
     assert(res.forall(i => (i % 2) == 0))
-    val res2 = generator.from(0).sequential.filter(i => (i % 2) == 0).get(9);
+    val res2 = generator.from(0).sequential.filter(i => (i % 2) == 0).get(9)
     assert(res2.length === 9)
     assert(res2.forall(i => (i % 2) == 0))
   }

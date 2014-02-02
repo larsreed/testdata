@@ -15,7 +15,7 @@ abstract class DataRecordGenerator[T](nulls: NullHandler) extends GeneratorImpl[
   /** Mutable list of fields (in reverse order). */
   protected var fields: List[DataField]= List()
   /** Just the field names (in correct order). */
-  protected def fieldNames: List[String]= fields map(_.name) reverse
+  protected def fieldNames: List[String]= (fields map (_.name)).reverse
 
   /** Add a new data field, instantiated outside. */
   def add(df: DataField): this.type = {
@@ -29,16 +29,15 @@ abstract class DataRecordGenerator[T](nulls: NullHandler) extends GeneratorImpl[
 
   /** Return a ToFile that overwrites its result. */
   def toFile(fileName: String, charSet:String=ToFile.defaultCharSet): Generator[T]= 
-    ToFile(fileName, this, false, charSet)
+    ToFile(fileName, this, append = false, charSet)
 
   /** Return a ToFile that appends to its result. */
   def appendToFile(fileName: String, charSet:String=ToFile.defaultCharSet): Generator[T]= 
-    ToFile(fileName, this, true, charSet)
+    ToFile(fileName, this, append = true, charSet)
 
   /** Return a list of n records. Each record consists of 1 value for each field. */
   protected def getRecords(n: Int, recordNulls:NullHandler): List[DataRecord] = {
     val fieldList= fields.reverse
-    val x= fieldList.map(_.getTuples(n, recordNulls))
     fieldList.map(_.getTuples(n, recordNulls)).transpose
   }
 }

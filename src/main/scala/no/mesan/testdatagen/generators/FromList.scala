@@ -5,8 +5,7 @@ import scala.util.Random
 
 import no.mesan.testdatagen.SingleGenerator
 
-/**
- * Probably the most versatile of all the generators, the FromList takes a list of
+/** * Probably the most versatile of all the generators, the FromList takes a list of
  * "anything" as input and generates its values from that, it is typed (FromList[T]),
  * so you keep the type of the input list.
 
@@ -23,12 +22,14 @@ class FromList[T] extends SingleGenerator[T] {
   /** Enter the list of values. */
   def fromList(l: List[T]): this.type= { inputList= l; this }
 
+  // FIXME Weighted values!
+
   override def get(n: Int): List[T] = {
     require(n>=0, "cannot get negative count")
     require(inputList.length>0, "cannot extract from empty list")
     val accepted= inputList filter filterAll
 
-    def getSequentially(): List[T]= {
+    def getSequentially: List[T]= {
       val basis= if (isReversed) accepted.reverse else accepted
       @tailrec def next(soFar:List[T]): List[T]=
         if (soFar.length>=n) soFar.take(n)

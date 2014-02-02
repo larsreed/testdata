@@ -1,3 +1,5 @@
+faks.sql
+
 project/target/
 project/project/
 project/boot/
@@ -36,3 +38,6 @@ project/plugins/project/
 
 # Scala-IDE specific
 .scala_dependencies
+
+
+src/test/scala/worksheet.sc

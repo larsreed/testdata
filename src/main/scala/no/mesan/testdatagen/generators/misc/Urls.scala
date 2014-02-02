@@ -16,7 +16,7 @@ object Urls {
     new FieldConcatenator().
                 add(FromList("http://", "https://")).
                 add(FromList("", "www.")).
-                add(Strings().lengthBetween(4,10).chars(chars)).
+                add(Strings().lengthBetween(4, 10).chars(chars)).
                 add(FromList(".com", ".no", ".org", ".net", ".co.uk", ".gov"))
   }
 }

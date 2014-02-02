@@ -1,10 +1,6 @@
 package no.mesan.testdatagen.generators
 
-import scala.annotation.tailrec
-import scala.util.Random
-import no.mesan.testdatagen.SingleGenerator
-import no.mesan.testdatagen.ExtendedDelegate
-import no.mesan.testdatagen.ExtendedGenerator
+import no.mesan.testdatagen.{ExtendedDelegate,ExtendedGenerator}
 
 /**
  * Generate Ints.
@@ -15,7 +11,7 @@ import no.mesan.testdatagen.ExtendedGenerator
  */
 class Ints extends ExtendedGenerator[Int] with ExtendedDelegate[Long, Int] {
 
-  private val gen= Longs() from((Int.MinValue+1).toLong) to((Int.MaxValue-1).toLong)
+  private val gen= Longs() from (Int.MinValue + 1).toLong to (Int.MaxValue - 1).toLong
   protected var generator: ExtendedGenerator[Long]= gen
 
   override protected def conv2gen(f: Int): Long = f+0L

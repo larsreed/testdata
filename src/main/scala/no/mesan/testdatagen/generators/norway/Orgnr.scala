@@ -12,7 +12,7 @@ import no.mesan.testdatagen.generators.Ints
  */
 class Orgnr() extends GeneratorImpl[Int] {
 
-  private val intGen= Ints() from(80000000) to(90000000)
+  private val intGen= Ints() from 80000000 to 90000000
 
   override def get(n:Int): List[Int]= {
     require(n>=0, "cannot get negative count")

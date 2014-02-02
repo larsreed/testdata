@@ -36,13 +36,13 @@ class CreditCards (prefixes: List[Long], length:Int) extends GeneratorImpl[Long]
   override def get(n:Int): List[Long] = {
     require(n>=0, "cannot get negative count")
     val pfxGen= FromList(prefixes)
-    val ints= Ints() from(0) to (9)
+    val ints= Ints() from 0 to 9
     @tailrec
     def getRandomly(soFar: List[Long]): List[Long]=
     if (soFar.length>=n) soFar
     else {
       val pfx: Long= pfxGen.get(1)(0)
-      val allInts= ints.get(length-(pfx.toString.length)) // up to 15 more digits
+      val allInts= ints.get(length- pfx.toString.length) // up to 15 more digits
       val sample= allInts.foldLeft(pfx)(10L*_ + _)
       val nxt= (sample/10L)*10L + checkDigit(sample)
       if (filterAll(nxt) && (!isUnique || !(soFar contains nxt)))

@@ -77,7 +77,6 @@ class Markov extends Generator[String] {
 }
 
 object Markov {
-
   /** A list of files to read. */
   val inputFiles= List("markov.txt")
 

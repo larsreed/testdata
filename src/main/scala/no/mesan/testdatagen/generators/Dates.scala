@@ -29,23 +29,29 @@ class Dates extends SingleGenerator[DateTime] {
   private var showDate= true
   private var showTime= false
 
-  /** Show only time, set period to 1 second. */
+  /** Show only time, set period to 1 second if sequential. */
   def timeOnly: this.type= {
     showTime= true
     showDate= false
-    step(ss=1)
+    val wasSeq= isSequential // FIXME hack
+    val ret= step(ss=1)
+    isSequential= wasSeq
+    ret
   }
-  /** Show date and time, set period to 1 hour. */
+  /** Show date and time, set period to 1 hour if sequential. */
   def dateAndTime: this.type= {
     showTime= true
     showDate= true
-    step(hh=1)
+    val wasSeq= isSequential
+    val ret= step(hh=1)
+    isSequential= wasSeq
+    ret
   }
 
   private val now= new DateTime()
-  private var stdYear= now.getYear()
-  private var stdMonth= now.getMonthOfYear()
-  private var stdDay= now.getDayOfMonth()
+  private var stdYear= now.getYear
+  private var stdMonth= now.getMonthOfYear
+  private var stdDay= now.getDayOfMonth
   private var stdHour= 0
   private var stdMin= 0
   private var stdSec= 0
@@ -82,7 +88,7 @@ class Dates extends SingleGenerator[DateTime] {
   def to(y: Int=9999, m: Int=12, d:Int= -31,
            hh: Int=23, mm: Int=59, ss:Int=59, ms: Int=999):this.type = {
     if ( d<0 ) { // Must avoid situation where unspecified d needs a value less than 31
-      val fixD= new DateTime(y,m,28,0,0,0,0).dayOfMonth().getMaximumValue()
+      val fixD= new DateTime(y,m,28,0,0,0,0).dayOfMonth().getMaximumValue
       to(new DateTime(y,m,fixD,hh,mm,ss,ms))
     }
     else to(new DateTime(y,m,d,hh,mm,ss,ms))
@@ -124,7 +130,7 @@ class Dates extends SingleGenerator[DateTime] {
     require(showTime||showDate, "either date or time must be shown")
     require(min<=max, "from must not be after to")
 
-    def getSequentially(): List[DateTime]= {
+    def getSequentially: List[DateTime]= {
       def next(last: DateTime, soFar:List[DateTime]): List[DateTime]=
         if (soFar.length>=n) soFar
         else {
@@ -151,15 +157,15 @@ class Dates extends SingleGenerator[DateTime] {
           }
           else v1
         if (showDate) {
-          y= setOne(min.getYear(), max.getYear(), 0, 0)
-          m= setOne(min.getMonthOfYear(), max.getMonthOfYear(), 1, 12)
-          d= setOne(min.getDayOfMonth(), max.getDayOfMonth(), 1, 31)
+          y= setOne(min.getYear, max.getYear, 0, 0)
+          m= setOne(min.getMonthOfYear, max.getMonthOfYear, 1, 12)
+          d= setOne(min.getDayOfMonth, max.getDayOfMonth, 1, 31)
         }
         if (showTime) {
-          hh= setOne(min.getHourOfDay(), max.getHourOfDay(), 0, 23)
-          mm= setOne(min.getMinuteOfHour(), max.getMinuteOfHour(), 0, 59)
-          ss= setOne(min.getSecondOfMinute(), max.getSecondOfMinute(), 0, 59)
-          ms= setOne(min.getMillisOfSecond(), max.getMillisOfSecond(), 0, 999)
+          hh= setOne(min.getHourOfDay, max.getHourOfDay, 0, 23)
+          mm= setOne(min.getMinuteOfHour, max.getMinuteOfHour, 0, 59)
+          ss= setOne(min.getSecondOfMinute, max.getSecondOfMinute, 0, 59)
+          ms= setOne(min.getMillisOfSecond, max.getMillisOfSecond, 0, 999)
         }
         try {
           val dt= new DateTime(y,m,d,hh,mm,ss,ms)

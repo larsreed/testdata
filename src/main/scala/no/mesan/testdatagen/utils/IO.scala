@@ -13,14 +13,13 @@ object IO {
     }
     catch {
       case ugh: FileNotFoundException =>
-        Source.fromInputStream(getClass.getClassLoader().getResourceAsStream(fileName), encoding)
+        Source.fromInputStream(getClass.getClassLoader.getResourceAsStream(fileName), encoding)
     }
   }
 
   def sourceLines(input: Source): List[String] = {
     val source = input.getLines
     var res: List[String]= Nil
-    var i= 0
     while (source.hasNext) res ::= source.next()
     res.reverse
   }

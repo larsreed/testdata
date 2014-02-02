@@ -9,7 +9,7 @@ import no.mesan.testdatagen.Printer
 @RunWith(classOf[JUnitRunner])
 class MarkovSuite extends FunSuite with Printer {
 
-  print(true) {
+  print(false) {
     // println(Markov() filter(bi=> bi%2==0) getStrings(120))
     println(Markov().getStrings(500))
   }

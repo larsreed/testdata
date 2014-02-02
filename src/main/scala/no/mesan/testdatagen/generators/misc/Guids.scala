@@ -11,9 +11,9 @@ import scala.language.postfixOps
  * @author lre
  */
 class Guids extends GeneratorImpl[Seq[Long]] {
-  private val p1Gen= Ints() from(0)
-  private val p23Gen= Ints() from(0) to(65535)
-  private val p4Gen= Longs() from(0)
+  private val p1Gen= Ints() from 0
+  private val p23Gen= Ints() from 0 to 65535
+  private val p4Gen= Longs() from 0
 
   override def get(n:Int): List[Seq[Long]] = {
     val p1= p1Gen get(n) map(_.toLong)
@@ -30,8 +30,7 @@ class Guids extends GeneratorImpl[Seq[Long]] {
   }
 
   formatWith{
-    case Seq(p1,p2,p3,p4)=>
-      "%08x-%04x-%04x-%016x".format(p1, p2, p3, p4)
+    case Seq(p1,p2,p3,p4)=> f"$p1%08x-$p2%04x-$p3%04x-$p4%016x"
   }
 
   override def filter(f: Seq[Long]=>Boolean)= throw new UnsupportedOperationException

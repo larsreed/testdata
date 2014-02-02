@@ -26,26 +26,26 @@ class ToJson(nulls:NullHandler, header:String, bare:Boolean) extends StringRecor
   }
 
   override def recordPrefix: String =
-    newline + "  " + (if (!bare) "\"" + header + "\": " else "") + " { "
+    s"$newline  " + (if (!bare) s""""$header": """ else "") + " { "
   override def recordSuffix: String =
-    newline + "  }" + (if (bare) "" else ",")
+    s"$newline  }" + (if (bare) "" else ",")
 
   override def get(n:Int): List[String] = {
     val orgVals= super.get(n)
     if (bare) orgVals
     else List("{") :::
          (orgVals(n-1).replaceAll(",$", "") :: orgVals.take(n-1).reverse).reverse :::
-         List((newline + "}"))
+         List(newline + "}")
   }
 
   override def makeFields(rec: DataRecord): String=
     rec.foldLeft(""){
       (str, rec)=> rec match {
         case null => str
-        case (key, null) => str + (if (str>"") "," else "") + newline +
-                             "    \"" + key + "\": null"
-        case (key, value) => str + (if (str>"") "," else "") + newline +
-                             "    \"" + key + "\": " + value
+        case (key, null) => str + (if (str>"") "," else "") +
+                             s"""$newline    "$key": null"""
+        case (key, value) => str + (if (str>"") "," else "") +
+                             s"""$newline    "$key": $value"""
      }
     }
 }

@@ -4,6 +4,8 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
+import scala.language.postfixOps
+
 import no.mesan.testdatagen.Printer
 import no.mesan.testdatagen.aggreg.SomeNulls
 import no.mesan.testdatagen.generators.{Booleans, Chars, Dates, FromList, Ints, Strings}

@@ -12,11 +12,7 @@ import no.mesan.testdatagen.{Generator, GeneratorImpl}
  *
  * @author lre
  */
-class FieldConcatenator extends GeneratorImpl[String] {
-  private var generators: List[Generator[_]] = Nil
-
-  /** Add another field. */
-  def add(g: Generator[_]): FieldConcatenator = { generators ::= g; FieldConcatenator.this }
+class FieldConcatenator extends MultiGenerator[String, Any] {
 
   override def get(n: Int): List[String] = {
     val lists = generators.reverse.map(g => g.getStrings(n)).transpose

@@ -91,4 +91,12 @@ class TextWrapperSuite extends FunSuite with Printer {
     assert(res.forall(s => s.matches("<[a-c]>")), res)
   }
 
+  test("text replacement") {
+    val v = TextWrapper(Strings().chars("ABC").sequential).
+                substitute("[ABC]", "g")
+
+    val res = v.getStrings(12)
+    assert(res.forall(s => s.matches("^g+$")), res)
+  }
+
 }

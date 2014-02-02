@@ -5,8 +5,8 @@ import scala.collection.immutable.List
 import no.mesan.testdatagen.{Generator, GeneratorImpl}
 
 /**
- * This generator takes any other generator as input, always uses its 
- * getStrings(n) as input, thus acting as "text converter", and adds methods to 
+ * This generator takes any other generator as input, always uses its
+ * getStrings(n) as input, thus acting as "text converter", and adds methods to
  * manipulate the resulting text.
  *
  * @author lre
@@ -41,6 +41,9 @@ class TextWrapper(generator:Generator[_]) extends GeneratorImpl[String] {
 
   /** Convert to lower case. */
   def toLower(): this.type = transform { s=> s.toLowerCase }
+
+  /** Substitute text. */
+  def substitute(fromRegex:String, to:String): this.type = transform { s=> s.replaceAll(fromRegex, to) }
 
   private def transformAll(s:List[String]): List[String]= {
     val func= transformers reduce(_ compose _)

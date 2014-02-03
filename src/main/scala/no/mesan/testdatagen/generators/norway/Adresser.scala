@@ -30,7 +30,7 @@ class Adresser(withNumbers:Boolean) {
     FieldConcatenator()
        .add(Fixed(" "))
        .add(Ints() from 1 to 120)
-       .add(WeightedGenerator()
+       .add(WeightedGenerator[Any]()
             add(3, Fixed(""))
             add(1, Chars('A' to 'F'))
            )

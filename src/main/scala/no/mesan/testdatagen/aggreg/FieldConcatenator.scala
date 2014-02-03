@@ -2,7 +2,7 @@ package no.mesan.testdatagen.aggreg
 
 import scala.collection.immutable.List
 
-import no.mesan.testdatagen.{Generator, GeneratorImpl}
+import no.mesan.testdatagen.{GeneratorImpl, Generator}
 
 /**
  * The FieldConcatenator is given a set of generators with the add method.
@@ -12,14 +12,14 @@ import no.mesan.testdatagen.{Generator, GeneratorImpl}
  *
  * @author lre
  */
-class FieldConcatenator extends MultiGenerator[String, Any] {
+class FieldConcatenator extends GeneratorImpl[String] with MultiGenerator[Any] {
 
   override def get(n: Int): List[String] = {
-    val lists = generators.reverse.map(g => g.getStrings(n)).transpose
-    lists.map(l => l.reduceLeft(_ + _)).filter(filterAll)
+    val allLists = generators.map{ g => g.getStrings(n) }.transpose
+    allLists.map(l => l.reduceLeft(_ + _)).filter(filterAll)
   }
 }
 
 object FieldConcatenator {
-  def apply(): FieldConcatenator = new FieldConcatenator
+  def apply(gs: Generator[Any]*): FieldConcatenator =  new FieldConcatenator() add(gs:_*)
 }

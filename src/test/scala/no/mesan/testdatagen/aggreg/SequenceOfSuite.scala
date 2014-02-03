@@ -14,9 +14,9 @@ class SequenceOfSuite extends FunSuite with Printer {
 
   trait Setup {
     val noOfGens= 3
-    val xgen= SequenceOf().add(FromList(1, 2, 3) sequential).
-                           add(Chars("abc") sequential).
-                           add(Ints() from 4 sequential)
+    val xgen= SequenceOf.strings(FromList(1, 2, 3) sequential,
+                                 Chars("abc") sequential,
+                                 Ints() from 4 sequential)
   }
 
   print(false) {
@@ -50,8 +50,8 @@ class SequenceOfSuite extends FunSuite with Printer {
       val exp= List("1", "2", "3", "a", "b", "c", "4", "5", "6")
       val res1= xgen.get(3)
       val res2= xgen.getStrings(3)
-      assert(exp==res1)
-      assert(exp==res2)
+      assert(exp==res1, "1" + res1)
+      assert(exp==res2, "2" + res2)
     }
   }
 }

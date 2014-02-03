@@ -12,10 +12,10 @@ import no.mesan.testdatagen.Printer
 class WeightedGeneratorSuite extends FunSuite with Printer {
 
   trait Setup {
-    val xgen= WeightedGenerator().add(1, FromList(1,2,3)).
-                                  add(2, Chars("1abc")).
-                                  add(1, Booleans().format("0", "1")).
-                                  filter(x=> !(x.toString.matches("1")))
+    val xgen= WeightedGenerator[Any]((1, FromList(1,2,3)),
+                                     (2, Chars("1abc")),
+                                     (1, Booleans().format("0", "1"))).
+                                       filter(x=> !(x.toString.matches("1")))
   }
 
   print(false) {

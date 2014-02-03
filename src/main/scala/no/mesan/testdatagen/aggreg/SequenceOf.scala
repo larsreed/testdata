@@ -11,13 +11,14 @@ import no.mesan.testdatagen.{Generator, GeneratorImpl}
  *
  * @author lre
  */
-class SequenceOf extends MultiGenerator[String, Any] {
+class SequenceOf[S, T] (convert: T=>S) extends GeneratorImpl[S] with MultiGenerator[T] {
 
-  override def get(n: Int): List[String] = {
-    generators.reverse.flatMap(g => g.getStrings(n))
-  }
+  override def get(n: Int): List[S] =  generators.flatMap{ g => g.get(n).map(v=>convert(v)) }
+  override def getStrings(n: Int): List[String] =  generators.flatMap(g => g.getStrings(n))
 }
 
 object SequenceOf {
-  def apply(gs: Generator[Any]*): SequenceOf =  new SequenceOf().add(gs:_*)
+  def apply[T](gs: Generator[T]*): SequenceOf[T, T] =  new SequenceOf[T, T]({x=>x}).add(gs:_*)
+  def strings(gs: Generator[Any]*): SequenceOf[String, Any] =
+    new SequenceOf[String, Any] (x=> if (x==null) null else x.toString).add(gs:_*)
 }

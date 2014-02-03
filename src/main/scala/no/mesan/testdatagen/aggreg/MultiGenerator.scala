@@ -5,18 +5,40 @@ import scala.collection.immutable.List
 import no.mesan.testdatagen.{Generator, GeneratorImpl}
 
 /**
- * A common superclass for generators needing to support one or more nested generators.
+ * Traits for generators needing to support one or more nested generators.
  *
  * @author lre
  */
-abstract class MultiGenerator[T, U] extends GeneratorImpl[T] {
-  var generators: List[Generator[U]] = Nil
+trait MultiGenerator[T] {
+  var generators: List[Generator[T]] = Nil
 
-  /** Add another generator. */
-  def add(g: Generator[U]): this.type = { generators ::= g; this }
-
-  /** Add many generators. */
-  def add(gs: Generator[U]*): this.type = { generators ++= (gs.reverse); this }
+  /** Add 0 or more generators. */
+  def add(gs: Generator[T]*): this.type = {
+    generators ++= gs.toList
+    this
+  }
 }
 
+trait MultiGeneratorWithWeight[T] {
+  type GenList= List[(Int,Generator[T])]
+  var generators: GenList = Nil
+
+  /** Add 0 or more generators with weight 1. */
+  def add(gs: Generator[T]*): this.type = {
+    gs.foreach{ g=> add(1, g) }
+    this
+  }
+
+  /** Add 0 or more generators with weight 1. */
+  def add(weight:Int, g: Generator[T]): this.type = {
+    generators ::= (weight, g)
+    this
+  }
+
+  /** Add 0 or more weighted generators. */
+  def addTuples(weighted: (Int, Generator[T])*): this.type = {
+    generators ++= weighted.toList.reverse
+    this
+  }
+}
 

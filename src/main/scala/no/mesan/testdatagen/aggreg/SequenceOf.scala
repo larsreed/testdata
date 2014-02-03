@@ -11,10 +11,19 @@ import no.mesan.testdatagen.{Generator, GeneratorImpl}
  *
  * @author lre
  */
-class SequenceOf[S, T] (convert: T=>S) extends GeneratorImpl[S] with MultiGenerator[T] {
+class SequenceOf[S, T] (convert: T=>S) extends GeneratorImpl[S] with MultiGeneratorWithWeight[T] {
 
-  override def get(n: Int): List[S] =  generators.flatMap{ g => g.get(n).map(v=>convert(v)) }
-  override def getStrings(n: Int): List[String] =  generators.flatMap(g => g.getStrings(n))
+  private def total= generators.foldLeft(0)((zum, tuple)=> zum + tuple._1)
+  private def round(n: Int, weight:Int, totWeight:Int)= scala.math.round((n*weight)/totWeight)
+  private def getList[U](n: Int)(f: (Int, Generator[T]) => List[U]): List[U] =  {
+    val tot= total
+    generators.flatMap{ tuple =>
+      val (w, g)= tuple
+      f(round(n, w, tot), g)
+    }
+  }
+  override def get(n: Int): List[S] =  getList(n){ (no, g)=> g.get(no).map(convert(_)) }
+  override def getStrings(n: Int): List[String] =  getList(n){ (no, g)=> g.getStrings(no)}
 }
 
 object SequenceOf {

@@ -26,32 +26,29 @@ class SequenceOfSuite extends FunSuite with Printer {
     }
   }
 
-  test("negative get") {
-    intercept[IllegalArgumentException] {
-      new Setup {
-        xgen.get(-1)
-      }
-    }
-    intercept[IllegalArgumentException] {
-      new Setup {
-        xgen.getStrings(-1)
-      }
-    }
-  }
-
   test("count") {
     new Setup {
-      assert(xgen.get(30).size === noOfGens*30)
+      private val size = xgen.get(30).size
+      assert(size>=28 && size<=32)
     }
   }
 
-  test("contents") {
+  test("plain contents") {
     new Setup {
       val exp= List("1", "2", "3", "a", "b", "c", "4", "5", "6")
-      val res1= xgen.get(3)
-      val res2= xgen.getStrings(3)
+      val res1= xgen.get(9)
+      val res2= xgen.getStrings(9)
       assert(exp==res1, "1" + res1)
       assert(exp==res2, "2" + res2)
     }
+  }
+
+  test("weighted contents") {
+    val xgen= SequenceOf[Any]().addTuples((5, FromList(1, 2, 3) sequential),
+                                          (3, Chars("abc") sequential),
+                                          (2, Ints() from 4 sequential))
+      val exp= List("1", "2", "3", "1", "2", "3", "a", "b", "c", "4", "5")
+      val res= xgen.getStrings(12)
+      assert(exp===res)
   }
 }

@@ -10,7 +10,7 @@ import no.mesan.testdatagen.Generator
  *
  * To facilitate quoting, you must call the alternative addQuoted method for values
  * that need quotes -- they are then single quoted (and embedded single quotes escaped):
- * 
+ *
  * The apply method needs to know the table name, you may optionally use a record
  * separator different from ";".
  *
@@ -32,4 +32,5 @@ class ToSql(tableName: String, exec: String) extends StringRecordGenerator(KeepN
 
 object ToSql {
   def apply(tableName: String, exec: String=";"): ToSql = new ToSql(tableName, exec)
+  def sybase(tableName: String): ToSql= apply(tableName, "\ngo")
 }

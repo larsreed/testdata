@@ -132,6 +132,8 @@ class Strings extends SingleGenerator[String] {
 }
 
 object Strings {
+  val asciiUpperLower= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+  val digits= "0123456789"
   def apply(length: Int=1):Strings = new Strings().length(length)
   def apply(length: Int, chars:Seq[Char]):Strings = new Strings().length(length).chars(chars)
 }

@@ -16,7 +16,7 @@ abstract class MultiGenerator[T, U] extends GeneratorImpl[T] {
   def add(g: Generator[U]): this.type = { generators ::= g; this }
 
   /** Add many generators. */
-  def add(gs: Generator[U]*): this.type = { generators ++= gs; this }
+  def add(gs: Generator[U]*): this.type = { generators ++= (gs.reverse); this }
 }
 
 

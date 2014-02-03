@@ -19,5 +19,5 @@ class SequenceOf extends MultiGenerator[String, Any] {
 }
 
 object SequenceOf {
-  def apply(): SequenceOf = new SequenceOf
+  def apply(gs: Generator[Any]*): SequenceOf =  new SequenceOf().add(gs:_*)
 }

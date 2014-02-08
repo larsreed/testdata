@@ -8,7 +8,7 @@ import no.mesan.testdatagen.generators.{FromFile, Strings}
  * Generate Norwegian names...
  *
  * First a bit about the background for this generator...
- * Over the years, I have "scraped" lists of names from the net -- 
+ * Over the years, I have "scraped" lists of names from the net --
  * tax lists, participants in conferences and sports events etc,
  * and tried to normalize and uniquify these lists (this bears the
  * risk of having first and last names mixed up, and wrong capitalization...).
@@ -87,6 +87,7 @@ class NorskeNavn(allLines: Boolean) extends Generator[String] {
    }
    gen
   }
+  override def formatOne[S >: String](v: S): String = generator.formatOne(v)
 }
 
 object NorskeNavn {

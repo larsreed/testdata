@@ -4,7 +4,7 @@ package no.mesan.testdatagen
  * This is the main testdata generator interface.
  * For default implementation -- see GeneratorImpl.
  * For more functions, see ExtendedGenerator.
- * 
+ *
  * Most methods return this.type (ending up in the type of the
  * class implementing the trait), to allow _builders_ like
  * Ints() from(1) to(10) reversed.
@@ -18,22 +18,25 @@ trait Generator[+T] {
   /** Get n entries converted to strings and formatted. */
   def getStrings(n: Int): List[String]
 
-  /** 
-   * Add a filter function that takes an instance of the 
-   *  generator's type and returns  true if the instance should be 
-   *  included in the list. Should be applied before constructing
-   *  the final list (to ensure that get(n) actually contains n
-   *  elements). The function may be called several times to add
-   *  multiple filters to apply -- each filter must accept the
-   *  instance to include it in the final list.
+  /**
+   * Add a filter function that takes an instance of the
+   * generator's type and returns  true if the instance should be
+   * included in the list. Should be applied before constructing
+   * the final list (to ensure that get(n) actually contains n
+   * elements). The function may be called several times to add
+   * multiple filters to apply -- each filter must accept the
+   * instance to include it in the final list.
    */
   def filter(f: T => Boolean): this.type
 
-  /** 
+  /**
    * Adds a formatting function that takes an instance of the given
-   *  type T and formats it as a string.
+   * type T and formats it as a string.
    */
   def formatWith(f: T => String): this.type
+
+  /** Runs the defined formatter on one instance*/
+  def formatOne[S>:T](v: S): String
 }
 
 
@@ -77,7 +80,7 @@ trait ExtendedGenerator[T] extends Generator[T] {
    */
   def sequential: this.type
 
-  /** 
+  /**
    * Calling this sets the generation to random, and then checks to see
    * that each generated value is unique.
    */
@@ -86,13 +89,13 @@ trait ExtendedGenerator[T] extends Generator[T] {
   /**
    * Calling this implies a call to sequential();
    * additionally, generation starts at the upper bound, stepping towards
-   * the lower. 
+   * the lower.
    */
   def reversed: this.type
 }
 
 
-/** 
+/**
  * A default implementation of the Generator interface.
  *
  * @author lre
@@ -109,9 +112,11 @@ trait GeneratorImpl[T] extends Generator[T] {
   override def formatWith(f: T => String): this.type = { formatFun = f; this }
 
   override def getStrings(n: Int): List[String] = get(n).map(formatFun)
+
+  override def formatOne[S>:T](v: S): String = formatFun(v.asInstanceOf[T])
 }
 
-/** 
+/**
  * A trait to help build delegates for ExtendedGenerators.
  *
  * @author lre
@@ -137,4 +142,5 @@ trait ExtendedDelegate[G, T]   {
   override def filter(f: T=>Boolean): this.type = { generator.filter(v=> f(conv2result(v))); this }
   override def get(n: Int): List[T] = generator.get(n) map conv2result
   override def getStrings(n: Int): List[String] = generator.getStrings(n)
+  override def formatOne[S>:T](v: S): String= generator.formatOne(v)
 }

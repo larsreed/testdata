@@ -2,9 +2,9 @@
 This project contains a simple set of tools to help generate test data. It is primarily a way to train myself in Scala (by porting and enhancing some very old AWK scripts :), but can hopefully be useful to someone...
 
 ## Overview
-The basic component is the `Generator[T]`  trait, which is able to provide a (possibly filtered) list of instances of a given type, as well as the same list converted to strings.  
-On top of this is a set of generators based on the `ExtendedGenerator[T]` interface, containing methods to set up lists of basic data like strings and numbers.  
-Furthermore, there are some utility classes like FieldConcatenator and WeightedGenerator to assist in creating aggregate or more complex data. And finally, there are a set of classes to assist in creating complete data records, like `ToSql` for generating SQL inserts, and `ToCsv` to create simple flat file records.
+The basic component is the `Generator[T]` trait, which is able to provide a (possibly filtered) list of instances of a given type, as well as the same list converted to strings.
+On top of this is a set of generators based on the `ExtendedGenerator[T]` interface, containing methods to set up lists of basic data like strings and numbers.
+Furthermore, there are some utility classes like `FieldConcatenator` and `WeightedGenerator` to assist in creating aggregate or more complex data. And finally, there are a set of classes to assist in creating complete data records, like `ToSql` for generating SQL inserts, and `ToCsv` to create simple flat file records.
 
 ### Sample usage
 Here is an introductory example to give you a sense of what it's all about:
@@ -15,19 +15,21 @@ Here is an introductory example to give you a sense of what it's all about:
     import no.mesan.testdatagen.generators.{Dates, Doubles, Fixed, FromList, Ints}
     import no.mesan.testdatagen.generators.misc.Names
     import no.mesan.testdatagen.recordgen.{SkipNull, ToXmlElements}
-    
+    import scala.language.postfixOps
+
+
     object SimpleSample extends App {
       ToXmlElements("order", "orderLine", SkipNull)
         .add("id", Ints() from(1) sequential)
-        .add("productName", WeightedGenerator()
-                             .add(3, Names(1))
-                             .add(2, Names(2)))
+        .add("productName", WeightedGenerator(
+                             (3, Names(1)),
+                             (2, Names(2))))
         .add("qty", SomeNulls(33,
                      FieldConcatenator()
                        .add(Doubles() from(1) to(300) format("%5.2f"))
                        .add(Fixed(" "))
                        .add(FromList("l", "kg", "", "m"))))
-        .add("orderDate", Dates() from(y=2012, m=9) to(y=2013, m=1) format("yyyy-MM-dd"))
+        .add("orderDate", Dates() from(y=2012, m=9) to(y=2014, m=1) format("yyyy-MM-dd"))
         .toFile("orders.xml")
         .getStrings(1000)
     }
@@ -50,7 +52,7 @@ This produces an XML-file, order.xml, with the following content:
           <id>3</id>
           <productName>Iphlifhmopaka</productName>
           <qty>87,77 kg</qty>
-          <orderDate>2012-11-04</orderDate>
+          <orderDate>2013-11-04</orderDate>
        </orderLine>
        <orderLine>
           <id>4</id>
@@ -91,7 +93,7 @@ The elements here are:
 is a simple trait containing a sufficient implementation of most of the generator methods (except `get`).   Implementing classes get the following members:
 
 * `protected var filterFuns` and `protected def filterAll(elem:T)`: the list of defined filters and a function to check them all at once.
-* A default filter function that accepts any input is included. 
+* A default filter function that accepts any input is included.
 * `protected var formatter` which is the defined formatting function, defaulting to a simple toString.
 * An implementation of `getStrings`  that calls `get` and formats each element with the formatter.
 
@@ -117,7 +119,7 @@ The general methods are:
 
 * `format(s)`: A simpler way to define a formatting function, by providing a simple format string for java.lang.String.format.
 * `from(T) / to(T)`: defines a lower/upper bound for generated values (takes a value of the output type, subclasses may provide variants)
-* `sequential`: Signals that sequential values are to be generated (subclasses may define a step size)   by default, random values are generated.  
+* `sequential`: Signals that sequential values are to be generated (subclasses may define a step size)   by default, random values are generated.
 Generation starts at the lower bound, generating towards the upper. If the upper bound is reached without providing the wanted *n* occurrences, it wraps around from the start. E.g.: when getting 6 numbers from `Ints() from(0) to(1) sequential` you get `0,1,0,1,0,1`.
 * `reversed`: Calling this implies a call to sequential ; additionally, generation starts at the upper bound, stepping towards the lower.
 * `unique`: Calling this sets the generation to random, and then checks to see that each generated value is unique.
@@ -139,7 +141,7 @@ Subclasses get the following `protected` members:
 * `var isReversed`
 
 #### ExtendedDelegate
-The final basic building block is the `trait ExtendedDelegate[G, T]`.  
+The final basic building block is the `trait ExtendedDelegate[G, T]`.
 This trait
 
 * can only be used on a type implementing `Generator[T]`
@@ -150,7 +152,7 @@ This trait
 ## Basic generators
 
 ### Booleans
-This class has the rather simple job of generating Booleans... It uses `FromList` under the hood. 
+This class has the rather simple job of generating Booleans... It uses `FromList` under the hood.
 
 * `from` and `to` are not supported
 * an additional method `format(falseString, trueString)` is available for the conversion in `getStrings`
@@ -159,7 +161,7 @@ This class has the rather simple job of generating Booleans... It uses `FromList
     * `Booleans(trueString, falseString)`
 
 ### Ints
-returns ints from the entire range. The only special method is `step(Int)` to define step size for sequences.  
+returns ints from the entire range. The only special method is `step(Int)` to define step size for sequences.
 Apply methods (defaults for all parameters):
 
 * `Ints(from:Int=Int.MinValue+1, to:Int=Int.MaxValue-1, step:Int=1)`
@@ -190,7 +192,7 @@ A simple enough data type, this is still one of the more complex generators. It 
 * `timeOnly`: generates different times with date part omitted
 * `dateAndTime`: include both date and time in the output (default is just date)
 * `setStdTime(h: Int, min:Int, s:Int, ms:Int)`: set the standard time parts used when generating (default 0,0,0,0)
-* `setStdDate(y: Int, m:Int, d:Int)`: set the standard date parts used when generating (default today's date) 
+* `setStdDate(y: Int, m:Int, d:Int)`: set the standard date parts used when generating (default today's date)
 * `from(java.util.Date)` / `to(java.util.Date)`: limit using JDK Dates rather than Joda DateTimes.
 * `from(y: Int=1753, m: Int=1, d:Int=1, hh: Int=0, mm: Int=0, ss:Int=0, ms: Int=0)` / `to(y:Int=9999, m: Int=12, d:Int= -31, hh: Int=23, mm: Int=59, ss:Int=59, ms: Int=999)`: These are designed to be used with named arguments, like `from(y=1980, m=1) to(y=1999, m=12)`
 * `step(y: Int=0, m: Int=0, d:Int=0, hh: Int=0, mm: Int=0, ss:Int=0, ms:Int=0)`: Another candidate for named arguments, this method sets the interval for sequential generation
@@ -199,11 +201,11 @@ A simple enough data type, this is still one of the more complex generators. It 
 * `Dates.dateFormatter(formatString)`: returns a partial function to format dates according to a given string
 
 ### Strings
-The Strings generator generate strings, would you believe it...  
+The Strings generator generate strings, would you believe it...
 Special methods:
 
 * `length(n)` / `lengthBetween(from, to)`: sets the required length (default 1) of the generated strings
-* `chars(Seq[Char])`: defines the default characters to build strings from (default printable ASCII, i.e. space to `~`).  
+* `chars(Seq[Char])`: defines the default characters to build strings from (default printable ASCII, i.e. space to `~`).
 Note that there are many ways to define a `Seq[Char]`, e.g. `"aeiuoy"`, `'a' to 'z'`, `'a' to 'z' filter {x=> !"aeiouy".contains(x)}`
 
 Apply methods:
@@ -212,11 +214,11 @@ Apply methods:
 * `Strings(length: Int, chars:Seq[Char])`: supply length and character set
 
 ### Fixed
-This generator may seem superfluous... It takes a single value, and returns that same value repeatedly. But it is meant for aggregating values, see `FieldConcatenator` for an example.  
+This generator may seem superfluous... It takes a single value, and returns that same value repeatedly. But it is meant for aggregating values, see `FieldConcatenator` for an example.
 This "generator" is actually just an apply method taking a single value, it is backed by a `FromList`.
 
 ### FromFile
-This generator reads lines from an input file and creates a list of values, from which a delegate `FromList` can take its values. The values may be typed (does not currently work as expected...), even though they are read as strings. 
+This generator reads lines from an input file and creates a list of values, from which a delegate `FromList` can take its values. The values may be typed (does not currently work as expected...), even though they are read as strings.
 Specialities:
 
 * The `from` and `to` methods are not supported.
@@ -300,7 +302,7 @@ Creates "name-like" strings   words containing A-Zs with random length between 3
 This generator selects from a list of about a 100 manufacturers of cars, motor cycles etc, like "Porsche" and "Toyota". No class, just an apply method without parameters returning a `FromList`.
 
 ### Urls
-Builds fake URLs using a http/https prefix, "://", sometimes "www.", a lowercase string (a-z) of length 4-10, and a suffix of .com/no/org/net/co.uk/gov.  
+Builds fake URLs using a http/https prefix, "://", sometimes "www.", a lowercase string (a-z) of length 4-10, and a suffix of .com/no/org/net/co.uk/gov.
 No class, just an apply method without parameters.
 
 ### MailAddresses
@@ -318,7 +320,7 @@ This generator is a (perhaps too) simple generator for GUIDs, basically 128-bits
 There are 3 get-methods (and only a default apply method):
 
 * `get(n)`: returns a list of `Seq[Int]`, with 4 positive longs; with 32, 16, 16 and 64 bits respectively (negative numbers are not generated)
-* `getStrings(n)`: the numbers are formatted as hex strings in the format "hhhhhhhh-hhhh-hhhh-hhhhhhhhhhhhhhhh" (unless you call `formatWith` with another formatter).  
+* `getStrings(n)`: the numbers are formatted as hex strings in the format "hhhhhhhh-hhhh-hhhh-hhhhhhhhhhhhhhhh" (unless you call `formatWith` with another formatter).
 If you need something like the standard Windows references, you can use a `TextWrapper`, e.g. `TextWrapper(Guids()) surroundWith("{", "}") toUpper`, which returns strings like `{0B9F2CC4-7A26-DF88-57BFACEB0A6152C3}`
 * `getBigInts(n)`: the values are returned as actual 128-bit ints, like 135552048303739552162038533024056166383
 
@@ -326,7 +328,7 @@ The `filter` method is *not* supported for this generator.
 
 ### CreditCards
 This generator by default generates 16-digit credit card numbers from Visa or MasterCard, but you can instruct it otherwise through its generic apply method. The
-last digit is generated using Luhn's algorithm ([http://en.wikipedia.org/wiki/Luhn_algorithm](http://en.wikipedia.org/wiki/Luhn_algorithm), see also [http://en.wikipedia.org/wiki/Credit_card_number](http://en.wikipedia.org/wiki/Credit_card_number)).  
+last digit is generated using Luhn's algorithm ([http://en.wikipedia.org/wiki/Luhn_algorithm](http://en.wikipedia.org/wiki/Luhn_algorithm), see also [http://en.wikipedia.org/wiki/Credit_card_number](http://en.wikipedia.org/wiki/Credit_card_number)).
 There are 4 different "apply" methods:
 
 * `CreditCards()`: 16 digit MasterCard/Visa
@@ -354,22 +356,22 @@ A generator for Markov chain text generation, i.e. random text based on existing
 > føremoner. Statstilsette må møte framtidige utfordringar både
 > avgjerdsprosessen og 1970-talet.
 
-Neither `filter` nor `formatWith` are supported.  
+Neither `filter` nor `formatWith` are supported.
 `getString` returns just _one_ valuable occurrence (at index 0) -- the selected words concatenatenated with a space between them.
 
 Both files and a string list may be used as input. A default text from [http://www.regjeringen.no/nb/dep/fad/dok/regpubl/stmeld/2008-2009/stmeld-nr-19-2008-2009-](http://www.regjeringen.no/nb/dep/fad/dok/regpubl/stmeld/2008-2009/stmeld-nr-19-2008-2009-) is provided in the file markov.txt.
 
 
 ### Fibonaccis
-You cannot write a set of generators in a functional language without a Fibonacci sequence generator. Thus...  
-This generator is written in a tail recursive manner, supported by `BigInt` , thus calculating Fibonacci(500)==1394232245616978801397243828704072839500702565876973072641089629483255716228632906915576 seemingly correct.  
+You cannot write a set of generators in a functional language without a Fibonacci sequence generator. Thus...
+This generator is written in a tail recursive manner, supported by `BigInt` , thus calculating Fibonacci(500)==1394232245616978801397243828704072839500702565876973072641089629483255716228632906915576 seemingly correct.
 You may use `filter` and `formatWith` as for other generators.
 
 ### Norwegian custom generators
 These generators create data specific to Norwegian domains. They use Norwegian names, as they are of limited value outside of Norway anyway.
 
 #### Kjennemerker
-No class, just an apply method without parameters.  
+No class, just an apply method without parameters.
 Generates strings resembling Norwegian car license plates   2 uppercase letters (not I, M, O or Q) followed by 5 digits (use a TextWrapper to shorten them if you need).
 
 #### Fnr
@@ -400,21 +402,21 @@ Generates legal "organisasjonsnummer", Norwegian "organization numbers" ([http:/
 Apply methods: Standard no-args
 
 #### Land
-(Country generator.)  
+(Country generator.)
 This generator (object) reads the supplied "land.txt" file containing country names in Norwegian spelling, and uses a `FromFile` to supply values.
 
 #### Poststeder
-(Postal code generator.)  
+(Postal code generator.)
 This one is also based on a `FromFile` reading the supplied "postnr.txt" which contains Norwegian postal codes, formatted as "NNNN Ssss....", where NNNN is the 4-digit code, followed by a space, then the name.   There are 3 alternative invokations, they all have an optional `allLines` parameter (default true) for the `FromFile` generator:
 
-* `Poststeder`: returns full strings as described above 
-* `Poststeder.postnr`: returns the numeric code only 
+* `Poststeder`: returns full strings as described above
+* `Poststeder.postnr`: returns the numeric code only
 * `Poststeder.poststed`: returns the name only
 
 Source: [http://www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postreklame/andre-tjenester/postnummertabeller](http://www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postreklame/andre-tjenester/postnummertabeller)
 
 #### Kommuner
-(County generator.)  
+(County generator.)
 Another one based on a `FromFile`, reading "kommuner.txt" which contains Norwegian county names, formatted as "NNNN Ssss....", where NNNN is a 4-digit code, followed by a space, then the name. There are 3 alternative invokations, they all have an optional `allLines` parameter (default `true`) for the `FromFile` generator:
 
 * `Kommuner`: returns full strings as described above
@@ -424,7 +426,7 @@ Another one based on a `FromFile`, reading "kommuner.txt" which contains Norwegi
 Source: [http://www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postreklame/andre-tjenester/postnummertabeller](http://www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postreklame/andre-tjenester/postnummertabeller)
 
 #### NorskeNavn
-(Generator for Norwegian names.)  
+(Generator for Norwegian names.)
 First a bit about the background for this generator... Over the years, I have "scraped" lists of names from the net   tax lists, participants in conferences and sports events etc, and tried to normalize and uniquify these lists (this bears the risk of having first and last names mixed up, and wrong capitalization...). Then I removed first and last names that only appeared once in any combination, to avoid generating names that identifies a single person. To these lists, I added the list from Norwegian SSB (Statistics Norway) of the most popular names, from these I have extracted the lists of names in "fornavn.txt" (a little short of 5000 first names) and "etternavn.txt" (about 8300 last names). The lists have no notion of gender, so you might well end up with names like "Ann Abdul Hansen"...
 
 To generate names:
@@ -435,11 +437,11 @@ To generate names:
 3. the standard `filter` and `formatWith` may also be used.
 
 #### RareNavn
-This is a simpler name generator, picking from a list of about 100 names. These names are meant to sound "funny", read the right way, they form other words or expressions, e.g. "Buster Minal" and "Mary Christmas".. :)  
+This is a simpler name generator, picking from a list of about 100 names. These names are meant to sound "funny", read the right way, they form other words or expressions, e.g. "Buster Minal" and "Mary Christmas".. :)
 It supports the `allLines` parameter of `FromFile`.
 
 #### Adresser
-A generator to create strings that look like Norwegian street addresses. It uses surnames (from `NorskeNavn.kunEtternavn`) and places (from `Poststeder.poststed`), and optionally a house number (sometimes with a letter suffix).  
+A generator to create strings that look like Norwegian street addresses. It uses surnames (from `NorskeNavn.kunEtternavn`) and places (from `Poststeder.poststed`), and optionally a house number (sometimes with a letter suffix).
 Note that the class itself does *not* implement a generator interface, but its `generator(withNumbers:Boolean)` returns a generator (as does the apply method).
 
 Apply method: `Adresser(withNumbers: Boolean=true)`
@@ -476,7 +478,7 @@ in an XML record.
 
 Each field (i.e. name+ generator) is represented by a `case class DataField(name: String, generator: Generator[_]` or one of its subclasses. In addition to its constructor arguments, it contains the overridable methods
 
-* `prefix` / `suffix`: how to add "something" before or after the field value 
+* `prefix` / `suffix`: how to add "something" before or after the field value
 * transform(String): how to transform the value from the generator's `getStrings` to the output string
 * `getTuples(Int, NullHandler)`: the method that calls the generator and produces N tuples in a `(name,value)` format.
 
@@ -515,12 +517,12 @@ The output from this generator is a set of data records, optionally enclosed in 
 
 1. `rootName:String`: if this parameter has a value, a root record with that name is generated, enclosing the other records.
 2. `recordName:String`: must be given, sets the name of the base element for each record
-3. `nullHandler`: see above, default `EmptyNull` 
+3. `nullHandler`: see above, default `EmptyNull`
 
 The introductory example shows sample output from this.
 
 #### ToXmlAttribute
-Much like the previous, but the fields are represented as *attributes* on the (empty) data record, rather than enclosed elements. Parameters are like the previous. 
+Much like the previous, but the fields are represented as *attributes* on the (empty) data record, rather than enclosed elements. Parameters are like the previous.
 Sample without root record and with empty nulls:
 
     <data homePage="" userId="RKGG" id="1" name="Gleihoy Tmfsmr" born=""></data>
@@ -531,7 +533,7 @@ Sample without root record and with empty nulls:
 This one formats its output as an HTML table, optionally as a complete HTML document.
 The apply methods has two optional parameters:
 
-* `pageTitle:String`: if this parameter has a value, a complete HTML document with that title and heading is generated, enclosing the table. 
+* `pageTitle:String`: if this parameter has a value, a complete HTML document with that title and heading is generated, enclosing the table.
 * `nullHandler`: see above, default `EmptyNull`.
 `EmptyNull` is handled with a `<td>&nbsp; </td>` cell, `SkipNull` should not be used.
 
@@ -587,9 +589,9 @@ No prize for guessing the output format from this generator... There are two dif
 ### ToSql
 Often, you will need to put test data into a data base. This generator tries to help you... It generates records of the form `insert into tableName (field1, field2,...) values (value1, value2, ...);`.
 
-* To facilitate quoting, you must call the alternative add method for values that need quotes  they are then single quoted (and embedded single quotes escaped):  
+* To facilitate quoting, you must call the alternative add method for values that need quotes  they are then single quoted (and embedded single quotes escaped):
 `addQuoted(fieldName: String, gen: Generator[_])`
-* The apply method needs to know the table name, you may optionally use a record separator different from ";":  
+* The apply method needs to know the table name, you may optionally use a record separator different from ";":
 `ToSql(tableName: String, exec: String=";")`
 
 Sample output:

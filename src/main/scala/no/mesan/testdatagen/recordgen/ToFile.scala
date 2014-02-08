@@ -13,21 +13,37 @@ import no.mesan.testdatagen.Generator
  * @author lre
  */
 class ToFile[T](fileName:String,
-                         generator: Generator[T],
-                         append:Boolean,
-                         charSet:String) extends Generator[T] {
+                generator: Generator[T],
+                append:Boolean,
+                charSet:String) extends Generator[T] {
+
+  protected var prefix= List[String]()
+  protected var suffix= List[String]()
+
+  def prepend(s: String):this.type = {
+    prefix::= s
+    this
+  }
+
+  def append(s: String):this.type = {
+    suffix::= s
+    this
+  }
 
   /** Writes a list of strings to a named file. */
   protected def toFile(list: List[String]) {
     val writer = new OutputStreamWriter(
-                   new FileOutputStream(fileName, append), 
+                   new FileOutputStream(fileName, append),
                    Charset.forName(charSet).newEncoder())
     val bufWriter= new BufferedWriter(writer)
     try {
-      list.foreach{ s=>
+      def out(s: String) {
         bufWriter.append(s)
         bufWriter.newLine
       }
+      prefix.reverse.foreach {s => out(s)}
+      list.foreach{s=> out(s)}
+      suffix.reverse.foreach {s => out(s)}
     }
     catch {
       case e: IOException => println("Error: " + e)
@@ -51,6 +67,7 @@ class ToFile[T](fileName:String,
 
   override def filter(f: T => Boolean): this.type= { generator.filter(f); this }
   override def formatWith(f: T => String): this.type= { generator.formatWith(f); this }
+  override def formatOne[S >: T](v: S): String = generator.formatOne(v)
 }
 
 object ToFile {

@@ -41,3 +41,4 @@ project/plugins/project/
 
 
 src/test/scala/worksheet.sc
+/src/test/scala/no/mesan/testdatagen/generators/sample/TadFaks.scala

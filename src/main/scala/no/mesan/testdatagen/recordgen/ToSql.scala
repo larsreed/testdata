@@ -25,7 +25,7 @@ class ToSql(tableName: String, exec: String) extends StringRecordGenerator(KeepN
   override protected def makeFields(rec: DataRecord): String = rec.map(_._2).mkString(", ")
 
   def addQuoted(fieldName: String, gen: Generator[_]): ToSql.this.type = {
-    add(new SingleQuoteWithEscapeDataField(fieldName, gen))
+    add(new SingleQuoteWithDoubleEscapeDataField(fieldName, gen))
     this
   }
 }

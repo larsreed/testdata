@@ -80,7 +80,7 @@ class ToSqlSuite extends FunSuite with Printer {
     new Setup {
       var fnuttGen = Chars("'")
       val res = ToSql("tbl", "").addQuoted("fnutt", fnuttGen).getStrings(1)(0)
-      val exp= "insert into tbl (fnutt) values ('\\'')"
+      val exp= "insert into tbl (fnutt) values ('''')"
       assert(res===exp,res +"=" + exp)
     }
   }

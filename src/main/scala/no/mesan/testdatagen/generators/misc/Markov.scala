@@ -72,8 +72,8 @@ class Markov extends Generator[String] {
   }
 
   override def filter(f: (String) => Boolean) = throw new UnsupportedOperationException("filter")
-
   override def formatWith(f: (String) => String) = throw new UnsupportedOperationException("formatWith")
+  override def formatOne[S>:String](v: S): String = "%s".format(v)
 }
 
 object Markov {

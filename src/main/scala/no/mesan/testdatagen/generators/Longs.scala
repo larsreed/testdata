@@ -34,7 +34,7 @@ class Longs extends SingleGenerator[Long] {
     require(max<Long.MaxValue, "max < " + Long.MaxValue)
     require(min>Long.MinValue, "min > " + Long.MinValue)
 
-    val span= BigInt(max) - BigInt(min)
+    val span= BigInt(max) - BigInt(min) +1
     var step= if (isReversed) -stepSize else stepSize
 
     def getSequentially(): List[Long]= {

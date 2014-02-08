@@ -1,7 +1,7 @@
 package no.mesan.testdatagen.generators.misc
 
 import no.mesan.testdatagen.Generator
-import no.mesan.testdatagen.aggreg.FieldConcatenator
+import no.mesan.testdatagen.aggreg.{WeightedGenerator, FieldConcatenator}
 import no.mesan.testdatagen.generators.Strings
 
 /**
@@ -27,6 +27,12 @@ object Names {
       gen.add(Strings().length(1).chars(pfxChars))
       gen.add(Strings().lengthBetween(2, 19).chars(sfxChars))
     }
+    gen
+  }
+
+  def apply(fromN: Int, toN: Int): Generator[String] = {
+    val gen = WeightedGenerator[String]()
+    for ( i<- fromN to toN ) gen.add(Names(i))
     gen
   }
 }

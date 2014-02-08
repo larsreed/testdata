@@ -4,7 +4,7 @@ import no.mesan.testdatagen.{Generator, GeneratorImpl}
 import java.util.regex.Pattern
 import scala.language.postfixOps
 
-/** 
+/**
  * The base class for record generators.
  *
  * @author lre
@@ -28,11 +28,11 @@ abstract class DataRecordGenerator[T](nulls: NullHandler) extends GeneratorImpl[
     add(new DataField(fieldName, gen))
 
   /** Return a ToFile that overwrites its result. */
-  def toFile(fileName: String, charSet:String=ToFile.defaultCharSet): Generator[T]= 
+  def toFile(fileName: String, charSet:String=ToFile.defaultCharSet): Generator[T]=
     ToFile(fileName, this, append = false, charSet)
 
   /** Return a ToFile that appends to its result. */
-  def appendToFile(fileName: String, charSet:String=ToFile.defaultCharSet): Generator[T]= 
+  def appendToFile(fileName: String, charSet:String=ToFile.defaultCharSet): Generator[T]=
     ToFile(fileName, this, append = true, charSet)
 
   /** Return a list of n records. Each record consists of 1 value for each field. */
@@ -77,7 +77,7 @@ case object SkipNull extends NullHandler
 /** Include null fields with an explicit "null" representation. */
 case object KeepNull extends NullHandler
 
-/** 
+/**
  * Representation of one of the fields in a record -- with a name and a generator.
  *
  * @author lre
@@ -109,13 +109,12 @@ case class DataField(name: String, generator: Generator[_])  {
  *
  * @author lre
  */
-class SingleQuoteWithEscapeDataField(name: String, generator: Generator[_])
+class SingleQuoteWithDoubleEscapeDataField(name: String, generator: Generator[_])
       extends DataField(name, generator) {
   override def prefix: String = "'"
   override def suffix: String = "'"
   override def transform(s: String): String =
-    if (s==null) null else s.replaceAll(Pattern.quote("\\"), "\\\\\\\\")
-                            .replaceAll("[']", """\\'""")
+    if (s==null) null else s.replaceAll("[']", "''")
 }
 
 /**
@@ -128,7 +127,7 @@ class DoubleQuoteWithEscapeDataField(name: String, generator: Generator[_])
       extends DataField(name, generator) {
   override def prefix: String = "\""
   override def suffix: String = "\""
-  override def transform(s: String): String = 
+  override def transform(s: String): String =
     if (s==null) null else s.replaceAll(Pattern.quote("\\"), "\\\\\\\\")
                             .replaceAll("[\"]", """\\\"""")
 }

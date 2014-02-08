@@ -42,4 +42,3 @@ trait MultiGeneratorWithWeight[T] {
     this
   }
 }
-

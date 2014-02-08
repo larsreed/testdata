@@ -15,7 +15,7 @@ class WeightedGeneratorSuite extends FunSuite with Printer {
     val xgen= WeightedGenerator[Any]((1, FromList(1,2,3)),
                                      (2, Chars("1abc")),
                                      (1, Booleans().format("0", "1"))).
-                                       filter(x=> !(x.toString.matches("1")))
+                                       filter(x=> !x.toString.matches("1"))
   }
 
   print(false) {

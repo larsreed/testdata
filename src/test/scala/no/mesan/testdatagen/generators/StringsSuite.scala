@@ -109,7 +109,7 @@ class StringsSuite extends FunSuite with Printer {
   }
 
   test("formatting") {
-    val  res= Strings().length(2).chars("ABC").sequential.formatWith(i=>i.formatted("%7s")).getStrings(3)
+    val  res= Strings().length(2).chars("ABC").sequential.formatWith(i=>f"$i%7s").getStrings(3)
     assert(res=== List("     AA", "     AB", "     AC"))
     val  res3= Strings().length(2).chars("AB").sequential.format("%-5s").getStrings(3)
     assert(res3=== List("AA   ", "AB   ", "BA   "))

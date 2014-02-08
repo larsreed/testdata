@@ -29,7 +29,7 @@ class SequenceOf[S, T] (convert: T=>S) extends GeneratorImpl[S] with MultiGenera
       f(number(n, w, tot), g)
     }
   }
-  override def get(n: Int): List[S] =  getList(n){ (no, g)=> g.get(no).map(convert(_)) }
+  override def get(n: Int): List[S] =  getList(n){ (no, g)=> g.get(no).map(convert) }
   override def getStrings(n: Int): List[String] =  getList(n){ (no, g)=> g.getStrings(no)}
 }
 

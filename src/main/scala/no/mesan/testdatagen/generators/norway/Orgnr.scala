@@ -2,6 +2,7 @@ package no.mesan.testdatagen.generators.norway
 
 import no.mesan.testdatagen.GeneratorImpl
 import no.mesan.testdatagen.generators.Ints
+import scala.annotation.tailrec
 
 /**
  * Generates legal "organisasjonsnummer", Norwegian "organization numbers"
@@ -18,7 +19,7 @@ class Orgnr() extends GeneratorImpl[Int] {
     require(n>=0, "cannot get negative count")
     val fakt= List(3, 2, 7, 6, 5, 4, 3, 2)
 
-    def genNext(soFar: List[Int]): List[Int]= {
+    @tailrec def genNext(soFar: List[Int]): List[Int]= {
       if (soFar.length>=n) soFar // Done!
       else {
         val first8= intGen.get(1)(0)

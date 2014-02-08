@@ -13,7 +13,7 @@ import no.mesan.testdatagen.Printer
 class UniqueWithFallbackSuite extends FunSuite with Printer {
 
   trait Setup {
-    val ints= (Ints() from -50 to 50 unique) get(101)
+    val ints= (Ints() from -50 to 50 unique) get 101
     val mainGen= FromList(ints)
     val altGen= Ints() from 1000 to 5000
     val xgen= UniqueWithFallback(mainGen, altGen)

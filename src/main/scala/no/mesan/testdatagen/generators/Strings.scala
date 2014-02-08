@@ -4,6 +4,7 @@ import scala.annotation.tailrec
 import scala.util.Random
 
 import no.mesan.testdatagen.SingleGenerator
+import scala.annotation.tailrec
 
 /**
  * Generate Strings.
@@ -61,7 +62,7 @@ class Strings extends SingleGenerator[String] {
         val width= if (minLength==maxLength) maxLength
                    else minLength + Random.nextInt(maxLength-minLength+1)
         val range= chars.length
-        def mkString(soFar: String): String= {
+        @tailrec def mkString(soFar: String): String= {
           if (soFar.length==width) soFar
           else mkString(soFar + chars(Random.nextInt(range)))
         }

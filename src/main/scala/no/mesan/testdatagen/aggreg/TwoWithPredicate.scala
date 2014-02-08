@@ -4,6 +4,7 @@ import scala.collection.immutable.List
 
 import no.mesan.testdatagen.{GeneratorImpl, Generator}
 import no.mesan.testdatagen.generators.{FromList, Dates}
+import scala.annotation.tailrec
 
 /**
  * This generator takes two generators and a predicate as input; it draws tuples from each
@@ -14,7 +15,7 @@ import no.mesan.testdatagen.generators.{FromList, Dates}
 class TwoWithPredicate[T, U](left: Generator[T], right: Generator[U],
                              predicate: ((T,U))=>Boolean) extends GeneratorImpl[(T, U)]  {
   override def get(n: Int): List[(T, U)] = {
-    def getAbunch(soFar:List[(T, U)]): List[(T, U)] =
+    @tailrec def getAbunch(soFar:List[(T, U)]): List[(T, U)] =
       if (soFar.isEmpty || soFar.length<n)
         getAbunch(soFar ++ (left.get(n) zip right.get(n)).filter(predicate).filter(filterAll))
       else soFar.take(n)

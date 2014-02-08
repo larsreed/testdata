@@ -1,11 +1,6 @@
 package no.mesan.testdatagen.generators
 
-import scala.annotation.tailrec
-import scala.util.Random
-
-import no.mesan.testdatagen.SingleGenerator
-
-/** 
+/**
  * Generate booleans.
  *
  * @author lre

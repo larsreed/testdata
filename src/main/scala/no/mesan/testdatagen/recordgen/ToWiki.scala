@@ -32,7 +32,7 @@ class ToWiki() extends StringRecordGenerator(EmptyNull) {
   }
 
   override def get(n: Int): List[String] =
-    (s"|| ${fieldNames.mkString(" || ")} ||") :: super.get(n)
+    s"|| ${fieldNames.mkString(" || ")} ||" :: super.get(n)
 }
 
 object ToWiki {

@@ -64,10 +64,10 @@ class DatesSuite extends FunSuite with Printer {
     val res = Dates().dateAndTime.from(y = 2012, m = 1, d = 1).sequential.get(30)
     val d1 = new DateTime(2012, 1, 1, 0, 0)
     val d2 = new DateTime(2012, 1, 2, 0, 0)
-    for (i <- 0 to 23) assert(res.contains(new DateTime(d1.getYear(), d1.getMonthOfYear(),
-      d1.getDayOfMonth(), i, 0, 0, 0)), i + " 1")
-    for (i <- 0 to 5) assert(res.contains(new DateTime(d2.getYear(), d2.getMonthOfYear(),
-      d2.getDayOfMonth(), i, 0, 0, 0)), i + " 2")
+    for (i <- 0 to 23) assert(res.contains(new DateTime(d1.getYear, d1.getMonthOfYear,
+      d1.getDayOfMonth, i, 0, 0, 0)), i + " 1")
+    for (i <- 0 to 5) assert(res.contains(new DateTime(d2.getYear, d2.getMonthOfYear,
+      d2.getDayOfMonth, i, 0, 0, 0)), i + " 2")
   }
 
   test("sequence that passes limit repeats itself") {
@@ -87,9 +87,9 @@ class DatesSuite extends FunSuite with Printer {
 
   test("limits with underspecified date") {
     // With m=2, d defaults to 31 ... should become 29 for a leap year
-    val dt: DateTime = (Dates().from(y = 2004, m = 2).to(y = 2004, m = 2).reversed.get(1))(0)
-    val (y, m, d, hh, mm, ss, ms) = (dt.getYear(), dt.getMonthOfYear(), dt.getDayOfMonth(),
-      dt.getHourOfDay(), dt.getMinuteOfHour(), dt.getSecondOfMinute(), dt.getMillisOfSecond())
+    val dt: DateTime = Dates().from(y = 2004, m = 2).to(y = 2004, m = 2).reversed.get(1)(0)
+    val (y, m, d, hh, mm, ss, ms) = (dt.getYear, dt.getMonthOfYear, dt.getDayOfMonth,
+      dt.getHourOfDay, dt.getMinuteOfHour, dt.getSecondOfMinute, dt.getMillisOfSecond)
     assert(y === 2004)
     assert(m === 2)
     assert(d === 29)
@@ -99,8 +99,8 @@ class DatesSuite extends FunSuite with Printer {
     val res = Dates().from(y = 2012).to(y = 2018).get(42)
     assert(res.length === 42)
     for (dt <- res) {
-      val (y, m, d, hh, mm, ss, ms) = (dt.getYear(), dt.getMonthOfYear(), dt.getDayOfMonth(),
-        dt.getHourOfDay(), dt.getMinuteOfHour(), dt.getSecondOfMinute(), dt.getMillisOfSecond())
+      val (y, m, d, hh, mm, ss, ms) = (dt.getYear, dt.getMonthOfYear, dt.getDayOfMonth,
+        dt.getHourOfDay, dt.getMinuteOfHour, dt.getSecondOfMinute, dt.getMillisOfSecond)
       assert((2012 to 2018).contains(y), "y " + dt)
       assert((1 to 12).contains(m), "m " + dt)
       assert((1 to 31).contains(d), "d " + dt)
@@ -115,8 +115,8 @@ class DatesSuite extends FunSuite with Printer {
     val res = Dates().from(y = 2012, m = 4).to(y = 2012, m = 4).get(42)
     assert(res.length === 42)
     for (dt <- res) {
-      val (y, m, d, hh, mm, ss, ms) = (dt.getYear(), dt.getMonthOfYear(), dt.getDayOfMonth(),
-        dt.getHourOfDay(), dt.getMinuteOfHour(), dt.getSecondOfMinute(), dt.getMillisOfSecond())
+      val (y, m, d, hh, mm, ss, ms) = (dt.getYear, dt.getMonthOfYear, dt.getDayOfMonth,
+        dt.getHourOfDay, dt.getMinuteOfHour, dt.getSecondOfMinute, dt.getMillisOfSecond)
       assert(y === 2012, "y " + dt)
       assert(m === 4, "m " + dt)
       assert((1 to 30).contains(d), "d " + dt)
@@ -131,8 +131,8 @@ class DatesSuite extends FunSuite with Printer {
     val res = Dates().from(y = 2012).to(y = 2018).dateAndTime.get(42)
     assert(res.length === 42)
     for (dt <- res) {
-      val (y, m, d, hh, mm, ss, ms) = (dt.getYear(), dt.getMonthOfYear(), dt.getDayOfMonth(),
-        dt.getHourOfDay(), dt.getMinuteOfHour(), dt.getSecondOfMinute(), dt.getMillisOfSecond())
+      val (y, m, d, hh, mm, ss, ms) = (dt.getYear, dt.getMonthOfYear, dt.getDayOfMonth,
+        dt.getHourOfDay, dt.getMinuteOfHour, dt.getSecondOfMinute, dt.getMillisOfSecond)
       assert((2012 to 2018).contains(y), "y " + dt)
       assert((1 to 12).contains(m), "m " + dt)
       assert((1 to 31).contains(d), "d " + dt)
@@ -147,8 +147,8 @@ class DatesSuite extends FunSuite with Printer {
     val res = Dates().from(y = 2012, m = 4, d = 8, hh = 21).to(y = 2012, m = 4, d = 8, hh = 23).dateAndTime.get(42)
     assert(res.length === 42)
     for (dt <- res) {
-      val (y, m, d, hh, mm, ss, ms) = (dt.getYear(), dt.getMonthOfYear(), dt.getDayOfMonth(),
-        dt.getHourOfDay(), dt.getMinuteOfHour(), dt.getSecondOfMinute(), dt.getMillisOfSecond())
+      val (y, m, d, hh, mm, ss, ms) = (dt.getYear, dt.getMonthOfYear, dt.getDayOfMonth,
+        dt.getHourOfDay, dt.getMinuteOfHour, dt.getSecondOfMinute, dt.getMillisOfSecond)
       assert(y === 2012)
       assert(m === 4)
       assert(d === 8)
@@ -163,8 +163,8 @@ class DatesSuite extends FunSuite with Printer {
     val res = Dates().from(hh = 3).setStdDate(2012, 11, 10).timeOnly.get(42)
     assert(res.length === 42)
     for (dt <- res) {
-      val (y, m, d, hh, mm, ss, ms) = (dt.getYear(), dt.getMonthOfYear(), dt.getDayOfMonth(),
-        dt.getHourOfDay(), dt.getMinuteOfHour(), dt.getSecondOfMinute(), dt.getMillisOfSecond())
+      val (y, m, d, hh, mm, ss, ms) = (dt.getYear, dt.getMonthOfYear, dt.getDayOfMonth,
+        dt.getHourOfDay, dt.getMinuteOfHour, dt.getSecondOfMinute, dt.getMillisOfSecond)
       assert(y === 2012)
       assert(m === 11)
       assert(d === 10)
@@ -179,8 +179,8 @@ class DatesSuite extends FunSuite with Printer {
     val res = Dates().from(hh = 3, mm = 14).to(hh = 3, mm = 14).setStdDate(2012, 11, 10).timeOnly.get(42)
     assert(res.length === 42)
     for (dt <- res) {
-      val (y, m, d, hh, mm, ss, ms) = (dt.getYear(), dt.getMonthOfYear(), dt.getDayOfMonth(),
-        dt.getHourOfDay(), dt.getMinuteOfHour(), dt.getSecondOfMinute(), dt.getMillisOfSecond())
+      val (y, m, d, hh, mm, ss, ms) = (dt.getYear, dt.getMonthOfYear, dt.getDayOfMonth,
+        dt.getHourOfDay, dt.getMinuteOfHour, dt.getSecondOfMinute, dt.getMillisOfSecond)
       assert(y === 2012)
       assert(m === 11)
       assert(d === 10)
@@ -216,7 +216,7 @@ class DatesSuite extends FunSuite with Printer {
 
   test("java.util.Date") {
     val start= new Date()
-    val end= new Date(start.getTime()+100000000L)
+    val end= new Date(start.getTime+100000000L)
     val res= Dates().from(start).to(end).dateAndTime.getJavaDates(500)
     res.foreach { dt=> assert(dt.getTime >= start.getTime && dt.getTime <= end.getTime, dt) }
     assert(res.size==500)

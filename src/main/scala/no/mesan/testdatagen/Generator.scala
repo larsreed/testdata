@@ -102,13 +102,13 @@ trait ExtendedGenerator[T] extends Generator[T] {
  */
 trait GeneratorImpl[T] extends Generator[T] {
 
-  private var filterFuns: List[T => Boolean] = List((t => true))
+  private var filterFuns: List[T => Boolean] = List(t => true)
   override def filter(f: T => Boolean): this.type = { filterFuns ::= f; this }
 
   /** Check that all filters are satisfied. */
   protected def filterAll(t: T): Boolean = filterFuns.forall(f => f(t))
 
-  private var formatFun: T => String = (t => if (t==null) null else t.toString)
+  private var formatFun: T => String = t => if (t == null) null else t.toString
   override def formatWith(f: T => String): this.type = { formatFun = f; this }
 
   override def getStrings(n: Int): List[String] = get(n).map(formatFun)

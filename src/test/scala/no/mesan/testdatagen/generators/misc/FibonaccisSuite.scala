@@ -11,7 +11,7 @@ class FibonaccisSuite extends FunSuite with Printer {
 
   print(false) {
     // println(Fibonaccis() filter(bi=> bi%2==0) getStrings(120))
-    println(Fibonaccis() getStrings(500))
+    println(Fibonaccis() getStrings 500)
   }
 
   test("negative get") {
@@ -43,6 +43,6 @@ class FibonaccisSuite extends FunSuite with Printer {
 
   test("not two") {
     val expected= List(1, 1, 3, 5, 8, 13, 21, 34, 55, 89, 144, 233, 377, 610, 987, 1597, 2584)
-    assert(Fibonaccis().filter(n=> !(n==2)).get(expected.size) === expected)
+    assert(Fibonaccis().filter(n=> !(n equals 2)).get(expected.size) === expected)
   }
 }

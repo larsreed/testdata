@@ -102,7 +102,7 @@ class FromFileSuite extends FunSuite with Printer {
 
   test("format") {
     new Setup {
-      val res= FromFile(ints).sequential.formatWith(s=> "%015d".format(s.toLong)).getStrings(3)
+      val res= FromFile(ints).sequential.formatWith(s=> f"${s.toLong}%015d").getStrings(3)
       val exp= List("000000000000001", "000000000000010", "000000000000100")
       assert(res === exp)
     }

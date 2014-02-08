@@ -13,7 +13,7 @@ import no.mesan.testdatagen.{Generator, GeneratorImpl}
  */
 class TextWrapper(generator:Generator[_]) extends GeneratorImpl[String] {
 
-  private var transformers: List[(String=>String)]= List((s=>s))
+  private var transformers: List[(String=>String)]= List(s => s)
 
   /** Add pre- and/or suffix to string. */
   def surroundWith(prefix:String="", suffix:String=""): this.type = {

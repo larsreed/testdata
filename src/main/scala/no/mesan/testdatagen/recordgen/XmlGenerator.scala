@@ -44,8 +44,8 @@ class ToXmlAttributes(rootName: String, recordName: String,
       val elem=
 <xml/>.copy(label=recordName)
        (elem /: getRecord(nodes)) {
-         case (elem, null) => elem
-         case (elem, attr) => elem % attr
+         case (x, null) => x
+         case (x, attr) => x % attr
        } }
     if (rootName!="") List(<xml>
   {xml}

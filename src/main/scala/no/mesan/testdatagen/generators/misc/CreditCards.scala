@@ -4,12 +4,13 @@ import scala.annotation.tailrec
 
 import no.mesan.testdatagen.GeneratorImpl
 import no.mesan.testdatagen.generators.{FromList, Ints}
+import scala.annotation.tailrec
 
 /**
  * This generator by default generates 16-digit credit card numbers from Visa or MasterCard,
  * but you can instruct it otherwise through its generic apply method.
  * The last digit is generated using Luhn's algorithm
- * (http://en.wikipedia.org/wiki/Luhn_algorithm], see also 
+ * (http://en.wikipedia.org/wiki/Luhn_algorithm], see also
  * http://en.wikipedia.org/wiki/Credit_card_number).
  *
  * @author lre
@@ -23,7 +24,7 @@ class CreditCards (prefixes: List[Long], length:Int) extends GeneratorImpl[Long]
   private def digits(n:Long) = n.toString.map { _.toString.toInt }
   private def sum(s: Seq[Int]) = s.foldLeft(0)(_+_)
   private def flip(n:Int) = if (n==2) 1 else 2
-  private def forAll(accum: Int, factor:Int, d:List[Int]): Int = d match {
+  @tailrec private def forAll(accum: Int, factor:Int, d:List[Int]): Int = d match {
      case Nil => accum
      case _ => forAll(accum + sum(digits(factor*d.head)), flip(factor), d.tail)
   }

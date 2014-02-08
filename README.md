@@ -68,18 +68,21 @@ For a more thorough example, scroll down...
 ### Generator
 The basic generator trait looks like this (details omitted):
 
-    trait Generator[T] {
+    trait Generator[+T] {
       /** Get the next n entries. */
       def get(n: Int): List[T]
 
       /** Get n entries converted to strings and formatted. */
       def getStrings(n:Int): List[String]
 
-      /** Set a formatting function. */
-      def format(f: T=>String): this.type
-
       /** Add a filter function. */
-      def filterWith(f: T=>Boolean): this.type
+      def filter(f: T=>Boolean): this.type
+
+      /** Set a formatting function. */
+      def formatWith(f: T=>String): this.type
+
+      /** Runs the defined formatter on one instance*/
+      def formatOne[S>:T](v: S): String
     }
 
 The elements here are:
@@ -88,6 +91,7 @@ The elements here are:
 * `getStrings(n)`: Returns the same list as the previous, but mapped via the formatter function (see below) and thus converted to string format.
 * `filter(f)`: Adds a function that takes an instance of the generator's type and returns true  if the instance should be included in the list. Should be applied before constructing the final list (to ensure that `get(n)` actually contains n elements). The function may be called several times to add multiple filters to apply   each filter must accept the instance to include it in the final list.
 * `formatWith(f)`: Adds a formatting function that takes an instance of the given type T  and formats it as a string.
+* `formatOne(v)`: Uses the defined formatting function to format one value. 
 
 #### GeneratorImpl
 is a simple trait containing a sufficient implementation of most of the generator methods (except `get`).   Implementing classes get the following members:
@@ -146,7 +150,7 @@ This trait
 
 * can only be used on a type implementing `Generator[T]`
 * requires the implementing type to have a `var generator:Generator[G]` containing the actual generator
-* allows you to override only the methods of `ExtendedGenerator` you need to change the definition of
+* to override the methods of `ExtendedGenerator` you need to change the definition of
 `def conv2gen(f: T): G` and / or `conv2result(f: G): T` to convert between the types of the generator and the implementing class (by default both are implemented with `asInstanceOf`
 
 ## Basic generators
@@ -171,7 +175,7 @@ returns longs from the entire range. The only special method is `step(Long)` to 
 
 Apply methods (defaults for all parameters):
 
-* `Longs(from:Long=0, to:Long=Long.MaxValue-1, step:Int=1)` (note default 0 for start)
+* `Longs(from:Long=0, to:Long=Long.MaxValue-1, step:Long=1)` (note default 0 for start)
 
 ### Chars
 uses `ExtendedDelegate` and a 1-character `Strings`-generator to do its work. It adds the `chars(Seq[Char])` method   also supported by Strings   to add a range of available characters. Accepts a string (`chars("aeiouy")`), an interval (`chars('a' to 'z')`) etc.
@@ -215,7 +219,7 @@ Apply methods:
 
 ### Fixed
 This generator may seem superfluous... It takes a single value, and returns that same value repeatedly. But it is meant for aggregating values, see `FieldConcatenator` for an example.
-This "generator" is actually just an apply method taking a single value, it is backed by a `FromList`.
+This "generator" is actually just an apply method taking a single value; it is backed by `FromList`.
 
 ### FromFile
 This generator reads lines from an input file and creates a list of values, from which a delegate `FromList` can take its values. The values may be typed (does not currently work as expected...), even though they are read as strings.
@@ -256,10 +260,11 @@ This generator takes any other generator as input, always uses its `getStrings(n
 
 Special methods:
 
-* `substring(from:Int, to:Int=-1)` (if `to` is omitted, the rest of the string is used)
-* `toLower` / `toUpper` / `trim`   as in `java.lang.String`
+* `substring(from:Int, to:Int=-1)`: (if `to` is omitted, the rest of the string is used)
+* `toLower` / `toUpper` / `trim`:   as in `java.lang.String`
 * `surroundWith(prefix:String="", suffix:String="")` pre/suffixes the result string with fixed strings
-* `transform(f: String=> String)`   add your own string transformer function
+* `transform(f: String=> String)`:   add your own string transformer function
+* `substitute(regexp:String, to:String)`: perform substitution of regexp
 
 Apply methods:
 

@@ -4,6 +4,8 @@ import scala.collection.immutable.List
 import scala.util.Random
 
 import no.mesan.testdatagen.{Generator, GeneratorImpl}
+import scala.annotation.tailrec
+import scala.annotation.tailrec
 
 /**
  * This generator takes one or more generators as input, and selects randomly between
@@ -18,7 +20,7 @@ class WeightedGenerator[T] extends GeneratorImpl[T] with MultiGeneratorWithWeigh
 
   private def getList[S](n:Int)(f: Generator[T]=>List[S]): List[S] = {
     val weightedList: List[(Int,List[S])]= {
-      def create(sum: Int, soFar: List[(Int,List[S])], left: GenList): List[(Int,List[S])]= {
+      @tailrec def create(sum: Int, soFar: List[(Int,List[S])], left: GenList): List[(Int,List[S])]= {
         if ( left.isEmpty ) soFar
         else {
           val w= sum + left.head._1
@@ -31,7 +33,7 @@ class WeightedGenerator[T] extends GeneratorImpl[T] with MultiGeneratorWithWeigh
     val max= weightedList.head._1
     def getByWeight(i: Int): S = {
       val selected= Random.nextInt(max)
-      def pick(rest: List[(Int,List[S])], lastList:List[S]): S = {
+      @tailrec def pick(rest: List[(Int,List[S])], lastList:List[S]): S = {
         if (rest.isEmpty || selected >= rest.head._1) lastList(i)
         else pick(rest.tail, rest.head._2)
       }
@@ -44,9 +46,6 @@ class WeightedGenerator[T] extends GeneratorImpl[T] with MultiGeneratorWithWeigh
   override def get(n: Int): List[T] = getList(n){ g:Generator[T] => g.get(n) }
 
   override def getStrings(n: Int): List[String] = getList(n){ g:Generator[T] => g.getStrings(n) }
-
-//    getList(true, n).map(x=> if (x==null) null else x.toString)
-
 }
 
 object WeightedGenerator {

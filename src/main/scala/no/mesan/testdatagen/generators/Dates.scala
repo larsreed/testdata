@@ -10,6 +10,7 @@ import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.scala_tools.time.Imports.{RichDateTime, RichReadableInstant}
 
 import no.mesan.testdatagen.SingleGenerator
+import scala.annotation.tailrec
 
 /**
  * Generate dates.
@@ -131,7 +132,7 @@ class Dates extends SingleGenerator[DateTime] {
     require(min<=max, "from must not be after to")
 
     def getSequentially: List[DateTime]= {
-      def next(last: DateTime, soFar:List[DateTime]): List[DateTime]=
+      @tailrec def next(last: DateTime, soFar:List[DateTime]): List[DateTime]=
         if (soFar.length>=n) soFar
         else {
           val d= if (last>max) min else if (last<min) max else last

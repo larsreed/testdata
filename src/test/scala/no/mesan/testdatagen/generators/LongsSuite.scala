@@ -7,12 +7,12 @@ import org.scalatest.FunSuite
 
 @RunWith(classOf[JUnitRunner])
 class LongsSuite extends FunSuite with Printer {
-  
+
   def generator= Longs()
 
   print(false) {
     println(generator from 4 to 44  get 0)
-    println((generator step 7 from 4 to 44).reversed get(30))
+    println((generator step 7 from 4 to 44).reversed get 30)
     println(generator from Long.MinValue get 30)
   }
 
@@ -47,20 +47,20 @@ class LongsSuite extends FunSuite with Printer {
   }
 
   test("normal sequence") {
-    val g= (generator.sequential) from -2 to 2 get 5
+    val g= generator.sequential from -2 to 2 get 5
     assert(g === List(-2L, -1L, 0L, 1L, 2L))
   }
 
   test("sequence that overflows") {
-    val g= (generator.sequential) step 2 from 1 to 6 get 5
+    val g= generator.sequential step 2 from 1 to 6 get 5
     assert(g === List(1L, 3L, 5L, 1L, 3L))
   }
 
   test("wrap the edge") {
-    val longs = (generator.sequential) from Long.MaxValue - 3  get 5
+    val longs = generator.sequential from Long.MaxValue - 3  get 5
     assert(longs ===
       List(Long.MaxValue-3, Long.MaxValue-2, Long.MaxValue-1, Long.MaxValue-3, Long.MaxValue-2))
-    val longs1 = (generator.reversed) from Long.MinValue + 1 to Long.MinValue + 3 get 5
+    val longs1 = generator.reversed from Long.MinValue + 1 to Long.MinValue + 3 get 5
     assert(longs1 ===
       List(Long.MinValue+3, Long.MinValue+2, Long.MinValue+1, Long.MinValue+3, Long.MinValue+2))
   }
@@ -102,11 +102,11 @@ class LongsSuite extends FunSuite with Printer {
   }
 
   test("formatting") {
-    val res = generator.step(2).from(-2).to(10).sequential.formatWith(i => i.formatted("%02d")).getStrings(7)
+    val res = generator.step(2).from(-2).to(10).sequential.formatWith(i => f"$i%02d").getStrings(7)
     assert(res === List("-2", "00", "02", "04", "06", "08", "10"))
     val res3 = generator.step(2).from(-2).to(10).sequential.format("%02d").getStrings(7)
     assert(res3 === List("-2", "00", "02", "04", "06", "08", "10"))
-    val res2 = generator.step(2).from(-2).to(10).sequential.formatWith(i => i.formatted("%02d")).getStrings(0)
+    val res2 = generator.step(2).from(-2).to(10).sequential.formatWith(i => f"$i%02d").getStrings(0)
     assert(res2 === Nil)
   }
 

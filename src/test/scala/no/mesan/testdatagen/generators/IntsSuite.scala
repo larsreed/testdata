@@ -8,7 +8,7 @@ import no.mesan.testdatagen.Printer
 
 @RunWith(classOf[JUnitRunner])
 class IntsSuite extends FunSuite with Printer {
-  
+
   def generator= Ints()
 
   print(false) {
@@ -46,9 +46,9 @@ class IntsSuite extends FunSuite with Printer {
   }
 
   test("wrap the edge") {
-    assert(generator.sequential.from(Int.MaxValue-3).get(5) === 
+    assert(generator.sequential.from(Int.MaxValue-3).get(5) ===
       List(Int.MaxValue-3, Int.MaxValue-2, Int.MaxValue-1, Int.MaxValue-3, Int.MaxValue-2))
-    assert(generator.reversed.to(Int.MinValue+3).get(5) === 
+    assert(generator.reversed.to(Int.MinValue+3).get(5) ===
       List(Int.MinValue+3, Int.MinValue+2, Int.MinValue+1, Int.MinValue+3, Int.MinValue+2))
   }
 
@@ -80,20 +80,20 @@ class IntsSuite extends FunSuite with Printer {
   }
 
   test("even numbers") {
-    val res = generator.filter(i => (i % 2) == 0).get(10);
+    val res = generator.filter(i => (i % 2) == 0).get(10)
     assert(res.length === 10)
     assert(res.forall(i => (i % 2) == 0))
-    val res2 = generator.from(0).sequential.filter(i => (i % 2) == 0).get(9);
+    val res2 = generator.from(0).sequential.filter(i => (i % 2) == 0).get(9)
     assert(res2.length === 9)
     assert(res2.forall(i => (i % 2) == 0))
   }
 
   test("formatting") {
-    val res = generator.step(2).from(-2).to(10).sequential.formatWith(i => i.formatted("%02d")).getStrings(7)
+    val res = generator.step(2).from(-2).to(10).sequential.formatWith(i => f"$i%02d").getStrings(7)
     assert(res === List("-2", "00", "02", "04", "06", "08", "10"))
     val res3 = generator.step(2).from(-2).to(10).sequential.format("%02d").getStrings(7)
     assert(res3 === List("-2", "00", "02", "04", "06", "08", "10"))
-    val res2 = generator.step(2).from(-2).to(10).sequential.formatWith(i => i.formatted("%02d")).getStrings(0)
+    val res2 = generator.step(2).from(-2).to(10).sequential.formatWith(i => f"$i%02d").getStrings(0)
     assert(res2 === Nil)
   }
 

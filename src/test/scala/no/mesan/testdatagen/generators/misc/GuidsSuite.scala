@@ -11,7 +11,7 @@ class GuidsSuite extends FunSuite with Printer {
 
   print(false) {
     println(Guids().get(10))
-    println(TextWrapper(Guids()) surroundWith("{", "}") toUpper() getStrings(120))
+    println(TextWrapper(Guids()) surroundWith("{", "}") toUpper() getStrings 120)
     println(Guids().getBigInts(100))
   }
 
@@ -29,7 +29,7 @@ class GuidsSuite extends FunSuite with Printer {
   }
 
   test("strings") {
-    Guids().getStrings(120).foreach(s => 
+    Guids().getStrings(120).foreach(s =>
       assert(s.matches("^[0-9a-f]{8}-([0-9a-f]{4}-){2}[0-9a-f]{16}$"), s))
   }
 

@@ -6,13 +6,14 @@ import org.scalatest.junit.JUnitRunner
 
 import no.mesan.testdatagen.Printer
 import scala.language.postfixOps
+import scala.annotation.tailrec
 
 @RunWith(classOf[JUnitRunner])
 class OrgnrSuite extends FunSuite with Printer {
 
   def sjekkOrgnr(orgNr: Int) = {
     val digits= orgNr.toString map(_.toString.toInt) toList
-    def sjekk(rest: List[Int], fakt: List[Int], sum: Int): Boolean =
+    @tailrec def sjekk(rest: List[Int], fakt: List[Int], sum: Int): Boolean =
       if (fakt.isEmpty) {
         val mod11 = sum % 11
         (mod11 == 0 && rest.head == 0) || (rest.head == 11 - mod11)
@@ -23,7 +24,7 @@ class OrgnrSuite extends FunSuite with Printer {
   }
 
   print(false) {
-    println(Orgnr() get(120))
+    println(Orgnr() get 120)
   }
 
   test("negative get") {
@@ -40,7 +41,7 @@ class OrgnrSuite extends FunSuite with Printer {
   }
 
   test("contents checksum") {
-    val res= Orgnr() get(300)
+    val res= Orgnr() get 300
     for (nr<-res) assert(sjekkOrgnr(nr), ""+nr)
   }
 

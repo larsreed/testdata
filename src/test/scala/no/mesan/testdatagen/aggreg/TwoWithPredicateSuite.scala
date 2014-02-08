@@ -13,7 +13,7 @@ import org.joda.time.DateTime
 class TwoWithPredicateSuite extends FunSuite with Printer {
 
   trait Setup {
-    val intGen= Ints() from -50 to 50 format("%08d")
+    val intGen= Ints() from -50 to 50 format "%08d"
     def lt(t: (Int, Int))= t._1 <= t._2
     val xgen= TwoWithPredicate[Int](intGen, lt)
   }
@@ -58,7 +58,7 @@ class TwoWithPredicateSuite extends FunSuite with Printer {
 
   test("formatted output"){
       new Setup {
-        val yGen= TwoWithPredicate(Ints() from 100 to 5000 format("x%08d"), lt)
+        val yGen= TwoWithPredicate(Ints() from 100 to 5000 format "x%08d", lt)
         val res= yGen.getFormatted(1000)
         res.foreach { t=>
           assert(t._1 matches "^x[0-9]{8}")
@@ -68,7 +68,7 @@ class TwoWithPredicateSuite extends FunSuite with Printer {
     }
 
   test("formatted listGens satisfies predicate") {
-    def dtLe(t:(DateTime, DateTime)) = (t._2 isAfter t._1)
+    def dtLe(t:(DateTime, DateTime)) = t._2 isAfter t._1
     val fromToDateGen= TwoWithPredicate(Dates().from(y=2010).to(y=2020).format("yyyy.MM.dd"), dtLe)
     val (fromDateGen, toDateGen)= fromToDateGen.asFormattedListGens(200)
     val res1= fromDateGen.get(200)

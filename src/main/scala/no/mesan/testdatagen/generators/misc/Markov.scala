@@ -3,6 +3,8 @@ package no.mesan.testdatagen.generators.misc
 import no.mesan.testdatagen.Generator
 import no.mesan.testdatagen.utils.IO
 import scala.util.Random
+import scala.annotation.tailrec
+import scala.annotation.tailrec
 
 /**
  * Simple Markov Chain generator.
@@ -20,7 +22,7 @@ class Markov extends Generator[String] {
   var words: WordMap= Map[String, List[String]]()
 
   def build(wordList: List[String]): WordMap= {
-    def build(map: WordMap, list: List[String]): WordMap =
+    @tailrec def build(map: WordMap, list: List[String]): WordMap =
       list match {
         case Nil => map
         case first :: Nil =>
@@ -53,14 +55,14 @@ class Markov extends Generator[String] {
   def get(n: Int): List[String] = {
     require(n>=0, "n cannot be negative")
     require(words.size > 0, "must load words")
-    def selectNext(from: List[String]): String= from match {
+    @tailrec def selectNext(from: List[String]): String= from match {
       case Nil =>
         selectNext(words.keys.toList)
       case _ =>
         val n= Random.nextInt(from.length)
         from(n)
     }
-    def getNext(word:String, soFar: List[String]): List[String] =
+    @tailrec def getNext(word:String, soFar: List[String]): List[String] =
       if (soFar.length>=n) soFar
       else getNext(selectNext(words(word)), word::soFar)
     getNext(selectNext(List()), List()).reverse
@@ -73,7 +75,7 @@ class Markov extends Generator[String] {
 
   override def filter(f: (String) => Boolean) = throw new UnsupportedOperationException("filter")
   override def formatWith(f: (String) => String) = throw new UnsupportedOperationException("formatWith")
-  override def formatOne[S>:String](v: S): String = "%s".format(v)
+  override def formatOne[S>:String](v: S): String = s"$v"
 }
 
 object Markov {

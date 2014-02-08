@@ -78,13 +78,13 @@ class DoublesSuite extends FunSuite with Printer {
   }
 
   test("formatting") {
-    val res = Doubles().step(2.5).from(-2.5).to(10).sequential.formatWith(i => i.formatted("%04.2f")).
+    val res = Doubles().step(2.5).from(-2.5).to(10).sequential.formatWith(i => f"$i%04.2f").
       getStrings(7).map(s => s.replaceAll("[.,]", ":"))
     assert(res === List("-2:50", "0:00", "2:50", "5:00", "7:50", "10:00", "-2:50"))
     val res3 = Doubles().step(2).from(-2.5).to(10).sequential.format("%02.0f").
       getStrings(7).map(s => s.replaceAll("[.,]", ":"))
     assert(res3 === List("-3", "-1", "02", "04", "06", "08", "10"))
-    val res2 = Doubles().step(2).from(-2).to(10).sequential.formatWith(i => i.formatted("%02d")).getStrings(0)
+    val res2 = Doubles().step(2).from(-2).to(10).sequential.formatWith(i => f"$i%02f").getStrings(0)
     assert(res2 === Nil)
   }
 

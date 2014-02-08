@@ -37,7 +37,7 @@ class Longs extends SingleGenerator[Long] {
     val span= BigInt(max) - BigInt(min) +1
     var step= if (isReversed) -stepSize else stepSize
 
-    def getSequentially(): List[Long]= {
+    def sequentially(): List[Long]= {
       @tailrec def next(last: Long, soFar:List[Long]): List[Long]=
         if (soFar.length>=n) soFar
         else {
@@ -50,21 +50,21 @@ class Longs extends SingleGenerator[Long] {
     }
 
     @tailrec
-    def getRandomly(soFar: List[Long]): List[Long]=
+    def randomly(soFar: List[Long]): List[Long]=
       if (soFar.length>=n) soFar
       else {
         val nxt= (min + (BigInt(Random.nextLong()) mod span)).toLong
         if (filterAll(nxt)  && (!isUnique || !(soFar contains nxt)))
-          getRandomly(nxt::soFar)
-        else getRandomly(soFar)
+          randomly(nxt::soFar)
+        else randomly(soFar)
       }
 
-    if (isSequential) getSequentially
-    else getRandomly(Nil)
+    if (isSequential) sequentially
+    else randomly(Nil)
   }
 }
 
 object Longs {
   def apply(from:Long=0, to:Long=Long.MaxValue-1, step:Long=1): Longs=
-    new Longs() from(from) to(to) step(step)
+    new Longs() from from to to step step
 }

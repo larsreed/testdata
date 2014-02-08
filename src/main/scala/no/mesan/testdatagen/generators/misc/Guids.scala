@@ -16,10 +16,10 @@ class Guids extends GeneratorImpl[Seq[Long]] {
   private val p4Gen= Longs() from 0
 
   override def get(n:Int): List[Seq[Long]] = {
-    val p1= p1Gen get(n) map(_.toLong)
-    val p2= p23Gen get(n) map(_.toLong)
-    val p3= p23Gen get(n) map(_.toLong)
-    val p4= p4Gen.get(n) map(_.toLong)
+    val p1= p1Gen get n map(_.toLong)
+    val p2= p23Gen get n map(_.toLong)
+    val p3= p23Gen get n map(_.toLong)
+    val p4= p4Gen.get(n)
     List(p1, p2, p3, p4) transpose
   }
 

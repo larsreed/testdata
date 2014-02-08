@@ -4,6 +4,7 @@ import org.joda.time.DateTime
 
 import no.mesan.testdatagen.{ExtendedGenerator, GeneratorImpl, Percentage}
 import no.mesan.testdatagen.generators.{Dates, Ints}
+import scala.annotation.tailrec
 
 /**
  * Generate Norwegian "foedselsnummer" (social registration numbers).
@@ -57,6 +58,7 @@ class Fnr(dateGenerator:ExtendedGenerator[DateTime]) extends GeneratorImpl[Strin
       val first6= if (hit(dnrFactor)) 4+orgAsInt(0) :: orgAsInt.drop(1)
                   else orgAsInt
 
+      @tailrec
       def genNext(soFar: List[Int], fakt:List[Int]): List[Int]= {
         val all= first6 ++ soFar
         if (all.length>=11) soFar

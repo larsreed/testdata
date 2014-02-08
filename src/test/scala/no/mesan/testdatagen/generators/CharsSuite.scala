@@ -77,7 +77,7 @@ class CharsSuite extends FunSuite with Printer {
   }
 
   test("formatting") {
-    val res = Chars().chars("ABC").sequential.formatWith(c => c.formatted("%7s")).getStrings(3)
+    val res = Chars().chars("ABC").sequential.formatWith(c => f"$c%7s").getStrings(3)
     assert(res === List("      A", "      B", "      C"))
     val res2 = Chars().sequential.format("%7s").getStrings(0)
     assert(res2 === Nil)

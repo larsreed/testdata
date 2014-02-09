@@ -49,6 +49,6 @@ class WeightedGenerator[T] extends GeneratorImpl[T] with MultiGeneratorWithWeigh
 }
 
 object WeightedGenerator {
-  def apply[T](weighted: (Int, Generator[T])*): WeightedGenerator[T] = new WeightedGenerator().addTuples(weighted:_*)
+  def apply[T](weighted: (Int, Generator[T])*): WeightedGenerator[T] = new WeightedGenerator().addWeighted(weighted:_*)
   def apply[T](gs: List[Generator[T]]): WeightedGenerator[T] = new WeightedGenerator().add(gs:_*)
 }

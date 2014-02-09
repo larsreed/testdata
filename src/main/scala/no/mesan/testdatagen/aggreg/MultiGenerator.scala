@@ -37,7 +37,7 @@ trait MultiGeneratorWithWeight[T] {
   }
 
   /** Add 0 or more weighted generators. */
-  def addTuples(weighted: (Int, Generator[T])*): this.type = {
+  def addWeighted(weighted: (Int, Generator[T])*): this.type = {
     _generators ++= weighted.toList.reverse
     this
   }

@@ -65,6 +65,9 @@ class ToFile[T](fileName:String,
     res
   }
 
+  // Nicer name...
+  def write(n:Int, strings:Boolean= true) = if (strings) getStrings(n) else get(n)
+
   override def filter(f: T => Boolean): this.type= { generator.filter(f); this }
   override def formatWith(f: T => String): this.type= { generator.formatWith(f); this }
   override def formatOne[S >: T](v: S): String = generator.formatOne(v)

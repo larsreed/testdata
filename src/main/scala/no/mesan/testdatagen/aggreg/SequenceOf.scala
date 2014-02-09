@@ -13,7 +13,7 @@ import no.mesan.testdatagen.{Generator, GeneratorImpl}
  *
  * @author lre
  */
-class SequenceOf[S, T] (convert: T=>S) extends GeneratorImpl[S] with MultiGeneratorWithWeight[T] {
+class SequenceOf[S, T] (convert: S=>T) extends GeneratorImpl[T] with MultiGeneratorWithWeight[S] {
   private var absolute= false
 
   def makeAbsolute(newVal:Boolean= true): this.type = {
@@ -22,19 +22,21 @@ class SequenceOf[S, T] (convert: T=>S) extends GeneratorImpl[S] with MultiGenera
   }
 
   private def number(n: Int, weight:Int, totWeight:Int)= scala.math.round((n*weight)/totWeight)
-  private def getList[U](n: Int)(f: (Int, Generator[T]) => List[U]): List[U] =  {
+  private def getList[U](n: Int)(f: (Int, Generator[S]) => List[U]): List[U] =  {
     val tot= if (absolute) 1 else generators.foldLeft(0)((zum, tuple) => zum + tuple._1)
     generators.flatMap{ tuple =>
       val (w, g)= tuple
       f(number(n, w, tot), g)
     }
   }
-  override def get(n: Int): List[S] =  getList(n){ (no, g)=> g.get(no).map(convert) }
+  override def get(n: Int): List[T] =  getList(n){ (no, g)=> g.get(no).map(convert) }
   override def getStrings(n: Int): List[String] =  getList(n){ (no, g)=> g.getStrings(no)}
 }
 
 object SequenceOf {
+  private def stringer(x:Any)= if (x==null) null else x.toString
+  def apply(): SequenceOf[Any, String] =  new SequenceOf[Any, String](stringer)
   def apply[T](gs: Generator[T]*): SequenceOf[T, T] =  new SequenceOf[T, T]({x=>x}).add(gs:_*)
-  def strings(gs: Generator[Any]*): SequenceOf[String, Any] =
-    new SequenceOf[String, Any] (x=> if (x==null) null else x.toString).add(gs:_*)
+  def strings(gs: Generator[Any]*): SequenceOf[Any, String] =
+    new SequenceOf[Any, String](stringer).add(gs:_*)
 }

@@ -30,7 +30,7 @@ class TwoFromFunction[T, U](gen: Generator[T], genFun: T=>U) extends Generator[(
     }
   }
 
-  def asListGens(n: Int): (Generator[T], Generator[U]) = {
+  def asListGens(n: Int): (FromList[T], FromList[U]) = {
     val tuples = get(n)
     val gen1 = FromList(tuples map {_._1}).sequential
     val gen2 = FromList(tuples map {_._2}).sequential

@@ -44,7 +44,7 @@ class SequenceOfSuite extends FunSuite with Printer {
   }
 
   test("weighted relative contents") {
-    val xgen= SequenceOf[Any]().addTuples((5, FromList(1, 2, 3) sequential),
+    val xgen= SequenceOf[Any]().addWeighted((5, FromList(1, 2, 3) sequential),
                                           (3, Chars("abc") sequential),
                                           (2, Ints() from 4 sequential))
       val exp= List("1", "2", "3", "1", "2", "3", "a", "b", "c", "4", "5")
@@ -54,7 +54,7 @@ class SequenceOfSuite extends FunSuite with Printer {
 
   test("weighted absolute contents") {
     val xgen= SequenceOf[Any]().makeAbsolute().
-        addTuples((5, FromList(1, 2, 3) sequential),
+        addWeighted((5, FromList(1, 2, 3) sequential),
                   (3, Chars("abc") sequential),
                   (2, Ints() from 4 sequential))
       val exp= List("1", "2", "3", "1", "2", "a", "b", "c", "4", "5")

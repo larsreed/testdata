@@ -1,53 +1,316 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <title>Using ReMarkdown</title>
-  <link rel="stylesheet" href="remarkdown.css">
+<title>README</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<style type="text/css">
+/* GitHub stylesheet for MarkdownPad (http://markdownpad.com) */
+/* Author: Nicolas Hery - http://nicolashery.com */
+/* Version: 29d1c5bc36da364ad5aa86946d420b7bbc54a253 */
+/* Source: https://github.com/nicolahery/markdownpad-github */
+
+/* RESET
+=============================================================================*/
+
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, menu, nav, output, ruby, section, summary, time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* BODY
+=============================================================================*/
+
+body {
+  font-family: Helvetica, arial, freesans, clean, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #333;
+  background-color: #fff;
+  padding: 20px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+body>*:first-child {
+  margin-top: 0 !important;
+}
+
+body>*:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* BLOCKS
+=============================================================================*/
+
+p, blockquote, ul, ol, dl, table, pre {
+  margin: 15px 0;
+}
+
+/* HEADERS
+=============================================================================*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 20px 0 10px;
+  padding: 0;
+  font-weight: bold;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1 tt, h1 code, h2 tt, h2 code, h3 tt, h3 code, h4 tt, h4 code, h5 tt, h5 code, h6 tt, h6 code {
+  font-size: inherit;
+}
+
+h1 {
+  font-size: 28px;
+  color: #000;
+}
+
+h2 {
+  font-size: 24px;
+  border-bottom: 1px solid #ccc;
+  color: #000;
+}
+
+h3 {
+  font-size: 18px;
+}
+
+h4 {
+  font-size: 16px;
+}
+
+h5 {
+  font-size: 14px;
+}
+
+h6 {
+  color: #777;
+  font-size: 14px;
+}
+
+body>h2:first-child, body>h1:first-child, body>h1:first-child+h2, body>h3:first-child, body>h4:first-child, body>h5:first-child, body>h6:first-child {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+a:first-child h1, a:first-child h2, a:first-child h3, a:first-child h4, a:first-child h5, a:first-child h6 {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
+  margin-top: 10px;
+}
+
+/* LINKS
+=============================================================================*/
+
+a {
+  color: #4183C4;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+/* LISTS
+=============================================================================*/
+
+ul, ol {
+  padding-left: 30px;
+}
+
+ul li > :first-child,
+ol li > :first-child,
+ul li ul:first-of-type,
+ol li ol:first-of-type,
+ul li ol:first-of-type,
+ol li ul:first-of-type {
+  margin-top: 0px;
+}
+
+ul ul, ul ol, ol ol, ol ul {
+  margin-bottom: 0;
+}
+
+dl {
+  padding: 0;
+}
+
+dl dt {
+  font-size: 14px;
+  font-weight: bold;
+  font-style: italic;
+  padding: 0;
+  margin: 15px 0 5px;
+}
+
+dl dt:first-child {
+  padding: 0;
+}
+
+dl dt>:first-child {
+  margin-top: 0px;
+}
+
+dl dt>:last-child {
+  margin-bottom: 0px;
+}
+
+dl dd {
+  margin: 0 0 15px;
+  padding: 0 15px;
+}
+
+dl dd>:first-child {
+  margin-top: 0px;
+}
+
+dl dd>:last-child {
+  margin-bottom: 0px;
+}
+
+/* CODE
+=============================================================================*/
+
+pre, code, tt {
+  font-size: 12px;
+  font-family: Consolas, "Liberation Mono", Courier, monospace;
+}
+
+code, tt {
+  margin: 0 0px;
+  padding: 0px 0px;
+  white-space: nowrap;
+  border: 1px solid #eaeaea;
+  background-color: #f8f8f8;
+  border-radius: 3px;
+}
+
+pre>code {
+  margin: 0;
+  padding: 0;
+  white-space: pre;
+  border: none;
+  background: transparent;
+}
+
+pre {
+  background-color: #f8f8f8;
+  border: 1px solid #ccc;
+  font-size: 13px;
+  line-height: 19px;
+  overflow: auto;
+  padding: 6px 10px;
+  border-radius: 3px;
+}
+
+pre code, pre tt {
+  background-color: transparent;
+  border: none;
+}
+
+/* QUOTES
+=============================================================================*/
+
+blockquote {
+  border-left: 4px solid #DDD;
+  padding: 0 15px;
+  color: #777;
+}
+
+blockquote>:first-child {
+  margin-top: 0px;
+}
+
+blockquote>:last-child {
+  margin-bottom: 0px;
+}
+
+/* HORIZONTAL RULES
+=============================================================================*/
+
+hr {
+  clear: both;
+  margin: 15px 0;
+  height: 0px;
+  overflow: hidden;
+  border: none;
+  background: transparent;
+  border-bottom: 4px solid #ddd;
+  padding: 0;
+}
+
+/* TABLES
+=============================================================================*/
+
+table th {
+  font-weight: bold;
+}
+
+table th, table td {
+  border: 1px solid #ccc;
+  padding: 6px 13px;
+}
+
+table tr {
+  border-top: 1px solid #ccc;
+  background-color: #fff;
+}
+
+table tr:nth-child(2n) {
+  background-color: #f8f8f8;
+}
+
+/* IMAGES
+=============================================================================*/
+
+img {
+  max-width: 100%
+}
+</style>
+<base href='file:\\\D:\data\scala\testdata\'/>
 </head>
-<body class="rmd-on">
-           <h1>Testdatagenerator</h1>
-
-<p>This project contains a simple set of tools to help generate test data.  It is primarily a way to train myself in Scala (by porting and enhancing some very old AWK scripts :), but can hopefully be useful to someone...</p>
-
+<body>
+<h1>Testdatagenerator</h1>
+<p>This project contains a simple set of tools to help generate test data. It is primarily a way to train myself in Scala (by porting and enhancing some very old AWK scripts :), but can hopefully be useful to someone...</p>
 <h2>Overview</h2>
-<p>The basic component is the <b><code>Generator[T]</code></b> trait, which is able to provide a (possibly filtered) list of instances of a given type, as well as the same list converted to strings.</p>
-
-<p>On top of this is a set of generators based on the <b><code>ExtendedGenerator[T]</code></b> interface, containing methods to set up lists of basic data like strings and numbers.</p>
-
-<p>Furthermore, there are some utility classes like <tt>FieldConcatenator</tt> and <tt>WeightedGenerator</tt> to assist in creating aggregate or more complex data.</p>
-
-<p>And finally, there are a set of classes to assist in creating complete data records, like <tt>ToSql</tt> for generating SQL inserts, and <tt>ToCsv</tt> to create simple flat file records.</p>
-
+<p>The basic component is the <code>Generator[T]</code> trait, which is able to provide a (possibly filtered) list of instances of a given type, as well as the same list converted to strings.
+On top of this is a set of generators based on the <code>ExtendedGenerator[T]</code> interface, containing methods to set up lists of basic data like strings and numbers.
+Furthermore, there are some utility classes like <code>FieldConcatenator</code> and <code>WeightedGenerator</code> to assist in creating aggregate or more complex data. And finally, there are a set of classes to assist in creating complete data records, like <code>ToSql</code> for generating SQL inserts, and <code>ToCsv</code> to create simple flat file records.</p>
 <h3>Sample usage</h3>
-<p>Here is an introductory example to give you a sense of what it's all about:<br>
-</p>
-<pre>
-package no.mesan.testdatagen.generators.sample
+<p>Here is an introductory example to give you a sense of what it's all about:</p>
+<pre><code>package no.mesan.testdatagen.generators.sample
 
 import no.mesan.testdatagen.aggreg.{FieldConcatenator, SomeNulls, WeightedGenerator}
 import no.mesan.testdatagen.generators.{Dates, Doubles, Fixed, FromList, Ints}
 import no.mesan.testdatagen.generators.misc.Names
 import no.mesan.testdatagen.recordgen.{SkipNull, ToXmlElements}
+import scala.language.postfixOps
+
 
 object SimpleSample extends App {
-  ToXmlElements("order", "orderLine", SkipNull)
-    .add("id", Ints() from(1) sequential)
-    .add("productName", WeightedGenerator()
-                         .add(3, Names(1))
-                         .add(2, Names(2)))
-    .add("qty", SomeNulls(33,
+  ToXmlElements(&quot;order&quot;, &quot;orderLine&quot;, SkipNull)
+    .add(&quot;id&quot;, Ints() from(1) sequential)
+    .add(&quot;productName&quot;, WeightedGenerator(
+                         (3, Names(1)),
+                         (2, Names(2))))
+    .add(&quot;qty&quot;, SomeNulls(33,
                  FieldConcatenator()
-                   .add(Doubles() from(1) to(300) format("%5.2f"))
-                   .add(Fixed(" "))
-                   .add(FromList("l", "kg", "", "m"))))
-    .add("orderDate", Dates() from(y=2012, m=9) to(y=2013, m=1) format("yyyy-MM-dd"))
-    .toFile("orders.xml")
+                   .add(Doubles() from(1) to(300) format(&quot;%5.2f&quot;))
+                   .add(Fixed(&quot; &quot;))
+                   .add(FromList(&quot;l&quot;, &quot;kg&quot;, &quot;&quot;, &quot;m&quot;))))
+    .add(&quot;orderDate&quot;, Dates() from(y=2012, m=9) to(y=2014, m=1) format(&quot;yyyy-MM-dd&quot;))
+    .toFile(&quot;orders.xml&quot;)
     .getStrings(1000)
 }
-</pre>
+</code></pre>
 
-<p>This produces an XML-file, <tt>order.xml</tt>, with the following content:</p>
-<pre>&lt;order&gt;
+<p>This produces an XML-file, order.xml, with the following content:</p>
+<pre><code>&lt;order&gt;
    &lt;orderLine&gt;
       &lt;id&gt;1&lt;/id&gt;
       &lt;productName&gt;Shrpfljookmlvkpe&lt;/productName&gt;
@@ -63,7 +326,7 @@ object SimpleSample extends App {
       &lt;id&gt;3&lt;/id&gt;
       &lt;productName&gt;Iphlifhmopaka&lt;/productName&gt;
       &lt;qty&gt;87,77 kg&lt;/qty&gt;
-      &lt;orderDate&gt;2012-11-04&lt;/orderDate&gt;
+      &lt;orderDate&gt;2013-11-04&lt;/orderDate&gt;
    &lt;/orderLine&gt;
    &lt;orderLine&gt;
       &lt;id&gt;4&lt;/id&gt;
@@ -72,622 +335,517 @@ object SimpleSample extends App {
       &lt;orderDate&gt;2012-09-16&lt;/orderDate&gt;
    &lt;/orderLine&gt;
 &lt;/order&gt;
-</pre>
-</div></div>
+</code></pre>
 
 <p>For a more thorough example, scroll down...</p>
-
 <h2>Core definitions</h2>
-
 <h3>Generator</h3>
 <p>The basic generator trait looks like this (details omitted):</p>
-
-<pre>
-trait Generator[T] {
+<pre><code>trait Generator[+T] {
   /** Get the next n entries. */
   def get(n: Int): List[T]
 
   /** Get n entries converted to strings and formatted. */
   def getStrings(n:Int): List[String]
 
-  /** Set a formatting function. */
-  def format(f: T=&gt;String): this.type
-
   /** Add a filter function. */
-  def filterWith(f: T=>Boolean): this.type
-}</pre>
+  def filter(f: T=&gt;Boolean): this.type
+
+  /** Set a formatting function. */
+  def formatWith(f: T=&gt;String): this.type
+
+  /** Runs the defined formatter on one instance*/
+  def formatOne[S&gt;:T](v: S): String
+}
+</code></pre>
 
 <p>The elements here are:</p>
-<ol>
-	<li><b><code>get(n)</code></b>: The main function, providing  a list of <em>n</em> data elements.</li>
-	<li><b><code>getStrings(n)</code></b>: Returns the same list as the previous, but mapped via the formatter function (see below) and thus converted to string format.</li>
-	<li><b><code>filter(f)</code></b>: Adds a function that takes an instance of the generator's type and returns <tt>true</tt> if the instance should be included in the list.  Should be applied before constructing the final list (to ensure that <code>get(n)</code> actually contains n elements). The function may be called several times to add multiple filters to apply &ndash; each filter must accept the instance to include it in the final list.</li>
-	<li><b><code>formatWith(f)</code></b>: Adds a formatting function that takes an instance of the given type <tt>T</tt> and formats it as a string.</li>
-</ol>
-
-
-<h4>GeneratorImpl</h4>
-<p>is a simple trait containing a sufficient implementation of most of the generator methods (except <tt>get</tt>).  Implementing classes get the following members:</p>
 <ul>
-	<li><tt>protected var filterFuns</tt> and <tt>protected def filterAll(elem:T)</tt> &ndash; the list of defined filters and a function to check them all at once.<br>
-A default filter function that accepts any input is included.</li>
-	<li><tt>protected var formatter</tt> which is the defined formatting function, defaulting to a simple <tt>toString</tt>.</li>
-	<li>An implementation of <tt>getStrings</tt> that calls <tt>get</tt> and formats each element with the formatter.</li>
+<li><code>get(n)</code>: The main function, providing a list of <em>n</em> data elements.</li>
+<li><code>getStrings(n)</code>: Returns the same list as the previous, but mapped via the formatter function (see below) and thus converted to string format.</li>
+<li><code>filter(f)</code>: Adds a function that takes an instance of the generator's type and returns true  if the instance should be included in the list. Should be applied before constructing the final list (to ensure that <code>get(n)</code> actually contains n elements). The function may be called several times to add multiple filters to apply   each filter must accept the instance to include it in the final list.</li>
+<li><code>formatWith(f)</code>: Adds a formatting function that takes an instance of the given type T  and formats it as a string.</li>
+<li><code>formatOne(v)</code>: Uses the defined formatting function to format one value. </li>
 </ul>
-
-
+<h4>GeneratorImpl</h4>
+<p>is a simple trait containing a sufficient implementation of most of the generator methods (except <code>get</code>).   Implementing classes get the following members:</p>
+<ul>
+<li><code>protected var filterFuns</code> and <code>protected def filterAll(elem:T)</code>: the list of defined filters and a function to check them all at once.</li>
+<li>A default filter function that accepts any input is included.</li>
+<li><code>protected var formatter</code> which is the defined formatting function, defaulting to a simple toString.</li>
+<li>An implementation of <code>getStrings</code>  that calls <code>get</code> and formats each element with the formatter.</li>
+</ul>
 <h3>ExtendedGenerator</h3>
-<p>The ExtendedGenerator trait extends the <tt>Generator</tt> trait with
-methods to control how data is generated.</p>
-<pre>trait ExtendedGenerator[T] extends Generator[T] {
+<p>The ExtendedGenerator trait extends the Generator  trait with methods to control how data is generated.</p>
+<pre><code>trait ExtendedGenerator[T] extends Generator[T] {
   /** Set a formatting string. */
   def format(f: String): this.type
-
   /** Lower bound.  */
   def from(min: T): this.type
-
   /** Upper bound. */
   def to(max: T): this.type
-
   /** Generate sequential, not random. */
   def sequential: this.type
-
   /** Generate unique, random values. */
   def unique: this.type
-
   /** Generate reversed sequential values. */
   def reversed: this.type
 }
-</pre>
+</code></pre>
 
 <p>The general methods are:</p>
-<ol>
-	<li><b><code>format(s)</code></b>: A simpler way to define a formatting function, by providing a simple format string for <tt>java.lang.String.format</tt>.</li>
-	<li><b><code>from(T) / to(T)</code></b>: defines a lower/upper bound for generated values (takes a value of the output type, subclasses may provide variants)</li>
-	<li><b><code>sequential</code></b>: Signals that sequential values are to be generated (subclasses may define a step size) &ndash; by default, random values are generated.<br>
-Generation starts at the lower bound, generating towards the upper.  If the upper bound is reached without providing the wanted <em>n</em> occurrences, it wraps around from the start.  E.g.: when getting 6 numbers from <tt>Ints() from(0) to(1) sequential</tt> you get 0,1,0,1,0,1.</li>
-	<li><b><code>reversed</code></b>: Calling this implies a call to <tt>sequential</tt>; additionally, generation starts at the upper bound, stepping towards the lower.</li>
-	<li><b><code>unique</code></b>: Calling this sets the generation to random, and then checks to see that each generated value is unique.</li>
-</ol>
-
-
-<p>All the methods return <tt>this.type</tt> (ending up in the type of the class implementing the trait), to allow <em>builders</em> like <tt>Ints() from(1) to(10) reversed</tt>.</p>
-
-<p>As the method definitions imply, generators will by default pick <em>random</em> sequences from their value space (the range of the underlying data type(s), possibly limited by from/to-arguments).  When <tt>unique</tt> is added, it will check to see that the same value is never drawn twice.  For generators with a limited value space, you should be careful with this setting &ndash; <tt>FromList(List(1,2)).unique.get(3)</tt> will probably crash or run forever...<br>
-The methods <tt>sequential</tt> and <tt>reversed</tt> (and for some subclasses, a <tt>step</tt> method) change this behaviour &ndash; instead a series of increasing (or decreasing) values will be produced.<br>
-Sometimes you will find it necessary to have two generators A and B draw from the same value space.  In that case, you could use a generator to fill a list, and then use a <tt>FromList</tt> to produce the final values.</p>
-
-<h4>SingleGenerator</h4>
-<p><tt>SingleGenerator</tt> is an abstract base class extending <code>ExtendedGenerator[T]</code> backed by <code>GeneratorImpl[T]</code>.  All methods except <code>get(n)</code> are defined.<br>
-Subclasses get the following <tt>protected</tt> members:</p>
 <ul>
-	<li><code>var lower: Option[T]</code></li>
-	<li><code>var upper: Option[T]</code></li>
-	<li><tt>var isSequential</tt></li>
-	<li><tt>final def isRandom= !isSequential</tt></li>
-	<li><tt>var isUnique</tt></li>
-	<li><tt>var isReversed</tt></li>
+<li><code>format(s)</code>: A simpler way to define a formatting function, by providing a simple format string for java.lang.String.format.</li>
+<li><code>from(T) / to(T)</code>: defines a lower/upper bound for generated values (takes a value of the output type, subclasses may provide variants)</li>
+<li><code>sequential</code>: Signals that sequential values are to be generated (subclasses may define a step size)   by default, random values are generated.
+Generation starts at the lower bound, generating towards the upper. If the upper bound is reached without providing the wanted <em>n</em> occurrences, it wraps around from the start. E.g.: when getting 6 numbers from <code>Ints() from(0) to(1) sequential</code> you get <code>0,1,0,1,0,1</code>.</li>
+<li><code>reversed</code>: Calling this implies a call to sequential ; additionally, generation starts at the upper bound, stepping towards the lower.</li>
+<li><code>unique</code>: Calling this sets the generation to random, and then checks to see that each generated value is unique.</li>
 </ul>
-
-
+<p>All the methods return <code>this.type</code> (ending up in the type of the class implementing the trait), to allow <em>builders</em> like <code>Ints() from(1) to(10) reversed</code>. As the method definitions imply, generators will by default pick <em>random</em> sequences from their value space (the range of the underlying data type(s), possibly limited by from/to-arguments). When <code>unique</code> is added, it will check to see that the same value is never drawn twice. For generators with a limited value space, you should be careful with this setting   <code>FromList(List(1,2)).unique.get(3)</code> will probably crash or run forever...</p>
+<p>The methods <code>sequential</code> and <code>reversed</code> (and for some subclasses, a <code>step</code> method) change this behaviour   instead a series of increasing (or decreasing) values will be produced.
+Sometimes you will find it necessary to have two generators A and B draw from the same value space. In that case, you could use a generator to fill a list, and then use a <code>FromList</code> to produce the final values.</p>
+<h4>SingleGenerator</h4>
+<p>SingleGenerator is an abstract base class extending <code>ExtendedGenerator[T]</code> backed by <code>GeneratorImpl[T]</code>. All methods except <code>get(n)</code> are defined.
+Subclasses get the following <code>protected</code> members:</p>
+<ul>
+<li><code>var lower: Option[T]</code></li>
+<li><code>var upper: Option[T]</code></li>
+<li><code>var isSequential</code></li>
+<li><code>final def isRandom= !isSequential</code></li>
+<li><code>var isUnique</code></li>
+<li><code>var isReversed</code></li>
+</ul>
 <h4>ExtendedDelegate</h4>
-<p>The final basic building block is the <code>trait ExtendedDelegate[G, T]</code>.<br>
+<p>The final basic building block is the <code>trait ExtendedDelegate[G, T]</code>.
 This trait</p>
 <ul>
-	<li>can only be used on a type implementing <code>Generator[T]</code></li>
-	<li>requires the implementing type to have a <code>var generator:Generator[G]</code> containing the actual generator</li>
-	<li>allows you to override
-	<ul>
-		<li>only the methods of <tt>ExtendedGenerator</tt> you need to change</li>
-		<li>the definition of <tt>def conv2gen(f: T): G</tt> and / or <code>conv2result(f: G): T</code> to convert between the types of the generator and the implementing class (by default both are implemented with <tt>asInstanceOf</tt></li>
-	</ul>
-	</li>
+<li>can only be used on a type implementing <code>Generator[T]</code></li>
+<li>requires the implementing type to have a <code>var generator:Generator[G]</code> containing the actual generator</li>
+<li>to override the methods of <code>ExtendedGenerator</code> you need to change the definition of
+<code>def conv2gen(f: T): G</code> and / or <code>conv2result(f: G): T</code> to convert between the types of the generator and the implementing class (by default both are implemented with <code>asInstanceOf</code>)</li>
 </ul>
-
-
 <h2>Basic generators</h2>
-
 <h3>Booleans</h3>
-<p>This class has the rather simple job of generating Booleans...  It uses <tt>FromList</tt> under the hood.</p>
+<p>This class has the rather simple job of generating Booleans... It uses <code>FromList</code> under the hood.</p>
 <ul>
-	<li><tt>from</tt> and <tt>to</tt> are not supported</li>
-	<li>an additional method <tt>format(falseString, trueString)</tt> is available for the conversion in <tt>getStrings</tt></li>
+<li><code>from</code> and <code>to</code> are not supported</li>
+<li>an additional method <code>format(falseString, trueString)</code> is available for the conversion in <code>getStrings</code></li>
+<li>
+Apply methods:
+<ul>
+<li><code>Booleans()</code></li>
+<li><code>Booleans(trueString, falseString)</code></li>
 </ul>
-
-
-<p>Apply methods:</p>
-<ol>
-	<li><tt>Booleans()</tt></li>
-	<li><tt>Booleans(trueString, falseString)</tt></li>
-</ol>
-
-
+</li>
+</ul>
 <h3>Ints</h3>
-<p>returns ints from the entire range.  The only special method is</p>
+<p>returns ints from the entire range. The only special method is <code>step(Int)</code> to define step size for sequences.
+Apply methods (defaults for all parameters):</p>
 <ul>
-	<li><tt>step(Int)</tt> to define step size for sequences</li>
+<li><code>Ints(from:Int=Int.MinValue+1, to:Int=Int.MaxValue-1, step:Int=1)</code></li>
 </ul>
-
-
-<p>Apply methods (defaults for all parameters):</p>
-<ul>
-	<li><tt>Ints(from:Int=Int.MinValue+1, to:Int=Int.MaxValue-1, step:Int=1)</tt></li>
-</ul>
-
-
 <h3>Longs</h3>
-<p>returns longs from the entire range.  The only special method is</p>
-<ul>
-	<li><tt>step(Long)</tt> to define step size for sequences</li>
-</ul>
-
-
+<p>returns longs from the entire range. The only special method is <code>step(Long)</code> to define step size for sequences</p>
 <p>Apply methods (defaults for all parameters):</p>
 <ul>
-	<li><tt>Longs(from:Long=0, to:Long=Long.MaxValue-1, step:Int=1)</tt> (note default 0 for start)</li>
+<li><code>Longs(from:Long=0, to:Long=Long.MaxValue-1, step:Long=1)</code> (note default 0 for start)</li>
 </ul>
-
-
 <h3>Chars</h3>
-<p>uses <tt>ExtendedDelegate</tt> and a 1-character <tt>Strings</tt>-generator to do its work.  It adds</p>
-<ul>
-	<li>the <code>chars(Seq[Char])</code> method &ndash; also supported by <tt>Strings</tt> &ndash; to add a range of available characters.  Accepts a string (<tt>chars("aeiouy")</tt>), an interval (<tt>chars('a' to 'z')</tt>) etc.</li>
-</ul>
-
-
+<p>uses <code>ExtendedDelegate</code> and a 1-character <code>Strings</code>-generator to do its work. It adds the <code>chars(Seq[Char])</code> method   also supported by Strings   to add a range of available characters. Accepts a string (<code>chars(&quot;aeiouy&quot;)</code>), an interval (<code>chars('a' to 'z')</code>) etc.</p>
 <p>Apply methods:</p>
-<ol>
-	<li><tt>Chars()</tt></li>
-	<li><tt>Chars(seq)</tt></li>
-</ol>
-
-
+<ul>
+<li><code>Chars()</code></li>
+<li><code>Chars(seq)</code></li>
+</ul>
 <h3>Doubles</h3>
-<p>returns doubles from the entire range.  The only special method is</p>
-<ul>
-	<li><tt>step(Double)</tt> to define step size for sequences</li>
-</ul>
-
-
-<p>Apply methods:</p>
-<ol>
-	<li><tt>Double()</tt></li>
-</ol>
-
-
+<p>returns doubles from the entire range. The only special method is <code>step(Double)</code> to define step size for sequences</p>
+<p>Apply methods: <code>Double()</code></p>
 <h3>Dates</h3>
-<p>A simple enough data type, this is still one of the more complex generators.  It uses JodaTime for date/time representation, although conversions for <tt>java.util.Date</tt> are available.  There are a lot of special methods:</p>
+<p>A simple enough data type, this is still one of the more complex generators. It uses JodaTime for date/time representation, although conversions for <code>java.util.Date</code> are available. There are a lot of special methods:</p>
 <ul>
-	<li><tt>timeOnly</tt>: generates different times with date part omitted</li>
-	<li><tt>dateAndTime</tt>: include both date and time in the output (default is just date)</li>
-	<li><tt>setStdTime(h: Int, min:Int, s:Int, ms:Int)</tt>: set the standard time parts used when generating (default 0,0,0,0)</li>
-	<li><tt>setStdDate(y: Int, m:Int, d:Int)</tt>: set the standard date parts used when generating (default today's date)</li>
-	<li><tt>from(java.util.Date)</tt> / <tt>to(java.util.Date)</tt>: limit using JDK Dates rather than Joda DateTimes.</li>
-	<li><tt>from(y: Int=1753, m: Int=1, d:Int=1, hh: Int=0, mm: Int=0, ss:Int=0, ms: Int=0)</tt> / <tt>to(y: Int=9999, m: Int=12, d:Int= -31, hh: Int=23, mm: Int=59, ss:Int=59, ms: Int=999)</tt>: These are designed to be used with named arguments, like <tt>from(y=1980, m=1) to(y=1999, m=12)</tt></li>
-	<li><tt>step(y: Int=0, m: Int=0, d:Int=0, hh: Int=0, mm: Int=0, ss:Int=0, ms:Int=0)</tt>: Another candidate for named arguments, this method sets the interval for sequential generation</li>
-	<li><tt>format(DateTimeFormatter)</tt>: Use one of Joda's formatters</li>
-	<li><tt>getJavaDates(n:Int)</tt>: same as <tt>get</tt>, but converts to <tt>java.util.Date</tt></li>
-	<li><tt>Dates.dateFormatter(formatString)</tt>: returns a partial function to format dates according to a given string</li>
+<li><code>timeOnly</code>: generates different times with date part omitted</li>
+<li><code>dateAndTime</code>: include both date and time in the output (default is just date)</li>
+<li><code>setStdTime(h: Int, min:Int, s:Int, ms:Int)</code>: set the standard time parts used when generating (default 0,0,0,0)</li>
+<li><code>setStdDate(y: Int, m:Int, d:Int)</code>: set the standard date parts used when generating (default today's date)</li>
+<li><code>from(java.util.Date)</code> / <code>to(java.util.Date)</code>: limit using JDK Dates rather than Joda DateTimes.</li>
+<li><code>from(y: Int=1753, m: Int=1, d:Int=1, hh: Int=0, mm: Int=0, ss:Int=0, ms: Int=0)</code> / <code>to(y:Int=9999, m: Int=12, d:Int= -31, hh: Int=23, mm: Int=59, ss:Int=59, ms: Int=999)</code>: These are designed to be used with named arguments, like <code>from(y=1980, m=1) to(y=1999, m=12)</code></li>
+<li><code>step(y: Int=0, m: Int=0, d:Int=0, hh: Int=0, mm: Int=0, ss:Int=0, ms:Int=0)</code>: Another candidate for named arguments, this method sets the interval for sequential generation</li>
+<li><code>format(DateTimeFormatter)</code>: Use one of Joda's formatters</li>
+<li><code>getJavaDates(n:Int)</code>: same as <code>get</code>, but converts to <code>java.util.Date</code></li>
+<li><code>Dates.dateFormatter(formatString)</code>: returns a partial function to format dates according to a given string</li>
 </ul>
-
-
-
 <h3>Strings</h3>
-<p>The Strings generator generate strings, would you believe it...</p>
-
-<p>Special methods:</p>
+<p>The Strings generator generate strings, would you believe it...
+Special methods:</p>
 <ul>
-	<li><code>length(n)</code> / <tt>lengthBetween(from, to)</tt>: sets the required length (default 1) of the generated strings</li>
-	<li><code>chars(Seq[Char])</code>: defines the default characters to build strings from (default printable ASCII, i.e. space to  <tt>~</tt>).<br>
-Note that there are many ways to define a <code>Seq[Char]</code>, e.g.
-	<ul>
-		<li><tt>"aeiuoy"</tt></li>
-		<li><tt>'a' to 'z'</tt></li>
-		<li><code>'a' to 'z' filter {x=&gt; !"aeiouy".contains(x)}</code></li>
-	</ul>
-	</li>
+<li><code>length(n)</code> / <code>lengthBetween(from, to)</code>: sets the required length (default 1) of the generated strings</li>
+<li><code>chars(Seq[Char])</code>: defines the default characters to build strings from (default printable ASCII, i.e. space to <code>~</code>).
+Note that there are many ways to define a <code>Seq[Char]</code>, e.g. <code>&quot;aeiuoy&quot;</code>, <code>'a' to 'z'</code>, <code>'a' to 'z' filter {x=&gt; !&quot;aeiouy&quot;.contains(x)}</code></li>
 </ul>
-
-
 <p>Apply methods:</p>
 <ul>
-	<li><tt>Strings(length: Int=0)</tt>: default method, exact length may be given</li>
-	<li><code>Strings(length: Int, chars:Seq[Char])</code>: supply length and character set</li>
+<li><code>Strings(length: Int=0)</code>: default method, exact length may be given</li>
+<li><code>Strings(length: Int, chars:Seq[Char])</code>: supply length and character set</li>
 </ul>
-
-
-
 <h3>Fixed</h3>
-<p>This generator may seem superfluous...  It takes a single value, and returns that same value repeatedly.  But it is meant for aggregating values, see <tt>FieldConcatenator</tt> for an example.</p>
-
-<p>This "generator" is actually just an apply method taking a single value, it is backed by a <tt>FromList</tt>.</p>
-
+<p>This generator may seem superfluous... It takes a single value, and returns that same value repeatedly. But it is meant for aggregating values, see <code>FieldConcatenator</code> for an example.
+This &quot;generator&quot; is actually just an apply method taking a single value; it is backed by <code>FromList</code>.</p>
 <h3>FromFile</h3>
-<p>This generator reads lines from an input file and creates a list of values, from which a delegate <tt>FromList</tt> can take its values. The values may be typed (does not currently work as expected...), even though they are read as strings.</p>
-
-<p>Specialities:</p>
+<p>This generator reads lines from an input file and creates a list of values, from which a delegate <code>FromList</code> can take its values. The values may be typed (does not currently work as expected...), even though they are read as strings.
+Specialities:</p>
 <ul>
-	<li>The <tt>from</tt> and <tt>to</tt> methods are not supported.</li>
-	<li><tt>allLines(all:Boolean=true)</tt>: to support large input files, the generator only reads the first <em>n</em> lines from the file when asked to produce <em>n</em> values.  To utilize the entire file, call <tt>allLines</tt> before getting input, this is meaningless for sequential output, but increases the value space for random generation.</li>
+<li>The <code>from</code> and <code>to</code> methods are not supported.</li>
+<li><code>allLines(all:Boolean=true)</code>: to support large input files, the generator only reads the first <em>n</em> lines from the file when asked to produce <em>n</em> values. To utilize the entire file, call</li>
+<li><code>allLines</code> before getting input, this is meaningless for sequential output, but increases the value space for random generation.</li>
 </ul>
-
-
 <p>Apply method:</p>
 <ul>
-	<li><tt>FromFile(resourceName: String, allLines:Boolean=false, encoding: String= "ISO-8859-1")</tt>: A file name must be given, allLines is optional (see the similar method), so is the encoding to be used (defaults to ISO-8859-1).<br>
-The file to be read is first searched for on the classpath, then as a regular file name.  Since reading is not done until a get-method is called, invalid file names will not be detected when <em>constructing</em> the generator.</li>
+<li><code>FromFile(resourceName: String, allLines:Boolean=false, encoding: String= &quot;ISO-8859-1&quot;)</code>: A file name must be given, allLines is optional (see the similar method), so is the encoding to be used (defaults to ISO-8859-1). The file to be read is first searched for on the classpath, then as a regular file name. Since reading is not done until a get-method is called, invalid file names will not be detected when <em>constructing</em> the generator.</li>
 </ul>
-
-
-
 <h3>FromList</h3>
-<p>Probably the most versatile of all the generators, the FromList takes a list of "anything" as input and generates its values from that, it is typed (<code>FromList[T]</code>), so you keep the type of the input list.<br>
+<p>Probably the most versatile of all the generators, the FromList takes a list of &quot;anything&quot; as input and generates its values from that, it is typed (<code>FromList[T]</code>), so you keep the type of the input list.
 To name a few possible uses:</p>
-<ol>
-	<li>If you already have a list of the values you want to pick from, the FromList takes care of the rest...  This is what the Boolean (short list :), fixed (even shorter) and FromFile generators do.  You could just as well use it for a list of Person objects or DOM trees...</li>
-	<li>As mentioned above, if you need to reuse the same values in several generators, e.g. if you need "foreign keys" from one generator to another, you could generate the needed values in a list, and use that list for the other generators.</li>
-	<li>You could use it to scramble existing data.  E.g.: do a <tt>select Id, FirstName, LastName, Address, CreditCardNumber from Customer</tt> in your code, keep the field values in each their list, and the generate a number of <tt>inserts</tt> picking random values from the lists.</li>
-</ol>
-
-
+<ul>
+<li>If you already have a list of the values you want to pick from, the FromList takes care of the rest... This is what the Boolean (short list :), fixed (even shorter) and FromFile generators do. You could just as well use it for a list of Person objects or DOM trees...</li>
+<li>As mentioned above, if you need to reuse the same values in several generators, e.g. if you need &quot;foreign keys&quot; from one generator to another, you could generate the needed values in a list, and use that list for the other generators.</li>
+<li>You could use it to scramble existing data. E.g.: do a <code>select Id, FirstName, LastName, Address, CreditCardNumber from Customer</code> in your code, keep the field values in each their list, and the generate a number of <code>insert</code>s picking random values from the lists.</li>
+</ul>
 <p>Specialities:</p>
 <ul>
-	<li><tt>from</tt> and <tt>to</tt> are not supported</li>
-	<li>The method <tt>fromList(list)</tt> <b>must</b> be called before you generate values (unless you use the apply method with a list argument).</li>
+<li><code>from</code> and <code>to</code> are not supported</li>
+<li>The method <code>fromList(list)</code> must be called before you generate values (unless you use the apply method with a list argument).</li>
 </ul>
-
-
 <p>Apply methods:</p>
 <ul>
-	<li><tt>FromList()</tt> &ndash; then you <em>must</em> call <tt>fromList</tt> afterwards</li>
-	<li><tt>FromList(List)</tt></li>
-	<li><tt>FromList(T*)</tt> &ndash; e.g. <tt>FromList(1,2,4,8,16,32,64)</tt></li>
+<li><code>FromList()</code> then you <em>must</em> call <code>fromList</code> afterwards</li>
+<li><code>FromList(List)</code></li>
+<li><code>FromList(T*)</code> e.g. <code>FromList(1,2,4,8,16,32,64)</code></li>
 </ul>
-
-
 <h2>Aggregates</h2>
 <p>There will often be a need to handle more complex data than what the basic generators can produce. A set of generators are provided to facilitate building of aggregate constructs.</p>
-
+<h3>MultiGenerator / MultiGeneratorWithWeight</h3>
+<p>These traits are used by several of the follow generators, supplying miscellaneous <code>add</code>-methods</p>
 <h3>TextWrapper</h3>
-<p>This generator takes any other generator as input, always uses its <code>getStrings(n)</code> as input, thus acting as "text converter", and adds methods to manipulate the resulting text.</p>
-
-
+<p>This generator takes any other generator as input, always uses its <code>getStrings(n)</code> as input, thus acting as &quot;text converter&quot;, and adds methods to manipulate the resulting text.</p>
 <p>Special methods:</p>
 <ul>
-	<li><code>substring(from:Int, to:Int=-1)</code> (if <tt>to</tt> is omitted, the rest of the string is used)</li>
-	<li><tt>toLower</tt> / <tt>toUpper</tt> / <tt>trim</tt> &ndash; as in <tt>java.lang.String</tt></li>
-	<li><code>surroundWith(prefix:String="", suffix:String="")</code> pre/suffixes the result string with fixed strings</li>
-	<li><code>transform(f: String=&gt; String)</code> &ndash; add your own string transformer function</li>
+<li><code>substring(from:Int, to:Int=-1)</code>: (if <code>to</code> is omitted, the rest of the string is used)</li>
+<li><code>toLower</code> / <code>toUpper</code> / <code>trim</code>:   as in <code>java.lang.String</code></li>
+<li><code>surroundWith(prefix:String=&quot;&quot;, suffix:String=&quot;&quot;)</code> pre/suffixes the result string with fixed strings</li>
+<li><code>transform(f: String=&gt; String)</code>:   add your own string transformer function</li>
+<li><code>substitute(regexp:String, to:String)</code>: perform substitution of regexp</li>
 </ul>
-
-
 <p>Apply methods:</p>
 <ul>
-	<li><tt>TextWrapper(generator)</tt></li>
+<li><code>TextWrapper(generator)</code></li>
 </ul>
-
-
 <h3>FieldConcatenator</h3>
-<p>You saw the <tt>FieldConcatenator</tt> in action in the introductory example:</p>
-<pre>FieldConcatenator().
-  add(Doubles() from(1) to(300) format("%5.2f")).
-  add(Fixed(" ")).
-  add(FromList(List("l", "kg", "", "m")))
-</pre>
-<p>The FieldConcatenator is given a set of generators with the <tt>add</tt> method. When <tt>get</tt> is called, it calls <tt>getString</tt> on each of its generators, and concatenates the output from each generator (in the same order as the <tt>add</tt> calls), and returns the list of concatenated strings (in the above example strings like "12.04 kg").</p>
+<p>You saw the FieldConcatenator in action in the introductory example:</p>
+<pre><code>FieldConcatenator().
+  add(Doubles() from(1) to(300) format(&quot;%5.2f&quot;)).
+  add(Fixed(&quot; &quot;)).
+  add(FromList(List(&quot;l&quot;, &quot;kg&quot;, &quot;&quot;, &quot;m&quot;)))
+</code></pre>
 
+<p>The FieldConcatenator is given a set of generators with the <code>add</code> method. When <code>get</code> is called, it calls <code>getString</code> on each of its generators, and concatenates the output from each generator (in the same order as the <code>add</code> calls), and returns the list of concatenated strings (in the above example strings like &quot;12.04 kg&quot;).</p>
+<p>Apply methods:</p>
+<ul>
+<li><code>FieldConcatenator(generator*)</code> takes the generators to add</li>
+</ul>
 <h3>SomeNulls</h3>
-<p>This generator takes another generator and a percentage as input.  Both the <tt>get</tt> and the <tt>getStrings</tt> method calls the original generator to retrieve its values, and then replaces approximately N % of the occurrences (decided by a random generator) with <tt>null</tt>.  N==0 means no nulls, N==100 means only nulls, N==50 50% nulls etc.</p>
-
+<p>This generator takes another generator and a percentage as input. Both the <code>get</code> and the <code>getStrings</code> method calls the original generator to retrieve its values, and then replaces approximately N% of the occurrences (decided by a random generator) with <code>null</code>. N==0 means no nulls, N==100 means only nulls, N==50 50% nulls etc.</p>
 <p>Methods:</p>
 <ul>
-	<li><tt>nullFactor(percent:Int)</tt> as described above</li>
+<li><code>nullFactor(percent:Int)</code> as described above</li>
 </ul>
-
-
 <p>Apply methods:</p>
 <ul>
-	<li><tt>SomeNulls(percent, generator)</tt>: supply both the factor and the generator</li>
+<li><code>SomeNulls(percent, generator)</code>: supply both the factor and the generator</li>
 </ul>
-
-
 <h3>WeightedGenerator</h3>
-<p>This generator takes one or more generators as input, and selects randomly between them for each value to generate. It is typed as a <code>Generator[Any]</code>, since it can wrap a free mix of generator types.<br>
-Each generator is given a weight &ndash; the probability for each one is its own weight relative to the sum of all weights.</p>
-
+<p>This generator takes one or more generators as input, and selects randomly between them for each value to generate. It is typed as a <code>Generator[Any]</code>, since it can wrap a free mix of generator types. Each generator is given a weight &ndash;  the probability for each one is its own weight relative to the sum of all weights.</p>
 <ul>
-	<li><code>add(weight: Int, gen: Generator[_])</code></li>
-	<li>Apply: noargs</li>
+<li><code>add(weight: Int, gen: Generator[_])</code></li>
 </ul>
-
-
-
+<p>Apply methods:</p>
+<ul>
+<li><code>WeightedGenerator[T]((Int,Generator[T])*)</code>: add one or more tuples of weight + generator</li>
+<li><code>WeightedGenerator[T](List(Generator[T]))</code>: add one or more generators with weight 1</li>
+</ul>
+<h3>SequenceOf</h3>
+<p>This one also takes a list of generators (which may be weighted, the default weight is 1); when calling <code>get</code>/<code>getStrings</code>, the input generators are called in sequence, each adding a set of records to the result.  In default mode, each generator contributes a number of records relative to its weight, the total will then be close to N.  In absolute mode &ndash; after calling <code>makeAbsolute</code> &ndash; each generator contributes <code>N*weight</code> records.</p>
+<p>This might not seem very useful, but when generating to file (etc), it is usually easier to collect the individual  generators in this generator, rather than specifying <code>ToFile/append</code> for each input.</p>
+<p>It takes two type parameters:</p>
+<ol>
+<li>The type of the input generators (which could be <code>Any</code>, if the generator types vary)</li>
+<li>The type of the generated values (typically <code>String</code> if the input is <code>Any</code>, and equal to the input type if they don't...)
+The constructor needs a method to convert from the first to the second type.</li>
+</ol>
+<p>Add methods:</p>
+<ul>
+<li><code>add(generator*)</code></li>
+<li><code>add(weight:Int, Generator[T])</code></li>
+<li><code>addWeighted(weighted: (Int, Generator[T])*)</code></li>
+</ul>
+<p>Apply/object methods:</p>
+<ul>
+<li><code>SequenceOf[T](generator[T]*)</code>: adds 1 or more generators with weight 1, with an identity conversion function</li>
+<li><code>SequenceOf.strings(generator*)</code> and <code>SequenceOf()</code>: create a <code>SequenceOf[Any,String]</code>, the first with a set of weight 1 generators</li>
+</ul>
+<h3>TwoFromFunction</h3>
+<p>This generator takes a generator and a generator function as input. It generates values from the generator, and feeds values to the generator function to obtain a derived value.  The two values are then returned as a tuple. It does not support the <code>filter</code>, <code>formatWith</code> or <code>formatOne</code> functions.</p>
+<p>Special methods:</p>
+<ul>
+<li><code>getFormatted(n: Int): List[(String, String)]</code>: The <code>getStrings</code> method does not support formatting, but this method returns String tuples formatted according to the input generator's formatting function.</li>
+<li><code>asListGens(n: Int): (FromList[T], FromList[U]</code>: Runs <code>get(n)</code>, and returns <code>FromList</code>-generators for the two different value lists.</li>
+</ul>
+<p>Apply method:</p>
+<ul>
+<li><code>TwoFromFunction[T, U](gen: Generator[T], genFun: T=&gt;U): TwoFromFunction[T, U]</code></li>
+</ul>
+<h3>TwoWithPredicate</h3>
+<p>This generator draws tuples from two generators, it also takes a predicate function to determine if the generated tuple should be included. This generator is included to support generation of interdependent fields, e.g. &quot;fromDate &amp; toDate&quot; (where the predicate ensures toDate&gt;=fromDate), &quot;fromValue != toValue&quot; etc.</p>
+<p>Special methods:</p>
+<ul>
+<li><code>getFormatted(n: Int): List[(String, String)]</code>: The <code>getStrings</code> method does not support formatting, but this method returns String tuples formatted according to the input generator's formatting function.</li>
+<li><code>asListGens(n: Int): (FromList[T], FromList[U]</code>: Runs <code>get(n)</code>, and returns <code>FromList</code>-generators for the two different value lists.</li>
+<li><code>def asFormattedListGens(n: Int): (FromList[String], FromList[String])</code>: a combination of the previous two</li>
+</ul>
+<p>Apply methods:</p>
+<ul>
+<li><code>TwoWithPredicate[T, U](left: Generator[T], right: Generator[U], predicate: ((T,U))=&gt;Boolean): TwoWithPredicate[T, U]</code></li>
+<li><code>TwoWithPredicate[T](gen: Generator[T], predicate: ((T, T))=&gt;Boolean): TwoWithPredicate[T, T]</code> (uses the same generator twice)</li>
+</ul>
+<h3>UniqueWithFallback</h3>
+<p>takes a primary generator and a secondary generator.  It tries to get unique values from the primary generator, but for each duplicate value obtained, it repeatedly gets a value from the secondary generator until a unique value is found.  The <code>formatWith</code>function is not supported, formatting is done by the primary generator.</p>
+<p>Apply methods:</p>
+<ul>
+<li><code>UniqueWithFallback[T](primary: Generator[T], alt: Generator[T])</code></li>
+</ul>
 <h2>Specialized generators</h2>
-
 <h3>Names</h3>
-<p>Creates "name-like" strings &ndash; words containing A-Zs with random length between 3 and 20 with an uppercase first letter.  You can see some sample output in the product names in the introductory example.  This is only a wrapper object around a <tt>Strings</tt> generator, its only parameter is an int telling how many space-separated words to create in each string.</p>
-
+<p>Creates &quot;name-like&quot; strings   words containing A-Zs with random length between 3 and 20 with an uppercase first letter. You can see some sample output in the product names in the introductory example. This is only a wrapper object around a <code>Strings</code> generator, its only parameter is an int telling how many space-separated words to create in each string.</p>
 <h3>CarMakes</h3>
-<p>This generator selects from a list of about a 100 manufacturers of cars, motor cycles etc, like "Porsche" and "Toyota".<br>
-No class, just an apply method without parameters returning a <tt>FromList</tt>.</p>
-
+<p>This generator selects from a list of about a 100 manufacturers of cars, motor cycles etc, like &quot;Porsche&quot; and &quot;Toyota&quot;. No class, just an apply method without parameters returning a <code>FromList</code>.</p>
 <h3>Urls</h3>
-<p>Builds fake URLs using a http/https prefix, "://", sometimes "www.", a lowercase string (a-z) of length 4-10, and a suffix of .com/no/org/net/co.uk/gov.<br>
+<p>Builds fake URLs using a http/https prefix, &quot;://&quot;, sometimes &quot;www.&quot;, a lowercase string (a-z) of length 4-10, and a suffix of .com/no/org/net/co.uk/gov.
 No class, just an apply method without parameters.</p>
-
 <h3>MailAddresses</h3>
 <p>Builds email addresses using this pattern:</p>
 <ol>
-	<li>A name of 3-8 letters (a-z)</li>
-	<li>Sometimes expanded with "." and another name (4-9 letters)</li>
-	<li>"@"</li>
-	<li>A name of 4-9 characters</li>
-	<li>"."</li>
-	<li>com/no/org/net/co.uk/gov</li>
+<li>A name of 3-8 letters (a-z)
+Sometimes expanded with &quot;.&quot; and another name (4-9 letters)</li>
+<li>&quot;@&quot;</li>
+<li>A name of 4-9 characters</li>
+<li>&quot;.&quot;</li>
+<li>com/no/org/net/co.uk/gov</li>
 </ol>
-
-
 <h3>Guids</h3>
-<p>This generator is a (perhaps too) simple generator for GUIDs, basically 128-bits integers, NOT following the rules laid out in <a href="http://www.ietf.org/rfc/rfc4122.txt">http://www.ietf.org/rfc/rfc4122.txt</a> etc.<br>
+<p>This generator is a (perhaps too) simple generator for GUIDs, basically 128-bits integers, NOT following the rules laid out in <a href="http://www.ietf.org/rfc/rfc4122.txt">http://www.ietf.org/rfc/rfc4122.txt</a> etc.
 There are 3 get-methods (and only a default apply method):</p>
-<ol>
-	<li><code>get(n)</code>: returns a list of <code>Seq[Int]</code>, with 4 positive longs; with 32, 16, 16 and 64 bits respectively (negative numbers are not generated)</li>
-	<li><code>getStrings(n)</code>: the numbers are formatted as hex strings in the format "hhhhhhhh-hhhh-hhhh-hhhhhhhhhhhhhhhh" (unless you call <tt>formatWith</tt> with another formatter)
-	<ul>
-		<li>If you need something like the standard Windows references, you can use a <tt>TextWrapper</tt>, e.g. <code>TextWrapper(Guids()) surroundWith("{", "}") toUpper</code>, which returns strings like <code>{0B9F2CC4-7A26-DF88-57BFACEB0A6152C3}</code></li>
-	</ul>
-	</li>
-	<li><code>getBigInts(n)</code>: the values are returned as actual 128-bit ints, like <tt>135552048303739552162038533024056166383</tt></li>
-</ol>
-
-
-<p>The <tt>filter</tt> method is <em>not</em> supported for this generator.</p>
-
+<ul>
+<li><code>get(n)</code>: returns a list of <code>Seq[Int]</code>, with 4 positive longs; with 32, 16, 16 and 64 bits respectively (negative numbers are not generated)</li>
+<li><code>getStrings(n)</code>: the numbers are formatted as hex strings in the format &quot;hhhhhhhh-hhhh-hhhh-hhhhhhhhhhhhhhhh&quot; (unless you call <code>formatWith</code> with another formatter).
+If you need something like the standard Windows references, you can use a <code>TextWrapper</code>, e.g. <code>TextWrapper(Guids()) surroundWith(&quot;{&quot;, &quot;}&quot;) toUpper</code>, which returns strings like <code>{0B9F2CC4-7A26-DF88-57BFACEB0A6152C3}</code></li>
+<li><code>getBigInts(n)</code>: the values are returned as actual 128-bit ints, like 135552048303739552162038533024056166383</li>
+</ul>
+<p>The <code>filter</code> method is <em>not</em> supported for this generator.</p>
 <h3>CreditCards</h3>
-<p>This generator by default generates 16-digit credit card numbers from Visa or MasterCard, but you can instruct it otherwise through its generic apply method. The last digit is generated using Luhn's algorithm (<a href="http://en.wikipedia.org/wiki/Luhn_algorithm">http://en.wikipedia.org/wiki/Luhn_algorithm</a>, see also <a href="http://en.wikipedia.org/wiki/Credit_card_number">http://en.wikipedia.org/wiki/Credit_card_number</a>).<br>
-There are 4 different "apply" methods:</p>
-<ol>
-	<li><code>CreditCards()</code>: 16 digit MasterCard/Visa</li>
-	<li><code>CreditCards.visas</code>: 16 digit Visa numbers (starts with 4)</li>
-	<li><code>CreditCards.masterCards</code>: 16 digit MasterCard numbers (starts with 51..55)</li>
-	<li><code>CreditCards(prefixes: List[Long], length: Int)</code>: you decide the prefixes and length; make sure you leave room for the check digit.</li>
-</ol>
-
-
-<p>Additionally, you may add a call to <tt>unique()</tt>, to ensure unique values.</p>
-
+<p>This generator by default generates 16-digit credit card numbers from Visa or MasterCard, but you can instruct it otherwise through its generic apply method. The
+last digit is generated using Luhn's algorithm (<a href="http://en.wikipedia.org/wiki/Luhn_algorithm">http://en.wikipedia.org/wiki/Luhn_algorithm</a>, see also <a href="http://en.wikipedia.org/wiki/Credit_card_number">http://en.wikipedia.org/wiki/Credit<em>card</em>number</a>).
+There are 4 different &quot;apply&quot; methods:</p>
+<ul>
+<li><code>CreditCards()</code>: 16 digit MasterCard/Visa</li>
+<li><code>CreditCards.visas</code>: 16 digit Visa numbers (starts with 4)</li>
+<li><code>CreditCards.masterCards</code>: 16 digit MasterCard numbers (starts with 51..55)</li>
+<li><code>CreditCards(prefixes: List[Long], length: Int)</code>: you decide the prefixes and length; make sure you leave room for the check digit.</li>
+</ul>
+<p>Additionally, you may add a call to <code>unique()</code> , to ensure unique values.</p>
 <h3>Markov</h3>
-<p>A generator for Markov chain text generation, i.e. random text based
-on existing text
-(see <a href="http://en.wikipedia.org/wiki/Markov_chain#Markov_text_generators">http://en.wikipedia.org/wiki/Markov_chain#Markov_text_generators</a>).
-A sample...:</p>
+<p>A generator for Markov chain text generation, i.e. random text based on existing text (see <a href="http://en.wikipedia.org/wiki/Markov_chain#Markov_text_generators">http://en.wikipedia.org/wiki/Markov<em>chain#Markov</em>text_generators</a>).  A sample...:</p>
 <blockquote>
-Prioriteringseffektivitet (allokeringseffektivitet) dreier seg om statsføretak, særlovsselskap og brukarorganisasjonane. Regjeringa ser annleis ut over Noreg integrert om resultata av telefon- og transport eller delvis i arbeidet med endringane og medarbeidarar som går under sektorane i oppgåvefordelinga mellom helse og resten av endringane i pakt med om å prioritere mellom den politisk-administrative styringskjeda på ulike retningar. På 90-talet dreiv Statskonsult hadde. På den forvaltningspolitikken i livet. Forvaltninga skal løysast av organisasjonsformene er i norsk forvaltningsutvikling som strekkjer seg nye former for avgjerder. Det er venta at leiarar og er under omstilling. Ein skår på kunnskap og medarbeidarar med innvandrarbakgrunn i samfunnet og dei har endra rammeverket for forvaltningsverksemder kan arbeidsdelinga mellom ansvarsområdet til å nå andre føremoner. Statstilsette må møte framtidige utfordringar både avgjerdsprosessen og 1970-talet.
+<p>Prioriteringseffektivitet (allokeringseffektivitet) dreier seg om
+statsfÃ¸retak, sÃ¦rlovsselskap og brukarorganisasjonane. Regjeringa ser
+annleis ut over Noreg integrert om resultata av telefon- og transport
+eller delvis i arbeidet med endringane og medarbeidarar som gÃ¥r under
+sektorane i oppgÃ¥vefordelinga mellom helse og resten av endringane i
+pakt med om Ã¥ prioritere mellom den politisk-administrative
+styringskjeda pÃ¥ ulike retningar. PÃ¥ 90-talet dreiv Statskonsult
+hadde. PÃ¥ den forvaltningspolitikken i livet. Forvaltninga skal lÃ¸ysast
+av organisasjonsformene er i norsk forvaltningsutvikling som strekkjer
+seg nye former for avgjerder. Det er venta at leiarar og er under
+omstilling. Ein skÃ¥r pÃ¥ kunnskap og medarbeidarar med innvandrarbakgrunn
+i samfunnet og dei har endra rammeverket for forvaltningsverksemder kan
+arbeidsdelinga mellom ansvarsomrÃ¥det til Ã¥ nÃ¥ andre
+fÃ¸remoner. Statstilsette mÃ¥ mÃ¸te framtidige utfordringar bÃ¥de
+avgjerdsprosessen og 1970-talet.</p>
 </blockquote>
-<p>Neither <tt>filter</tt> nor <tt>formatWith</tt> are supported.<br/>
-<tt>getString</tt> returns just <i>one</i> valuable occurrence (at index 0) - the selected words concatenatenated with a space between them.</p>
+<p>Neither <code>filter</code> nor <code>formatWith</code> are supported.
+<code>getString</code> returns just <em>one</em> valuable occurrence (at index 0) -- the selected words concatenatenated with a space between them.</p>
 <p>Both files and a string list may be used as input. A default text from <a href="http://www.regjeringen.no/nb/dep/fad/dok/regpubl/stmeld/2008-2009/stmeld-nr-19-2008-2009-">http://www.regjeringen.no/nb/dep/fad/dok/regpubl/stmeld/2008-2009/stmeld-nr-19-2008-2009-</a> is provided in the file markov.txt.</p>
-
-
 <h3>Fibonaccis</h3>
-<p>You cannot write a set of generators in a functional language without a Fibonacci sequence generator. Thus...<br>
-This generator is written in a tail recursive manner, supported by <tt>BigInt</tt>, thus calculating Fibonacci(500)==139423224561697880139724382870407283950070256587697307264108962948325571622863290691557658876222521294125, seemingly correct.<br>
-You may use <tt>filter</tt> and <tt>formatWith</tt> as for other generators.</p>
-
+<p>You cannot write a set of generators in a functional language without a Fibonacci sequence generator. Thus...
+This generator is written in a tail recursive manner, supported by <code>BigInt</code> , thus calculating Fibonacci(500)==1394232245616978801397243828704072839500702565876973072641089629483255716228632906915576 seemingly correct.
+You may use <code>filter</code> and <code>formatWith</code> as for other generators.</p>
 <h3>Norwegian custom generators</h3>
-<p>These generators create data specific to Norwegian domains.  They use Norwegian names, as they are of limited value outside of Norway anyway.</p>
-
+<p>These generators create data specific to Norwegian domains. They use Norwegian names, as they are of limited value outside of Norway anyway.</p>
 <h4>Kjennemerker</h4>
-<p>No class, just an apply method without parameters.<br>
-Generates strings resembling Norwegian car license plates &ndash; 2 uppercase letters (not I, M, O or Q) followed by 5 digits (use a TextWrapper to shorten them if you need).</p>
-
+<p>No class, just an apply method without parameters.
+Generates strings resembling Norwegian car license plates   2 uppercase letters (not I, M, O or Q) followed by 5 digits (use a TextWrapper to shorten them if you need).</p>
 <h4>Fnr</h4>
-<p>Generates legal "fodselsnummer", Norwegian "social security numbers" (<a href="http://no.wikipedia.org/wiki/F%C3%B8dselsnummer">http://no.wikipedia.org/wiki/F%C3%B8dselsnummer</a>). These are strings of 11 digits:</p>
+<p>Generates legal &quot;fodselsnummer&quot;, Norwegian &quot;social security numbers&quot; (<a href="http://no.wikipedia.org/wiki/F%C3%B8dselsnummer">http://no.wikipedia.org/wiki/F%C3%B8dselsnummer</a>). These are strings of 11 digits:</p>
 <ol>
-	<li>Birth date &ndash; "ddmmyy"</li>
-	<li>A random 3-digit ID code</li>
-	<li>2 check digits (using two mod11 algorithms)</li>
+<li>Birth date   &quot;ddmmyy&quot;</li>
+<li>A random 3-digit ID code</li>
+<li>2 check digits (using two mod11 algorithms)</li>
 </ol>
-
-
 <p>There are several rules pertaining to these numbers, some of which are supported by the generator.</p>
-<ol>
-	<li>The date part usually starts with 01-31.  However, temporary numbers called D-numbers are issued, they add 40 to the birth day (i.e. 41-71).<br>
-Add a call to <code>withDnr(n)</code> to generate such numbers &ndash; n is a percentage between 0 (default, no dnrs) and 100 (all D-numbers).</li>
-	<li>If you only want certain dates, use the apply method or constructor with an <code>ExtendedGenerator[DateTime]</code> argument (e.g. a <tt>Dates</tt> generator).</li>
-	<li>The 3-digit ID is given in intervals signifying century.  This is not supported by the generator.</li>
-	<li>The 3-digit ID is odd for men, even for women.  Call <tt>boysOnly</tt> og <tt>girlsOnly</tt> if you are a sexist.</li>
-	<li>The algorithm for the check numbers leads to not all IDs being valid.  The generator ensures that all values are valid.</li>
-</ol>
-
-
-<p><b>Apply methods</b></p>
-<ol>
-	<li>Standard no-args</li>
-	<li><code>Fnr(ExtendedGenerator[DateTime])</code>: (e.g. <tt>Dates</tt>) to govern which dates are produced.  See the long sample at the end of the article.</li>
-</ol>
-
-
+<ul>
+<li>The date part usually starts with 01-31. However, temporary numbers called D-numbers are issued, they add 40 to the birth day (i.e. 41-71). Add a call to <code>withDnr(n)</code> to generate such numbers   n is a percentage between 0 (default, no dnrs) and 100 (all D-numbers).</li>
+<li>If you only want certain dates, use the apply method or constructor with an <code>ExtendedGenerator[DateTime]</code> argument (e.g. a <code>Dates</code> generator).</li>
+<li>The 3-digit ID is given in intervals signifying century. This is not supported by the generator.</li>
+<li>The 3-digit ID is odd for men, even for women. Call <code>boysOnly</code> or <code>girlsOnly</code> if you are a sexist.</li>
+<li>The algorithm for the check numbers leads to not all IDs being valid. The generator ensures that all values are valid.</li>
+</ul>
+<p>Apply methods:</p>
+<ul>
+<li>Standard no-args</li>
+<li><code>Fnr(ExtendedGenerator[DateTime])</code>: (e.g. <code>Dates</code>) to govern which dates are produced. See the long sample at the end of the article.</li>
+</ul>
 <h4>Orgnr</h4>
-<p>Generates legal "organisasjonsnummer", Norwegian "organization numbers" (<a href="http://www.brreg.no/samordning/organisasjonsnummeret.html">http://www.brreg.no/samordning/organisasjonsnummeret.html</a>). These are strings of 9 digits:</p>
-<ol>
-	<li>The first digit is 8 or 9</li>
-	<li>The last digit is a mod11 check digit</li>
-</ol>
-
-
-<p><b>Apply methods</b></p>
-<ol>
-	<li>Standard no-args</li>
-</ol>
-
-
+<p>Generates legal &quot;organisasjonsnummer&quot;, Norwegian &quot;organization numbers&quot; (<a href="http://www.brreg.no/samordning/organisasjonsnummeret.html">http://www.brreg.no/samordning/organisasjonsnummeret.html</a>). These are strings of 9 digits:
+1. The first digit is 8 or 9
+2. The last digit is a mod11 check digit</p>
+<p>Apply methods: Standard no-args</p>
 <h4>Land</h4>
-<p>(Country generator.)<br>
-This generator (object) reads the supplied "land.txt" file containing country names in Norwegian spelling, and uses a <tt>FromFile</tt> to supply values.</p>
-
-
+<p>(Country generator.)
+This generator (object) reads the supplied &quot;land.txt&quot; file containing country names in Norwegian spelling, and uses a <code>FromFile</code> to supply values.</p>
 <h4>Poststeder</h4>
-<p>(Postal code generator.)<br>
-This one is also based on a <tt>FromFile</tt> reading the supplied "postnr.txt" which contains Norwegian postal codes, formatted as "NNNN Ssss....", where NNNN is the 4-digit code, followed by a space, then the name.  There are 3 alternative invokations, they all have an optional <tt>allLines</tt> parameter (default <tt>true</tt>) for the <tt>FromFile</tt> generator:</p>
+<p>(Postal code generator.)
+This one is also based on a <code>FromFile</code> reading the supplied &quot;postnr.txt&quot; which contains Norwegian postal codes, formatted as &quot;NNNN Ssss....&quot;, where NNNN is the 4-digit code, followed by a space, then the name.   There are 3 alternative invokations, they all have an optional <code>allLines</code> parameter (default true) for the <code>FromFile</code> generator:</p>
 <ul>
-	<li><tt>Poststeder</tt>: returns full strings as described above</li>
-	<li><tt>Poststeder.postnr</tt>: returns the numeric code only</li>
-	<li><tt>Poststeder.poststed</tt>: returns the name only</li>
+<li><code>Poststeder</code>: returns full strings as described above</li>
+<li><code>Poststeder.postnr</code>: returns the numeric code only</li>
+<li><code>Poststeder.poststed</code>: returns the name only</li>
 </ul>
-
-
-<p><em>Source: <a href="http://www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postreklame/andre-tjenester/postnummertabeller">http://www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postreklame/andre-tjenester/postnummertabeller</a></em></p>
-
+<p>Source: <a href="http://www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postreklame/andre-tjenester/postnummertabeller">http://www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postreklame/andre-tjenester/postnummertabeller</a></p>
 <h4>Kommuner</h4>
-<p>(County generator.)<br>
-Another one based on a <tt>FromFile</tt>, reading  "kommuner.txt" which contains Norwegian county names, formatted as "NNNN Ssss....", where NNNN is a 4-digit code, followed by a space, then the name.  There are 3 alternative invokations, they all have an optional <tt>allLines</tt> parameter (default <tt>true</tt>) for the <tt>FromFile</tt> generator:</p>
+<p>(County generator.)
+Another one based on a <code>FromFile</code>, reading &quot;kommuner.txt&quot; which contains Norwegian county names, formatted as &quot;NNNN Ssss....&quot;, where NNNN is a 4-digit code, followed by a space, then the name. There are 3 alternative invokations, they all have an optional <code>allLines</code> parameter (default <code>true</code>) for the <code>FromFile</code> generator:</p>
 <ul>
-	<li><tt>Kommuner</tt>: returns full strings as described above</li>
-	<li><tt>Kommuner.kommunenr</tt>: returns the numeric code only</li>
-	<li><tt>Kommuner.kommunenavn</tt>: returns the name only</li>
+<li><code>Kommuner</code>: returns full strings as described above</li>
+<li><code>Kommuner.kommunenr</code>: returns the numeric code only</li>
+<li><code>Kommuner.kommunenavn</code>: returns the name only</li>
 </ul>
-
-
-<p><em>Source: <a href="http://www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postreklame/andre-tjenester/postnummertabeller">http://www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postreklame/andre-tjenester/postnummertabeller</a></em></p>
-
+<p>Source: <a href="http://www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postreklame/andre-tjenester/postnummertabeller">http://www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postreklame/andre-tjenester/postnummertabeller</a></p>
 <h4>NorskeNavn</h4>
-<p>(Generator for Norwegian names.)<br>
-First a bit about the background for this generator...</p>
-
-<p>Over the years, I have "scraped" lists of names from the net &ndash; tax lists, participants in conferences and sports events etc, and tried to normalize and uniquify these lists (this bears the risk of having first and last names mixed up, and wrong capitalization...).  Then I removed first and last names that only appeared once in any combination, to avoid generating names that identifies a single person.  To these lists, I added the list from Norwegian SSB (Statistics Norway) of the most popular names, from these I have extracted the lists of names in "fornavn.txt" (a little short of 5000 first names) and "etternavn.txt" (about 8300 last names).  The lists have no notion of gender, so you might well end up with names like "Ann Abdul Hansen"...</p>
-
-<p>To generate names</p>
+<p>(Generator for Norwegian names.)
+First a bit about the background for this generator... Over the years, I have &quot;scraped&quot; lists of names from the net   tax lists, participants in conferences and sports events etc, and tried to normalize and uniquify these lists (this bears the risk of having first and last names mixed up, and wrong capitalization...). Then I removed first and last names that only appeared once in any combination, to avoid generating names that identifies a single person. To these lists, I added the list from Norwegian SSB (Statistics Norway) of the most popular names, from these I have extracted the lists of names in &quot;fornavn.txt&quot; (a little short of 5000 first names) and &quot;etternavn.txt&quot; (about 8300 last names). The lists have no notion of gender, so you might well end up with names like &quot;Ann Abdul Hansen&quot;...</p>
+<p>To generate names:</p>
 <ol>
-	<li>You start with the the apply method &ndash; <tt>NorskeNavn(allLines:Boolean=true)</tt> (with <tt>allLines=true</tt>, all 12500 names are read at least once)</li>
-	<li>and may optionally add <tt>forOgEtternavn</tt> (default, both first and last names, creating names with 1 or 2 of each), <tt>kunFornavn</tt> (single first names only) or <tt>kunEtternavn</tt> (single last names only)</li>
-	<li>the standard <tt>filter</tt> and <tt>formatWith</tt> may also be used.</li>
+<li>You start with the the apply method   <code>NorskeNavn(allLines:Boolean=true)</code> (with <code>allLines=true</code> , all 12500 names are read at least once)</li>
+<li>and may optionally add <code>forOgEtternavn</code> (default, both first and last names, creating names with 1 or 2 of each), <code>kunFornavn</code> (single first names only) or <code>kunEtternavn</code>
+(single last names only)</li>
+<li>the standard <code>filter</code> and <code>formatWith</code> may also be used.</li>
 </ol>
-
-
 <h4>RareNavn</h4>
-<p>This is a simpler name generator, picking from a list of about 100 names.  These names are meant to sound "funny", read the right way, they form other words or expressions, e.g. "Buster Minal" and "Mary Christmas".. :)<br>
-It supports the <tt>allLines</tt> parameter of <tt>FromFile</tt>.</p>
-
+<p>This is a simpler name generator, picking from a list of about 100 names. These names are meant to sound &quot;funny&quot;, read the right way, they form other words or expressions, e.g. &quot;Buster Minal&quot; and &quot;Mary Christmas&quot;.. :)
+It supports the <code>allLines</code> parameter of <code>FromFile</code>.</p>
 <h4>Adresser</h4>
-<p>A generator to create strings that look like Norwegian street addresses.  It uses surnames (from <tt>NorskeNavn.kunEtternavn</tt>) and places (from <tt>Poststeder.poststed</tt>), and optionally a house number (sometimes with a letter suffix).<br>
+<p>A generator to create strings that look like Norwegian street addresses. It uses surnames (from <code>NorskeNavn.kunEtternavn</code>) and places (from <code>Poststeder.poststed</code>), and optionally a house number (sometimes with a letter suffix).
 Note that the class itself does <em>not</em> implement a generator interface, but its <code>generator(withNumbers:Boolean)</code> returns a generator (as does the apply method).</p>
-
-<p>Apply method:</p>
-<ul>
-	<li><code>Adresser(withNumbers: Boolean=true)</code></li>
-</ul>
-
-
+<p>Apply method: <code>Adresser(withNumbers: Boolean=true)</code></p>
 <p>Samples:</p>
-<pre>Vogts gate 62
+<pre><code>Vogts gate 62
 Vossskroken 87C
 Cowards plass 105
-</pre>
+</code></pre>
 
 <h2>Record builders</h2>
-<p>Generating values is all well and fine, and you may want to use the previous generators in contexts of your own.  But often, you will want to use the test data in another context.  The generators that follow help you in building not values but data structures, and perhaps saving them to a file.</p>
-
+<p>Generating values is all well and fine, and you may want to use the previous generators in contexts of your own. But often, you will want to use the test data in another context. The generators that follow help you in building not values but data structures, and perhaps saving them to a file.</p>
 <h3>Core classes</h3>
-<p>There are a few base classes that the other record generators are based on. The main concept is that you create a structure by adding a list of fields (the order in which they are added is normally important) &ndash; each field has a <em>name</em> (even for the few generators that do not use it) and a value generator, typically one of the generators above.  The <tt>get</tt> methods for the record generators call the <tt>getStrings</tt> method on each field's generator, and assembles records from the combined results.</p>
-
-<p>The main class is the <code>abstract class DataRecordGenerator[T](nulls: NullHandler)</code> whch implements <code>Generator[T]</code>.  It contains the following methods:</p>
+<p>There are a few base classes that the other record generators are based on. The main concept is that you create a structure by adding a list of fields (the order in which they are added is normally important)   each field has a <em>name</em> (even for the few generators that do not use it) and a value generator, typically one of the generators above. The <code>get</code> methods for the record generators call the <code>getStrings</code> method on each field's generator, and assembles records from the combined results.</p>
+<p>The main class is the <code>abstract class DataRecordGenerator[T](nulls: NullHandler)</code> which implements <code>Generator[T]</code>. It contains the following methods:</p>
 <ul>
-	<li><code>add(fieldName: String, gen:Generator[_])</code> &ndash; adds a named field (as previously mentioned, the order in which you call <tt>add</tt> becomes the order of the fields).</li>
-	<li><code>add(DataField)</code>: specialized subclasses of <tt>DataField</tt> (see below) may need to be built outside the DataRecordGenerator and added "as is".</li>
-	<li><code>toFile</code> / <code>appendToFile</code>: these methods, if called, must be the last call on the record generator, because they return a <tt>ToFile</tt> (which see), not the generator itself, to allow the result to be saved to a file.</li>
-	<li>Subclasses may also use the protected variable <tt>fields</tt>, which is the generator list, as well as the utility method <tt>fieldNames</tt> which returns the ordered list of field names.</li>
+<li><code>add(fieldName: String, gen:Generator[_])</code>   adds a named field (as previously mentioned, the order in which you call <code>add</code> becomes the order of the fields).</li>
+<li><code>add(DataField)</code>: specialized subclasses of <code>DataField</code> (see below) may need to be built outside the DataRecordGenerator and added &quot;as is&quot;.</li>
+<li><code>toFile</code> / <code>appendToFile</code>: these methods, if called, must be the last call on the record generator, because they return a <code>ToFile</code> (which see), not the generator itself, to allow the result to be saved to a file.</li>
 </ul>
-
-
-<p><code>StringRecordGenerator</code> is a subclass specialized for generating strings, with a notion of pre/suffixes, and an overridable <tt>newline</tt> method that defaults to the current platform line ending.</p>
-
-<p>The <tt>NullHandler</tt> in the constructor is a sealed trait describing how <tt>null</tt> values in the input should be handled (some strategies may be less relevant for some record formats):</p>
-<ol>
-	<li><tt>EmptyNull</tt>: include the element as an empty string/element/..., e.g. <tt>&lt;foo/&gt;</tt> in an XML record.</li>
-	<li><tt>SkipNull</tt>: exclude empty fields entirely</li>
-	<li><tt>KeepNull</tt>: include null fields with an explicit "null" representation.</li>
-</ol>
-
-
-<p>Each field (i.e. name+ generator) is represented by a <code>case class DataField(name: String, generator: Generator[_]</code> or one of its subclasses.  In addition to its constructor arguments, it contains the overridable methods</p>
+<p>Subclasses may also use the protected variable <code>fields</code> , which is the generator list, as well as the utility method <code>fieldNames</code> which returns the ordered list of field names.</p>
+<p><code>StringRecordGenerator</code> is a subclass specialized for generating strings, with a notion of pre/suffixes, and an overridable <code>newline</code> method that defaults to the current platform line ending.</p>
+<p>The <code>NullHandler</code> in the constructor is a sealed trait describing how <code>null</code> values in the input should be handled (some strategies may be less relevant for some record formats):
+* <code>EmptyNull</code>: include the element as an empty string/element/..., e.g.
+    <foo/>
+in an XML record.</p>
 <ul>
-	<li><tt>prefix</tt> / <tt>suffix</tt>: how to add "something" before or after the field value</li>
-	<li><tt>transform(String)</tt>: how to transform the value from the generator's <tt>getStrings</tt> to the output string</li>
-	<li><tt>getTuples(Int, NullHandler)</tt>: the method that calls the generator and produces N tuples in a <tt>(name,value)</tt> format.</li>
+<li><code>SkipNull</code>: exclude empty fields entirely</li>
+<li><code>KeepNull</code>: include null fields with an explicit &quot;null&quot; representation.</li>
 </ul>
-
-
-<p>A couple of subclasses are provided &ndash; <tt>SingleQuoteWithEscapeDataField</tt> and <tt>DoubleQuoteWithEscapeDataField</tt>, they encapsulate their values with single/double quotes, and escapes their respective quotes with a backslash.</p>
-
+<p>Each field (i.e. name+ generator) is represented by a <code>case class DataField(name: String, generator: Generator[_]</code> or one of its subclasses. In addition to its constructor arguments, it contains the overridable methods</p>
+<ul>
+<li><code>prefix</code> / <code>suffix</code>: how to add &quot;something&quot; before or after the field value</li>
+<li>transform(String): how to transform the value from the generator's <code>getStrings</code> to the output string</li>
+<li><code>getTuples(Int, NullHandler)</code>: the method that calls the generator and produces N tuples in a <code>(name,value)</code> format.</li>
+</ul>
+<p>A couple of subclasses are provided   <code>SingleQuoteWithEscapeDataField</code> and <code>DoubleQuoteWithEscapeDataField</code>, they encapsulate their values with single/double quotes, and escapes their respective quotes with a backslash.</p>
 <h3>ToCsv</h3>
-<p>This generator produces values separated by a comma (or another delimiter, e.g. TAB), values are pre- and suffixed with a delimiter, by default a double quote.  By default, the first record contains field names (which can be excluded).  Access it through the apply method <tt>ToCsv</tt> with the following optional parameters</p>
+<p>This generator produces values separated by a comma (or another delimiter, e.g. TAB), values are pre- and suffixed with a delimiter, by default a double quote. By default, the first record contains field names (which can be excluded). Access it through the apply method <code>ToCsv</code> with the following optional parameters</p>
 <ol>
-	<li><code>withHeaders: Boolean=true</code>: include header record</li>
-	<li><code>delimiter:String= "\""</code>: how to enclose each value</li>
-	<li><code>separator:String= ","</code>: how to separate each field</li>
+<li><code>withHeaders: Boolean=true</code>: include header record</li>
+<li><code>delimiter:String= &quot;\&quot;&quot;</code>: how to enclose each value</li>
+<li><code>separator:String= &quot;,&quot;</code>: how to separate each field</li>
 </ol>
-
-
 <p>The output would typically look like this:</p>
-<pre>"id","userId","ssn","mail","active"
-"1","SSQH","23040852859","oviydeo@nvyebr.org","false"
-"2","RYZJ","14088638868","pwrdsi@rvyhjvimz.gov","false"
-"3","UODG","08039917611","uex.hshuka@anqfj.net","false"
-</pre>
+<pre><code>&quot;id&quot;,&quot;userId&quot;,&quot;ssn&quot;,&quot;mail&quot;,&quot;active&quot;
+&quot;1&quot;,&quot;SSQH&quot;,&quot;23040852859&quot;,&quot;oviydeo@nvyebr.org&quot;,&quot;false&quot;
+&quot;2&quot;,&quot;RYZJ&quot;,&quot;14088638868&quot;,&quot;pwrdsi@rvyhjvimz.gov&quot;,&quot;false&quot;
+&quot;3&quot;,&quot;UODG&quot;,&quot;08039917611&quot;,&quot;uex.hshuka@anqfj.net&quot;,&quot;false&quot;
+</code></pre>
 
 <h3>ToFixedWidth</h3>
-<p>This generator produces data in fixed width fields, where each value is padded with blanks (or truncated) to a fixed width.  The inherited <tt>add</tt> method cannot be used, use <code>add(fieldName: String, gen: Generator[_], width: Int)</code> to add fields. The apply method is <code>ToFixedWidth(withHeaders: Boolean=true)</code> (as the output of a header record is optional).</p>
-
+<p>This generator produces data in fixed width fields, where each value is padded with blanks (or truncated) to a fixed width. The inherited <code>add</code> method cannot be used, use <code>add(fieldName: String, gen: Generator[_], width: Int)</code> to add fields. The apply method is <code>ToFixedWidth(withHeaders: Boolean=true)</code> (as the output of a header record is optional).</p>
 <p>Sample output:</p>
-<pre>rec u  ssn
+<pre><code>rec u  ssn
 HEADEFB17046606698
 VALUNE 01027711576
-</pre>
+</code></pre>
 
-<p><tt>skipNull</tt> is not supported for this generator.</p>
-
+<p><code>skipNull</code> is not supported for this generator.</p>
 <h3>XML</h3>
-<p>There are two different XML generators, and a generator for HTML. As opposed to other record generators, these differentiate between the <tt>get</tt> and <tt>getStrings</tt> methods, the latter pretty-prints the result to create a more readable layout.</p>
-
+<p>There are two different XML generators, and a generator for HTML. As opposed to other record generators, these differentiate between the <code>get</code> and <code>getStrings</code> methods, the latter pretty-prints the result to create a more readable layout.</p>
 <h4>ToXmlElements</h4>
-<p>The output from this generator is a set of data records, optionally enclosed in a root record. The apply method <tt>ToXmlElements()</tt> has 3 named parameters:</p>
+<p>The output from this generator is a set of data records, optionally enclosed in a root record. The apply method <code>ToXmlElements()</code> has 3 named parameters:</p>
 <ol>
-	<li><tt>rootName:String</tt>: if this parameter has a value, a root record with that name is generated, enclosing the other records.</li>
-	<li><tt>recordName:String</tt>: must be given, sets he name of the base element for each record</li>
-	<li><tt>nullHandler</tt>: see above, default <tt>EmptyNull</tt></li>
+<li><code>rootName:String</code>: if this parameter has a value, a root record with that name is generated, enclosing the other records.</li>
+<li><code>recordName:String</code>: must be given, sets the name of the base element for each record</li>
+<li><code>nullHandler</code>: see above, default <code>EmptyNull</code></li>
 </ol>
-
-
 <p>The introductory example shows sample output from this.</p>
-
 <h4>ToXmlAttribute</h4>
-<p>Much like the previous, but the fields are represented as <em>attributes</em> on the (empty) data record, rather than enclosed elements.  Parameters are like the previous.</p>
-
-<p>Sample without root record and with empty nulls:</p>
-<pre>
-&lt;data homePage="" userId="RKGG" id="1" name="Gleihoy Tmfsmr" born=""&gt;&lt;/data&gt;
-&lt;data homePage="http://eeofau.net" userId="EALP" id="2" name="Jnnadfpnfbjjv Jsokovknmvn" born="2004-03-14"&gt;&lt;/data&gt;
-&lt;data homePage="https://jdje.net" userId="GBDB" id="3" name="Gmbgbsnmatmiij Kafkdyydkkfkoi" born="1982-06-26"&gt;&lt;/data&gt;
-</pre>
+<p>Much like the previous, but the fields are represented as <em>attributes</em> on the (empty) data record, rather than enclosed elements. Parameters are like the previous.
+Sample without root record and with empty nulls:</p>
+<pre><code>&lt;data homePage=&quot;&quot; userId=&quot;RKGG&quot; id=&quot;1&quot; name=&quot;Gleihoy Tmfsmr&quot; born=&quot;&quot;&gt;&lt;/data&gt;
+&lt;data homePage=&quot;http://eeofau.net&quot; userId=&quot;EALP&quot; id=&quot;2&quot; name=&quot;Jnnadfpnfbjjv Jsokovknm
+&lt;data homePage=&quot;https://jdje.net&quot; userId=&quot;GBDB&quot; id=&quot;3&quot; name=&quot;Gmbgbsnmatmiij Kafkdyydk
+</code></pre>
 
 <h4>ToHtml</h4>
-<p>This one formats its output as an HTML table, optionally as a complete HTML document.  The apply methods has two optional parameters:</p>
-<ol>
-	<li><tt>pageTitle:String</tt>: if this parameter has a value, a complete HTML document with that title and heading is generated, enclosing the table.</li>
-	<li><tt>nullHandler</tt>: see above, default <tt>EmptyNull</tt>.  <tt>EmptyNull</tt> is handled with a <code>&lt;td&gt;&amp;nbsp;&lt;/td&gt;</code> cell, <tt>SkipNull</tt> should not be used.</li>
-</ol>
-
-
+<p>This one formats its output as an HTML table, optionally as a complete HTML document.
+The apply methods has two optional parameters:</p>
+<ul>
+<li><code>pageTitle:String</code>: if this parameter has a value, a complete HTML document with that title and heading is generated, enclosing the table.</li>
+<li><code>nullHandler</code>: see above, default <code>EmptyNull</code>.
+<code>EmptyNull</code> is handled with a <code>&lt;td&gt;&amp;nbsp; &lt;/td&gt;</code> cell, <code>SkipNull</code> should not be used.</li>
+</ul>
 <p>Sample output:</p>
-<pre>
-&lt;html&gt;
+<pre><code>&lt;html&gt;
    &lt;head&gt;
       &lt;title&gt;Brukere&lt;/title&gt;
    &lt;/head&gt;
    &lt;body&gt;
       &lt;h1&gt;Brukere&lt;/h1&gt;
-      &lt;table border="border"&gt;
+      &lt;table border=&quot;border&quot;&gt;
          &lt;tr&gt;
             &lt;th&gt;id&lt;/th&gt;
             &lt;th&gt;userId&lt;/th&gt;
@@ -702,212 +860,198 @@ VALUNE 01027711576
             &lt;td&gt;05068636754&lt;/td&gt;
             &lt;td&gt;1986-06-05&lt;/td&gt;
             &lt;td&gt;Anna George Lund&lt;/td&gt;
-            &lt;td&gt;&nbsp;&lt;/td&gt;
+            &lt;td&gt; &lt;/td&gt;
          &lt;/tr&gt;
       &lt;/table&gt;
    &lt;/body&gt;
-&lt;/html&gt;</pre>
+&lt;/html&gt;
+</code></pre>
 
 <h3>ToWiki</h3>
-<p>Another way to output a table is to use the wiki generator.  No moving parts here, it simply generates markup syntax like this:</p>
-<pre>|| id || userId || ssn || mail || active ||
+<p>Another way to output a table is to use the wiki generator. No moving parts here, it simply generates markup syntax like this:</p>
+<pre><code>|| id || userId || ssn || mail || active ||
 | 1 | ZYFR | 27020785859 | ueaqefjn@iojuwy.no | X |
 | 2 | AIUS | 16021276441 | lgdnjli.luccdz@uogugujjq.gov | |
 | 3 | WRCB | 05086007810 | | X |
-</pre>
+</code></pre>
 
 <h3>ToJson</h3>
-<p>No prize for guessing the output format from this generator...<br>
-There are two different add methods, the familiar <tt>add</tt> method, and a similar <tt>addQuoted</tt>, the latter should be used for any values that need double-quoted output (almost anything but ints, booleans and nested JSON; nulls are not quoted).<br>
-The apply method has 3 parameters:</p>
+<p>No prize for guessing the output format from this generator... There are two different add methods, the familiar <code>add</code> method, and a similar <code>addQuoted</code>, the latter should be used for any values that need double-quoted output (almost anything but ints, booleans and nested JSON; nulls are not quoted). The apply method has 3 parameters:</p>
 <ol>
-	<li><tt>header:String</tt>: This is the label for each record (ignored if <tt>bare</tt>, see below)</li>
-	<li><tt>bare:Boolean=false</tt>: This is intended for nesting
-	JSON-generators.  If you want to generate embedded records,
-	use <tt>bare=true</tt> for the inner generators, e.g.:
-<pre>val addressGen= ToJson(bare=true).addQuoted("line1", ....)...
-val customerGen= ToJson(header="customer").add("address", addressGen) ...
-// => "customer": { "address": { "line1": ... }, ...}</pre>
+<li><code>header:String</code>: This is the label for each record (ignored if <code>bare</code>, see below)</li>
+<li>
+<p><code>bare:Boolean=false</code>: This is intended for nesting JSON-generators. If you want to generate embedded records, use <code>bare=true</code> for the inner generators, e.g.:</p>
+<pre><code>val addressGen= ToJson(bare=true).addQuoted(&quot;line1&quot;, ....)...
+val customerGen= ToJson(header=&quot;customer&quot;).add(&quot;address&quot;, addressGen) ...
+// =&gt; &quot;customer&quot;: { &quot;address&quot;: { &quot;line1&quot;: ... }, ...}
+</code></pre>
+
 </li>
-	<li><code>nulls: NullHandler= KeepNull</code>: as described above</li>
+<li>
+<p><code>nulls: NullHandler= KeepNull</code>: as described above</p>
+</li>
 </ol>
-
-
-
 <h3>ToSql</h3>
-<p>Often, you will need to put test data into a data base.  This
-generator tries to help you...  It generates records of the form <code>insert into tableName (field1, field2,...) values (value1, value2, ...);</code>.</p>
-
-<p>To facilitate quoting, you must call the alternative add method for values that need quotes &ndash; they are then single quoted (and embedded single quotes escaped):</p>
+<p>Often, you will need to put test data into a data base. This generator tries to help you... It generates records of the form <code>insert into tableName (field1, field2,...) values (value1, value2, ...);</code>.</p>
 <ul>
-	<li><code>addQuoted(fieldName: String, gen: Generator[_])</code></li>
-</ul>
-
-
-<p>The apply method needs to know the table name, you may optionally use a record separator different from ";":</p>
+<li>To facilitate quoting, you must call the alternative add method for values that need quotes  they are then single quoted (and embedded single quotes escaped):
+<code>addQuoted(fieldName: String, gen: Generator[_])</code></li>
+<li>
+The apply method needs to know the table name, you may optionally use a record separator different from &quot;;&quot;:
+<code>ToSql(tableName: String, exec: String=&quot;;&quot;)</code>
 <ul>
-	<li><code>ToSql(tableName: String, exec: String=";")</code></li>
+<li>There is a Sybase shortcut available, <code>ToSql.sybase(tableName)</code>, it sets the record separator to <code>\ngo</code>.</li>
 </ul>
-
-
+</li>
+</ul>
 <p>Sample output:</p>
-<pre>insert into User (id, userId, born, name, mail)
+<pre><code>insert into User (id, userId, born, name, mail)
 values (1, 'UGRY', 1951-11-25, 'Vgdfhpgyp Fvtniivskmjkeaaol', 'udkad@efrghssgn.gov');
 insert into User (id, userId, born, name, mail)
-values (2, 'HWTG', null, 'Tykpieydmkdnsir Lioesngyhfrvatbsbe', 'idboyjq@cakcrrrny.no');
+values (2, 'HWTG', null, 'Tykpieydmkdnsir Lioesngyhfrvatbsbe', 'idboyjq@cakcrrrny.no'
 insert into User (id, userId, born, name, mail)
-values (3, 'RBWC', 1951-08-15, 'Kmdiklyumethyf Paabya', null);</pre>
+values (3, 'RBWC', 1951-08-15, 'Kmdiklyumethyf Paabya', null);
+</code></pre>
 
 <h3>ToFile</h3>
-<p>This generator is typically the end of a chain, and called implicitly
-by either <tt>toFile</tt> or <tt>appendToFile</tt> from a record
-generator, but may also be called through the apply method</p>
-<pre>apply[T](fileName:String,
+<p>This generator is typically the end of a chain, and called implicitly by either <code>toFile</code> or <code>appendToFile</code> from a record generator, but may also be called through the apply method</p>
+<pre><code>apply[T](fileName:String,
          generator: Generator[T],
          append:Boolean=false,
-         charSet:String="ISO-8859-1")</pre>
-<p>When <tt>get</tt> (or <tt>getStrings</tt>) is called, values are obtained from the embedded generator, and written/appended to the named file.</p>
+         charSet:String=&quot;ISO-8859-1&quot;)
+</code></pre>
 
+<p>You may also add (one or more) calls to <code>prepend(String)</code>&amp; <code>append(String)</code> to add text at beginning or the end of the file. </p>
+<p>When <code>get</code> (or <code>getStrings</code>) is called, values are obtained from the embedded generator, and written/appended to the named file.</p>
 <h2>Miscellaneous</h2>
-
 <h3>Printer</h3>
-<p>All the test suites uses the <tt>Printer</tt> trait.  This contains a single method: <code>def print(localPrint:Boolean)(printFun: =&gt;Unit )</code>.  If either the <tt>localPrint</tt> argument or the local <tt>centralPrint</tt> val is true, the <tt>printFun</tt> method is executed.  I use it to visually inspect the results, create samples etc.</p>
-
+<p>All the test suites uses the <code>Printer</code> trait. This contains a single method: <code>def print(localPrint:Boolean)(printFun: =&gt;Unit )</code>. If either the <code>localPrint</code> argument or the <code>centralPrint</code> val is true, the <code>printFun</code> method is executed. I use it to visually inspect the results, create samples etc.</p>
 <h3>Percentage</h3>
-<p>This little trait provides a <tt>hit(percent:Int)</tt> method that randomly returns <tt>true</tt> in about <tt>percent</tt> % of its calls (the argument should be an int in the range 0..100).  Used by <tt>SomeNulls</tt> and <tt>Fnr</tt>.</p>
-
+<p>This little trait provides a <code>hit(percent:Int)</code> method that randomly returns <code>true</code> in about <code>percent</code>% of its calls (the argument should be an int in the range 0..100). Used by <code>SomeNulls</code> and <code>Fnr</code>.</p>
 <h2>Extended example</h2>
+<p>For this last sample, we'll look at generation of data for several SQL tables. The data structure to fill looks like this:</p>
+<pre><code>Address:
+  Street
+  Postal code (Norwegian: name &amp; number)
+Customer
+  ID
+  SSN (Norwegian: fodselsnummer) (optional)
+  Date of birth
+  Name (Norwegian...)
+  Address (embedded)
+Product
+  ID
+  Name
+Order
+  ID
+  State (one of 'Pending', 'Ready', 'Delivered, 'Closed')
+  Customer (by ID)
+  Order date (optional)
+  Set of Order lines
+Order line
+  Order (by ID)
+  Line no. (sequential)
+  Product (by ID)
+  Info (optional, string)
+</code></pre>
 
-<p>For this last sample, we'll look at generation of data for several SQL tables.  The data structure to fill looks like this:</p>
+<p>The code:</p>
+<pre><code>package no.mesan.testdatagen.generators.sample
 
-<ul>
-	<li>Address:
-	<ul>
-		<li>Street</li>
-		<li>Postal code (Norwegian: name &amp; number)</li>
-	</ul>
-	</li>
-	<li>Customer
-	<ul>
-		<li>ID</li>
-		<li>SSN (Norwegian: fodselsnummer) (optional)</li>
-		<li>Date of birth</li>
-		<li>Name (Norwegian)</li>
-		<li>Address (embedded)</li>
-	</ul>
-	</li>
-	<li>Product
-	<ul>
-		<li>ID</li>
-		<li>Name</li>
-	</ul>
-	</li>
-	<li>Order
-	<ul>
-		<li>ID</li>
-		<li>State (one of 'Pending', 'Ready', 'Delivered, 'Closed')</li>
-		<li>Customer (by ID)</li>
-		<li>Order date (optional)</li>
-		<li>Set of Order lines</li>
-	</ul>
-	</li>
-	<li>Order line
-	<ul>
-		<li>Order (by ID)</li>
-		<li>Line no. (sequential)</li>
-		<li>Product (by ID)</li>
-		<li>Info (optional, string)</li>
-	</ul>
-	</li>
-</ul>
-
-<pre>
-package no.mesan.testdatagen.generators.sample
-
-import no.mesan.testdatagen.aggreg.{FieldConcatenator, SomeNulls, TextWrapper, WeightedGenerator}
+import no.mesan.testdatagen.aggreg.{UniqueWithFallback, SequenceOf, FieldConcatenator, SomeNulls,
+                                    TextWrapper, WeightedGenerator}
 import no.mesan.testdatagen.generators.{Dates, Doubles, Fixed, FromList, Ints}
 import no.mesan.testdatagen.generators.misc.Names
-import no.mesan.testdatagen.generators.norway.{Adresser, Fnr, Poststeder}
-import no.mesan.testdatagen.recordgen.ToSql
+import no.mesan.testdatagen.generators.norway.{NorskeNavn, RareNavn, Adresser, Fnr, Poststeder}
+import no.mesan.testdatagen.recordgen.{ToFile, ToSql}
+import scala.language.postfixOps
+
 
 object LongerSample extends App {
   // These are the total of numbers we will generate for the different categories
-  val totalOrders= 200
-  val totalProducts= totalOrders/2
-  val totalCustomers= totalOrders/3
-  val totalOrderLines= totalOrders*3
+  val recordsBase= 100
+  val orderFact= 2
+  val productFact= 3
+  val customerFact= 1
+  val orderLineFact= orderFact*3
 
   // We generate one script for all data
-  val resultFile= "orders.sql"
+  val resultFile= &quot;orders.sql&quot;
 
-  // To be able to reuse values between records, we generate some values in advance,
+  // To be able to reuse values between records, we generate some values in advance.
   // specifically IDs (for foreign keys) and dates (for correlation between birth dates
-  // and "fodselsnummer")
-  val customerIds= FromList(Ints().from(1).to(10000).unique.get(totalCustomers))
-  val birthDates= Dates() from (y=1921) to (y=1996) get(totalCustomers)
-  val productIds= FromList(Ints().from(1).to(100000).unique.get(totalProducts))
-  val orderIds= FromList(Ints().from(1).to(1000).unique.get(totalOrders)) sequential
-  val postSteder= FromList(Poststeder() get(totalCustomers)) sequential
+  // and &quot;fodselsnummer&quot;)
+  val customerIds= FromList(Ints().from(1).unique.get(customerFact*recordsBase))
+  val birthDates= Dates() from (y=1921) to (y=1996) get(customerFact*recordsBase)
+  val productIds= FromList(Ints().from(1).to(100000).unique.get(productFact*recordsBase))
+  val orderIds= FromList(Ints().from(1).unique.get(orderFact*recordsBase)) sequential
+  val postSteder= FromList(Poststeder() get(customerFact*recordsBase)) sequential
 
   // Populating the customer table - no dependencies
-  val customerGenerator=
-    ToSql("customer")
-    .add("id", customerIds)
-    .addQuoted("fnr", SomeNulls(25, Fnr(FromList(birthDates) sequential)))
-    .addQuoted("born", FromList(birthDates) formatWith(Dates.dateFormatter("yyyy-MM-dd")) sequential)
-    .addQuoted("adr", Adresser())
-    .addQuoted("postnr", TextWrapper(postSteder).substring(0, 4))
-    .addQuoted("poststed", TextWrapper(postSteder).substring(5))
+  val customerGenerator= ToSql(&quot;customer&quot;)
+    .add(&quot;id&quot;, customerIds)
+    .addQuoted(&quot;fnr&quot;, SomeNulls(25, Fnr(FromList(birthDates) sequential)))
+    .addQuoted(&quot;born&quot;, FromList(birthDates) formatWith Dates.dateFormatter(&quot;yyyy-MM-dd&quot;) sequential)
+    .addQuoted(&quot;name&quot;, UniqueWithFallback(RareNavn(), NorskeNavn())) // We want, for the test's sake, unique
+               // names. We try to get &quot;funny names&quot; from the RareNavn-generator, but add standard names
+               // from the NorskeNavn-generator when duplicates arise.
+    .addQuoted(&quot;adr&quot;, Adresser())
+    .addQuoted(&quot;postnr&quot;, TextWrapper(postSteder).substring(0, 4))
+    .addQuoted(&quot;poststed&quot;, TextWrapper(postSteder).substring(5))
 
   // and products - no dependencies either
-  val productGenerator=
-    ToSql("product")
-    .add("id", productIds)
-    .addQuoted("name", WeightedGenerator()
+  val productGenerator= ToSql(&quot;product&quot;)
+    .add(&quot;id&quot;, productIds)
+    .addQuoted(&quot;name&quot;, WeightedGenerator()
                          .add(60, Names(1))
                          .add(40, Names(2)))
 
   // Orders are connected to customers through customerIds
-  val orderGenerator=
-    ToSql("order")
-    .add("id", orderIds)
-    .addQuoted("status", FromList("Pending", "Ready", "Delivered", "Closed"))
-    .add("customer", customerIds)
-    .addQuoted("orderDate", Dates() from(y=2010) to(y=2013) format("yyyy-MM-dd"))
+  val orderGenerator= ToSql(&quot;order&quot;)
+    .add(&quot;id&quot;, orderIds)
+    .addQuoted(&quot;status&quot;, FromList(&quot;Pending&quot;, &quot;Ready&quot;, &quot;Delivered&quot;, &quot;Closed&quot;))
+    .add(&quot;customer&quot;, customerIds)
+    .addQuoted(&quot;orderDate&quot;, Dates() from(y=2010) to(y=2013) format &quot;yyyy-MM-dd&quot;)
 
   // And order_lines connected to orders and products
-  val orderLineGenerator=
-    ToSql("order_line")
-    .add("order", orderIds)
-    .add("product", productIds)
-    .add("lineNo", Ints() from(1) sequential)
-    .addQuoted("info",
+  val orderLineGenerator= ToSql(&quot;order_line&quot;)
+    .add(&quot;order&quot;, orderIds)
+    .add(&quot;product&quot;, productIds)
+    .add(&quot;lineNo&quot;, Ints() from 1 sequential)
+    .addQuoted(&quot;info&quot;,
         SomeNulls(60,
             WeightedGenerator()
-              .add(10, Fixed("Restock"))
-              .add(5, Fixed("Check!"))
+              .add(10, Fixed(&quot;Restock&quot;))
+              .add(5, Fixed(&quot;Check!&quot;))
               .add(20,  TextWrapper(FieldConcatenator()
-                        .add(Fixed("Amount: "))
-                        .add(Doubles() from (1) to (300) format("%5.2f"))
-                        .add(FromList(" l", " kg", "", " m")))
+                        .add(Fixed(&quot;Amount: &quot;))
+                        .add(Doubles() from 1 to 300 format &quot;%5.2f&quot;)
+                        .add(FromList(&quot; l&quot;, &quot; kg&quot;, &quot;&quot;, &quot; m&quot;)))
                         .trim)))
 
   // The generators are all set -- create result
-  customerGenerator toFile(resultFile) get(totalCustomers)
-  productGenerator appendToFile(resultFile) get(totalProducts)
-  orderGenerator appendToFile(resultFile) get(totalOrders)
-  orderLineGenerator appendToFile(resultFile) get(totalOrderLines)
-}</pre>
+  val allGenerators= SequenceOf().makeAbsolute().addWeighted(
+    (customerFact, customerGenerator),
+    (productFact, productGenerator),
+    (orderFact, orderGenerator),
+    (orderLineFact, orderLineGenerator)
+  )
+
+  ToFile(fileName=resultFile, generator=allGenerators) write recordsBase
+}
+</code></pre>
 
 <p>The output looks like this (excerpt):</p>
-<pre>insert into customer (id, fnr, born, adr, postnr, poststed)
-values (9399, '11109252079', '1992-10-11', 'Kuvens plass 81', '8733', 'Stuvland');
-insert into customer (id, fnr, born, adr, postnr, poststed)
-values (6370, null, '1990-06-16', 'Oddassvingen 119', '0903', 'Oslo');
-insert into customer (id, fnr, born, adr, postnr, poststed)
-values (4674, '15028313397', '1983-02-15', 'Spords plass 77', '4838', 'Arendal');
-insert into customer (id, fnr, born, adr, postnr, poststed)
-values (2542, '06117470669', '1974-11-06', 'Oldens plass 12', '0604', 'Oslo');
+<pre><code>insert into customer (id, fnr, born, name, adr, postnr, poststed)
+values (328069543, '03059613994', '1996-05-03', 'Rita Letter', 'FlÃ¸ttums vei 68A', '7435', 'Trondheim');
+insert into customer (id, fnr, born, name, adr, postnr, poststed)
+values (1325854638, '10035955203', '1959-03-10', 'Frank Lispiking', 'Furres vei 14', '4134', 'JÃ¸senfjorden');
+insert into customer (id, fnr, born, name, adr, postnr, poststed)
+values (1732690652, null, '1940-07-10', 'Tomm Hendt', 'StrÃ¸mmensveien 75', '2820', 'Nordre Toten');
+insert into customer (id, fnr, born, name, adr, postnr, poststed)
+values (460134634, '23074791654', '1947-07-23', 'Mona Mee', 'NordarnÃ¸ysveien 10E', '6927', 'YtrÃ¸ygrend');
+insert into customer (id, fnr, born, name, adr, postnr, poststed)
+values (1112030020, '11043457464', '1934-04-11', 'Kjell Erstuen', 'Venneslaskroken 24', '4884', 'Grimstad');
 ...
 insert into product (id, name) values (78471, 'Jhtb Iktaeyaihjrluso');
 insert into product (id, name) values (91325, 'Zsughfsy Bmpkfag');
@@ -943,15 +1087,17 @@ values (227, 33004, 16, null);
 insert into order_line (order, product, lineNo, info)
 values (319, 32357, 17, null);
 ...
-</pre>
+</code></pre>
 
 <h2>Notes</h2>
-
 <h3>TODO</h3>
 <ol>
-	<li>Could perhaps use <tt>Stream</tt> for get(Strings)? Or maybe not...</li>
-	<li>FromFile &ndash; type checking does not work</li>
-	<li>Xml &ndash; nesting not available</li>
-	<li>Analyzing SQL DDL and/or domain classes to generate a skeleton for test data generators</li>
-</ol></body>
+<li>Should have used streams rather than <code>n:Int</code> for the <code>get</code>-methods.  But a lot of work now...</li>
+<li>FromFile   type checking does not work</li>
+<li>Xml: nesting not available</li>
+<li>Analyzing SQL DDL and/or domain classes to generate a skeleton for test data generators?  After all, that's where it all started...</li>
+</ol>
+
+</body>
 </html>
+<!-- This document was created with MarkdownPad, the Markdown editor for Windows (http://markdownpad.com) -->

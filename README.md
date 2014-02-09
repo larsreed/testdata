@@ -151,7 +151,7 @@ This trait
 * can only be used on a type implementing `Generator[T]`
 * requires the implementing type to have a `var generator:Generator[G]` containing the actual generator
 * to override the methods of `ExtendedGenerator` you need to change the definition of
-`def conv2gen(f: T): G` and / or `conv2result(f: G): T` to convert between the types of the generator and the implementing class (by default both are implemented with `asInstanceOf`
+`def conv2gen(f: T): G` and / or `conv2result(f: G): T` to convert between the types of the generator and the implementing class (by default both are implemented with `asInstanceOf`)
 
 ## Basic generators
 
@@ -248,12 +248,15 @@ Specialities:
 
 Apply methods:
 
-* `FromList()`   then you *must* call `fromList` afterwards
+* `FromList()` then you *must* call `fromList` afterwards
 * `FromList(List)`
-* `FromList(T*)`   e.g. `FromList(1,2,4,8,16,32,64)`
+* `FromList(T*)` e.g. `FromList(1,2,4,8,16,32,64)`
 
 ## Aggregates
 There will often be a need to handle more complex data than what the basic generators can produce. A set of generators are provided to facilitate building of aggregate constructs.
+
+### MultiGenerator / MultiGeneratorWithWeight
+These traits are used by several of the follow generators, supplying miscellaneous `add`-methods
 
 ### TextWrapper
 This generator takes any other generator as input, always uses its `getStrings(n)` as input, thus acting as "text converter", and adds methods to manipulate the resulting text.
@@ -280,6 +283,10 @@ You saw the FieldConcatenator in action in the introductory example:
 
 The FieldConcatenator is given a set of generators with the `add` method. When `get` is called, it calls `getString` on each of its generators, and concatenates the output from each generator (in the same order as the `add` calls), and returns the list of concatenated strings (in the above example strings like "12.04 kg").
 
+Apply methods:
+
+* `FieldConcatenator(generator*)` takes the generators to add
+
 ### SomeNulls
 This generator takes another generator and a percentage as input. Both the `get` and the `getStrings` method calls the original generator to retrieve its values, and then replaces approximately N% of the occurrences (decided by a random generator) with `null`. N==0 means no nulls, N==100 means only nulls, N==50 50% nulls etc.
 
@@ -292,11 +299,70 @@ Apply methods:
 * `SomeNulls(percent, generator)`: supply both the factor and the generator
 
 ### WeightedGenerator
-This generator takes one or more generators as input, and selects randomly between them for each value to generate. It is typed as a `Generator[Any]`, since it can wrap a free mix of generator types. Each generator is given a weight   the probability for each one is its own weight relative to the sum of all weights.
+This generator takes one or more generators as input, and selects randomly between them for each value to generate. It is typed as a `Generator[Any]`, since it can wrap a free mix of generator types. Each generator is given a weight &ndash;  the probability for each one is its own weight relative to the sum of all weights.
 
 * `add(weight: Int, gen: Generator[_])`
 
-Apply: noargs
+Apply methods:
+
+* `WeightedGenerator[T]((Int,Generator[T])*)`: add one or more tuples of weight + generator
+* `WeightedGenerator[T](List(Generator[T]))`: add one or more generators with weight 1
+
+### SequenceOf
+This one also takes a list of generators (which may be weighted, the default weight is 1); when calling `get`/`getStrings`, the input generators are called in sequence, each adding a set of records to the result.  In default mode, each generator contributes a number of records relative to its weight, the total will then be close to N.  In absolute mode &ndash; after calling `makeAbsolute` &ndash; each generator contributes `N*weight` records.
+
+This might not seem very useful, but when generating to file (etc), it is usually easier to collect the individual  generators in this generator, rather than specifying `ToFile/append` for each input.
+
+It takes two type parameters:
+
+1. The type of the input generators (which could be `Any`, if the generator types vary)
+2. The type of the generated values (typically `String` if the input is `Any`, and equal to the input type if they don't...)
+The constructor needs a method to convert from the first to the second type.
+
+Add methods:
+
+* `add(generator*)`
+* `add(weight:Int, Generator[T])`
+* `addWeighted(weighted: (Int, Generator[T])*)`
+
+Apply/object methods:
+
+* `SequenceOf[T](generator[T]*)`: adds 1 or more generators with weight 1, with an identity conversion function
+* `SequenceOf.strings(generator*)` and `SequenceOf()`: create a `SequenceOf[Any,String]`, the first with a set of weight 1 generators
+
+### TwoFromFunction
+This generator takes a generator and a generator function as input. It generates values from the generator, and feeds values to the generator function to obtain a derived value.  The two values are then returned as a tuple. It does not support the `filter`, `formatWith` or `formatOne` functions.
+
+Special methods:
+
+* `getFormatted(n: Int): List[(String, String)]`: The `getStrings` method does not support formatting, but this method returns String tuples formatted according to the input generator's formatting function.
+* `asListGens(n: Int): (FromList[T], FromList[U]`: Runs `get(n)`, and returns `FromList`-generators for the two different value lists.
+
+Apply method:
+
+* `TwoFromFunction[T, U](gen: Generator[T], genFun: T=>U): TwoFromFunction[T, U]`
+
+### TwoWithPredicate
+This generator draws tuples from two generators, it also takes a predicate function to determine if the generated tuple should be included. This generator is included to support generation of interdependent fields, e.g. "fromDate & toDate" (where the predicate ensures toDate>=fromDate), "fromValue != toValue" etc.
+
+Special methods:
+
+* `getFormatted(n: Int): List[(String, String)]`: The `getStrings` method does not support formatting, but this method returns String tuples formatted according to the input generator's formatting function.
+* `asListGens(n: Int): (FromList[T], FromList[U]`: Runs `get(n)`, and returns `FromList`-generators for the two different value lists.
+* `def asFormattedListGens(n: Int): (FromList[String], FromList[String])`: a combination of the previous two
+
+Apply methods:
+
+* `TwoWithPredicate[T, U](left: Generator[T], right: Generator[U], predicate: ((T,U))=>Boolean): TwoWithPredicate[T, U]`
+* `TwoWithPredicate[T](gen: Generator[T], predicate: ((T, T))=>Boolean): TwoWithPredicate[T, T]` (uses the same generator twice)
+
+ 
+### UniqueWithFallback
+takes a primary generator and a secondary generator.  It tries to get unique values from the primary generator, but for each duplicate value obtained, it repeatedly gets a value from the secondary generator until a unique value is found.  The `formatWith`function is not supported, formatting is done by the primary generator.
+
+Apply methods:
+
+* `UniqueWithFallback[T](primary: Generator[T], alt: Generator[T])`
 
 ## Specialized generators
 
@@ -469,6 +535,8 @@ The main class is the `abstract class DataRecordGenerator[T](nulls: NullHandler)
 * `add(DataField)`: specialized subclasses of `DataField` (see below) may need to be built outside the DataRecordGenerator and added "as is".
 * `toFile` / `appendToFile`: these methods, if called, must be the last call on the record generator, because they return a `ToFile` (which see), not the generator itself, to allow the result to be saved to a file.
 
+
+
 Subclasses may also use the protected variable `fields` , which is the generator list, as well as the utility method `fieldNames` which returns the ordered list of field names.
 
 `StringRecordGenerator` is a subclass specialized for generating strings, with a notion of pre/suffixes, and an overridable `newline` method that defaults to the current platform line ending.
@@ -598,6 +666,7 @@ Often, you will need to put test data into a data base. This generator tries to 
 `addQuoted(fieldName: String, gen: Generator[_])`
 * The apply method needs to know the table name, you may optionally use a record separator different from ";":
 `ToSql(tableName: String, exec: String=";")`
+    * There is a Sybase shortcut available, `ToSql.sybase(tableName)`, it sets the record separator to `\ngo`.
 
 Sample output:
 
@@ -616,7 +685,9 @@ This generator is typically the end of a chain, and called implicitly by either 
              append:Boolean=false,
              charSet:String="ISO-8859-1")
 
-When `get` (or `getStrings`) is called, values are obtained from the embedded generator, and written/appended to the named file.
+You may also add (one or more) calls to `prepend(String)`& `append(String)` to add text at beginning or the end of the file. 
+
+When `get` (or `getStrings`) is called, values are obtained from the embedded generator, and written/appended to the named file.  That name may seem odd, so there is an alias available: `write(n:Int, strings:Boolean=true)`.
 
 ## Miscellaneous
 
@@ -656,56 +727,67 @@ For this last sample, we'll look at generation of data for several SQL tables. T
 The code:
 
     package no.mesan.testdatagen.generators.sample
-    import no.mesan.testdatagen.aggreg.{FieldConcatenator, SomeNulls, TextWrapper, Weight
+
+    import no.mesan.testdatagen.aggreg.{UniqueWithFallback, SequenceOf, FieldConcatenator, SomeNulls,
+                                        TextWrapper, WeightedGenerator}
     import no.mesan.testdatagen.generators.{Dates, Doubles, Fixed, FromList, Ints}
     import no.mesan.testdatagen.generators.misc.Names
-    import no.mesan.testdatagen.generators.norway.{Adresser, Fnr, Poststeder}
-    import no.mesan.testdatagen.recordgen.ToSql
+    import no.mesan.testdatagen.generators.norway.{NorskeNavn, RareNavn, Adresser, Fnr, Poststeder}
+    import no.mesan.testdatagen.recordgen.{ToFile, ToSql}
+    import scala.language.postfixOps
+
+
     object LongerSample extends App {
       // These are the total of numbers we will generate for the different categories
-      val totalOrders= 200
-      val totalProducts= totalOrders/2
-      val totalCustomers= totalOrders/3
-      val totalOrderLines= totalOrders*3
+      val recordsBase= 100
+      val orderFact= 2
+      val productFact= 3
+      val customerFact= 1
+      val orderLineFact= orderFact*3
+
       // We generate one script for all data
       val resultFile= "orders.sql"
-      // To be able to reuse values between records, we generate some values in advance,
-      // specifically IDs (for foreign keys) and dates (for correlation between birth dat
+
+      // To be able to reuse values between records, we generate some values in advance.
+      // specifically IDs (for foreign keys) and dates (for correlation between birth dates
       // and "fodselsnummer")
-      val customerIds= FromList(Ints().from(1).to(10000).unique.get(totalCustomers))
-      val birthDates= Dates() from (y=1921) to (y=1996) get(totalCustomers)
-      val productIds= FromList(Ints().from(1).to(100000).unique.get(totalProducts))
-      val orderIds= FromList(Ints().from(1).to(1000).unique.get(totalOrders)) sequential
-      val postSteder= FromList(Poststeder() get(totalCustomers)) sequential
+      val customerIds= FromList(Ints().from(1).unique.get(customerFact*recordsBase))
+      val birthDates= Dates() from (y=1921) to (y=1996) get(customerFact*recordsBase)
+      val productIds= FromList(Ints().from(1).to(100000).unique.get(productFact*recordsBase))
+      val orderIds= FromList(Ints().from(1).unique.get(orderFact*recordsBase)) sequential
+      val postSteder= FromList(Poststeder() get(customerFact*recordsBase)) sequential
+
       // Populating the customer table - no dependencies
-      val customerGenerator=
-        ToSql("customer")
+      val customerGenerator= ToSql("customer")
         .add("id", customerIds)
         .addQuoted("fnr", SomeNulls(25, Fnr(FromList(birthDates) sequential)))
-        .addQuoted("born", FromList(birthDates) formatWith(Dates.dateFormatter("yyyy-MM-d
+        .addQuoted("born", FromList(birthDates) formatWith Dates.dateFormatter("yyyy-MM-dd") sequential)
+        .addQuoted("name", UniqueWithFallback(RareNavn(), NorskeNavn())) // We want, for the test's sake, unique
+                   // names. We try to get "funny names" from the RareNavn-generator, but add standard names
+                   // from the NorskeNavn-generator when duplicates arise.
         .addQuoted("adr", Adresser())
         .addQuoted("postnr", TextWrapper(postSteder).substring(0, 4))
         .addQuoted("poststed", TextWrapper(postSteder).substring(5))
+
       // and products - no dependencies either
-      val productGenerator=
-        ToSql("product")
+      val productGenerator= ToSql("product")
         .add("id", productIds)
         .addQuoted("name", WeightedGenerator()
                              .add(60, Names(1))
                              .add(40, Names(2)))
+
       // Orders are connected to customers through customerIds
-      val orderGenerator=
-        ToSql("order")
+      val orderGenerator= ToSql("order")
         .add("id", orderIds)
         .addQuoted("status", FromList("Pending", "Ready", "Delivered", "Closed"))
         .add("customer", customerIds)
-        .addQuoted("orderDate", Dates() from(y=2010) to(y=2013) format("yyyy-MM-dd"))
+        .addQuoted("orderDate", Dates() from(y=2010) to(y=2013) format "yyyy-MM-dd")
+
       // And order_lines connected to orders and products
-      val orderLineGenerator=
-        ToSql("order_line")
+      val orderLineGenerator= ToSql("order_line")
         .add("order", orderIds)
         .add("product", productIds)
-        .add("lineNo", Ints() from(1) sequential)
+        .add("lineNo", Ints() from 1 sequential)
         .addQuoted("info",
             SomeNulls(60,
                 WeightedGenerator()
@@ -713,26 +795,34 @@ The code:
                   .add(5, Fixed("Check!"))
                   .add(20,  TextWrapper(FieldConcatenator()
                             .add(Fixed("Amount: "))
-                            .add(Doubles() from (1) to (300) format("%5.2f"))
+                            .add(Doubles() from 1 to 300 format "%5.2f")
                             .add(FromList(" l", " kg", "", " m")))
                             .trim)))
+
       // The generators are all set -- create result
-      customerGenerator toFile(resultFile) get(totalCustomers)
-      productGenerator appendToFile(resultFile) get(totalProducts)
-      orderGenerator appendToFile(resultFile) get(totalOrders)
-      orderLineGenerator appendToFile(resultFile) get(totalOrderLines)
+      val allGenerators= SequenceOf().makeAbsolute().addWeighted(
+        (customerFact, customerGenerator),
+        (productFact, productGenerator),
+        (orderFact, orderGenerator),
+        (orderLineFact, orderLineGenerator)
+      )
+
+      ToFile(fileName=resultFile, generator=allGenerators) write recordsBase
     }
+
 
 The output looks like this (excerpt):
 
-    insert into customer (id, fnr, born, adr, postnr, poststed)
-    values (9399, '11109252079', '1992-10-11', 'Kuvens plass 81', '8733', 'Stuvland');
-    insert into customer (id, fnr, born, adr, postnr, poststed)
-    values (6370, null, '1990-06-16', 'Oddassvingen 119', '0903', 'Oslo');
-    insert into customer (id, fnr, born, adr, postnr, poststed)
-    values (4674, '15028313397', '1983-02-15', 'Spords plass 77', '4838', 'Arendal');
-    insert into customer (id, fnr, born, adr, postnr, poststed)
-    values (2542, '06117470669', '1974-11-06', 'Oldens plass 12', '0604', 'Oslo');
+    insert into customer (id, fnr, born, name, adr, postnr, poststed)
+    values (328069543, '03059613994', '1996-05-03', 'Rita Letter', 'Fløttums vei 68A', '7435', 'Trondheim');
+    insert into customer (id, fnr, born, name, adr, postnr, poststed)
+    values (1325854638, '10035955203', '1959-03-10', 'Frank Lispiking', 'Furres vei 14', '4134', 'Jøsenfjorden');
+    insert into customer (id, fnr, born, name, adr, postnr, poststed)
+    values (1732690652, null, '1940-07-10', 'Tomm Hendt', 'Strømmensveien 75', '2820', 'Nordre Toten');
+    insert into customer (id, fnr, born, name, adr, postnr, poststed)
+    values (460134634, '23074791654', '1947-07-23', 'Mona Mee', 'Nordarnøysveien 10E', '6927', 'Ytrøygrend');
+    insert into customer (id, fnr, born, name, adr, postnr, poststed)
+    values (1112030020, '11043457464', '1934-04-11', 'Kjell Erstuen', 'Venneslaskroken 24', '4884', 'Grimstad');
     ...
     insert into product (id, name) values (78471, 'Jhtb Iktaeyaihjrluso');
     insert into product (id, name) values (91325, 'Zsughfsy Bmpkfag');
@@ -773,7 +863,7 @@ The output looks like this (excerpt):
 
 ### TODO
 
-1. Could perhaps use `Stream` for get(Strings)? Or maybe not...
+1. Should have used streams rather than `n:Int` for the `get`-methods.  But a lot of work now...
 2. FromFile   type checking does not work
 3. Xml: nesting not available
-4. Analyzing SQL DDL and/or domain classes to generate a skeleton for test data generators?
+4. Analyzing SQL DDL and/or domain classes to generate a skeleton for test data generators?  After all, that's where it all started...

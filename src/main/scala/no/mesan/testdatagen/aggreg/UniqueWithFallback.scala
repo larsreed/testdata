@@ -39,5 +39,6 @@ class UniqueWithFallback[T](primary: Generator[T], alt: Generator[T]) extends Ge
 }
 
 object UniqueWithFallback {
-  def apply[T](primary: Generator[T], alt: Generator[T])= new UniqueWithFallback(primary, alt)
+  def apply[T](primary: Generator[T], alt: Generator[T]): UniqueWithFallback[T]=
+    new UniqueWithFallback(primary, alt)
 }

@@ -1,6 +1,6 @@
 package no.mesan.testdatagen.generators.misc
 
-import no.mesan.testdatagen.Generator
+import no.mesan.testdatagen.{RandomElem, Generator}
 import no.mesan.testdatagen.utils.IO
 import scala.util.Random
 import scala.annotation.tailrec
@@ -15,7 +15,7 @@ import scala.annotation.tailrec
  * The get methods return a string containing N words randomly selected from
  * the input.
  */
-class Markov extends Generator[String] {
+class Markov extends Generator[String] with RandomElem {
 
   type WordMap= Map[String, List[String]]
 
@@ -59,8 +59,7 @@ class Markov extends Generator[String] {
       case Nil =>
         selectNext(words.keys.toList)
       case _ =>
-        val n= Random.nextInt(from.length)
-        from(n)
+        randomFrom(from)
     }
     @tailrec def getNext(word:String, soFar: List[String]): List[String] =
       if (soFar.length>=n) soFar

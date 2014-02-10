@@ -48,9 +48,7 @@ class ToFile[T](fileName:String,
     catch {
       case e: IOException => println("Error: " + e)
     }
-    finally {
-      bufWriter.close
-    }
+    finally bufWriter.close
   }
 
   override def get(n: Int): List[T]= {

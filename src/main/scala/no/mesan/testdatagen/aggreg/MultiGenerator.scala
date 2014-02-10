@@ -22,7 +22,7 @@ trait MultiGenerator[T] {
 trait MultiGeneratorWithWeight[T] {
   type GenList= List[(Int,Generator[T])]
   private var _generators: GenList = Nil
-  def generators = _generators.reverse
+  def generators: List[(Int, Generator[T])] = _generators.reverse
 
   /** Add 0 or more generators with weight 1. */
   def add(gs: Generator[T]*): this.type = {

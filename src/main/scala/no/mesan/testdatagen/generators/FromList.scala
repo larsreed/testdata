@@ -3,7 +3,7 @@ package no.mesan.testdatagen.generators
 import scala.annotation.tailrec
 import scala.util.Random
 
-import no.mesan.testdatagen.SingleGenerator
+import no.mesan.testdatagen.{RandomElem, SingleGenerator}
 
 /** * Probably the most versatile of all the generators, the FromList takes a list of
  * "anything" as input and generates its values from that, it is typed (FromList[T]),
@@ -13,7 +13,7 @@ import no.mesan.testdatagen.SingleGenerator
  *
  * @author lre
  */
-class FromList[T] extends SingleGenerator[T] {
+class FromList[T] extends SingleGenerator[T] with RandomElem {
 
   override def from(f:T) = throw new UnsupportedOperationException
   override def to(f:T) = throw new UnsupportedOperationException
@@ -43,7 +43,7 @@ class FromList[T] extends SingleGenerator[T] {
     def getRandomly(soFar: List[T]): List[T]=
       if (soFar.length>=n) soFar
       else {
-        val nxt= accepted(Random.nextInt(accepted.length))
+        val nxt= randomFrom(accepted)
         if (!isUnique || !(soFar contains nxt))
           getRandomly(nxt::soFar)
         else getRandomly(soFar)

@@ -22,7 +22,7 @@ libraryDependencies ++= Seq(
 
 libraryDependencies ++= Seq( // test
   "junit" % "junit" % "4.11" % "test",
-  "org.scalatest" %% "scalatest" % "1.9.1" % "test",
+  "org.scalatest" %% "scalatest" % "2.0" % "test",
   "org.hamcrest" % "hamcrest-core" % "1.1" % "test",
   "org.specs2" %% "specs2" % "2.1.1" % "test",
   "org.mockito" % "mockito-all" % "1.9.0" % "test"

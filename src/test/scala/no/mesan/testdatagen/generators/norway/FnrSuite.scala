@@ -57,7 +57,7 @@ class FnrSuite extends FunSuite with Printer {
 
   test("no dnr") {
     val res= Fnr() withDnr 0 get 200
-    for (fnr<-res) assert(condition = fnr.matches("^[0-3].*"), clue = fnr)
+    for (fnr<-res) assert(fnr.matches("^[0-3].*"), fnr)
   }
 
   test("girls") {

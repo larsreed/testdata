@@ -2,13 +2,14 @@ package no.mesan.testdatagen
 
 /**
  * This is the main testdata generator interface.
- * For default implementation -- see GeneratorImpl.
+ * For default implementation -- see `GeneratorImpl`.
  * For more functions, see ExtendedGenerator.
  *
  * Most methods return this.type (ending up in the type of the
  * class implementing the trait), to allow _builders_ like
  * Ints() from(1) to(10) reversed.
  *
+ * @tparam T Generated type
  * @author lre
  */
 trait Generator[+T] {
@@ -42,7 +43,6 @@ trait Generator[+T] {
 
 /**
  * An extended generator interface for limiting and ordering output.
- * SingleGenerator implements this interface.
  *
  * As the method definitions imply, generators will by default
  * pick _random_ sequences from their value space (the range of
@@ -54,8 +54,6 @@ trait Generator[+T] {
  * The methods sequential and reversed (and for some subclasses, a step
  * method) change this behaviour -- instead a series of increasing
  * (or decreasing) values will be produced.
- *
- * @author lre
  */
 trait ExtendedGenerator[T] extends Generator[T] {
 
@@ -94,12 +92,7 @@ trait ExtendedGenerator[T] extends Generator[T] {
   def reversed: this.type
 }
 
-
-/**
- * A default implementation of the Generator interface.
- *
- * @author lre
- */
+/** A default implementation of the Generator interface. */
 trait GeneratorImpl[T] extends Generator[T] {
 
   private var filterFuns: List[T => Boolean] = List(t => true)
@@ -118,6 +111,7 @@ trait GeneratorImpl[T] extends Generator[T] {
 
 /**
  * A trait to help build delegates for ExtendedGenerators.
+ * Used in a generator[T], wraps a delegate[G].
  *
  * @author lre
  */
@@ -143,4 +137,32 @@ trait ExtendedDelegate[G, T]   {
   override def get(n: Int): List[T] = generator.get(n) map conv2result
   override def getStrings(n: Int): List[String] = generator.getStrings(n)
   override def formatOne[S>:T](v: S): String= generator.formatOne(v)
+}
+
+/** Default implementations for extended generators. */
+trait ExtendedImpl[T] extends GeneratorImpl[T] with ExtendedGenerator[T] {
+
+  override def format(f: String): this.type= formatWith((t:T) => f.format(t))
+
+  /** Keeps the lower bound as Some(value) if set. */
+  protected var lower: Option[T]= None
+  override def from(min: T): this.type = { lower=Some(min); this }
+
+  /** Keeps the upper bound as Some(value) if set. */
+  protected var upper: Option[T]= None
+  override def to(max: T): this.type= { upper=Some(max); this }
+
+  /** False means random, true means sequential. */
+  protected var isSequential= false
+  /** Inverts isSequential. */
+  protected final def isRandom= !isSequential
+  override def sequential: this.type= { isSequential=true; this }
+
+  /** True= unique random values. */
+  protected var isUnique= false
+  override def unique: this.type= { isUnique=true; isSequential= false; this }
+
+  /** True= reversed, sequential values. */
+  protected var isReversed= false
+  override def reversed: this.type= { isReversed=true; sequential }
 }

@@ -2,14 +2,13 @@ package no.mesan.testdatagen.generators
 
 import java.util.Date
 
-import scala.annotation.tailrec
 import scala.util.Random
 
 import org.joda.time.{DateTime, Period}
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.scala_tools.time.Imports.{RichDateTime, RichReadableInstant}
 
-import no.mesan.testdatagen.SingleGenerator
+import no.mesan.testdatagen.ExtendedImpl
 import scala.annotation.tailrec
 
 /**
@@ -19,7 +18,7 @@ import scala.annotation.tailrec
  *
  * @author lre
  */
-class Dates extends SingleGenerator[DateTime] {
+class Dates extends ExtendedImpl[DateTime] {
 
   from()
   to()

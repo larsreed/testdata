@@ -4,9 +4,8 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.SingleGenerator
+import no.mesan.testdatagen.{ExtendedGenerator, Printer}
 
-import no.mesan.testdatagen.Printer
 
 @RunWith(classOf[JUnitRunner])
 class FromListSuite extends FunSuite with Printer {
@@ -25,7 +24,7 @@ class FromListSuite extends FunSuite with Printer {
   }
 
   test("from/to not suported") {
-    val l: SingleGenerator[Int] = FromList(List(1, 2, 3))
+    val l: ExtendedGenerator[Int] = FromList(List(1, 2, 3))
     intercept[UnsupportedOperationException] {
       l.from(1).get(1)
     }

@@ -3,7 +3,7 @@ package no.mesan.testdatagen.generators
 import scala.annotation.tailrec
 import scala.util.Random
 
-import no.mesan.testdatagen.SingleGenerator
+import no.mesan.testdatagen.ExtendedImpl
 
 /**
  * Generate longs.
@@ -12,7 +12,7 @@ import no.mesan.testdatagen.SingleGenerator
  *
  * @author lre
  */
-class Longs extends SingleGenerator[Long] {
+class Longs extends ExtendedImpl[Long] {
 
   filter(x=> lower match { case Some(low)=>  x>=low;  case _=> true })
   filter(x=> upper match { case Some(high)=> x<=high; case _=> true })

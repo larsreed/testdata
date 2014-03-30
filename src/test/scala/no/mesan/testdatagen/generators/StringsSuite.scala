@@ -4,7 +4,7 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.Printer
+import no.mesan.testdatagen.{Unique, Printer}
 
 @RunWith(classOf[JUnitRunner])
 class StringsSuite extends FunSuite with Printer {
@@ -117,7 +117,7 @@ class StringsSuite extends FunSuite with Printer {
     assert(res2=== Nil)
   }
   test("unique list") {
-    val  res= Strings().chars("ABC").length(2).unique.get(9).toSet
+    val  res= Unique(Strings() chars "ABC" length 2).get(9).toSet
     assert(res.size===9)
   }
 }

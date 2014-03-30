@@ -37,10 +37,10 @@ class TextWrapper(generator:Generator[_]) extends GeneratorImpl[String] {
   def trim(): this.type = transform {s=> s.trim }
 
   /** Convert to upper case. */
-  def toUpper(): this.type = transform { s=> s.toUpperCase }
+  def toUpper: this.type = transform { s=> s.toUpperCase }
 
   /** Convert to lower case. */
-  def toLower(): this.type = transform { s=> s.toLowerCase }
+  def toLower: this.type = transform { s=> s.toLowerCase }
 
   /** Substitute text. */
   def substitute(fromRegex:String, to:String): this.type = transform { s=> s.replaceAll(fromRegex, to) }

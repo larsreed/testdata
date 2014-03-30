@@ -6,7 +6,7 @@ import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 import java.util.Date
 
-import no.mesan.testdatagen.Printer
+import no.mesan.testdatagen.{Unique, Printer}
 
 @RunWith(classOf[JUnitRunner])
 class DatesSuite extends FunSuite with Printer {
@@ -192,7 +192,13 @@ class DatesSuite extends FunSuite with Printer {
   }
 
   test("formatting") {
-    val res = Dates().dateAndTime.from(y = 2012, m = 1, d = 1).step(hh = 4, mm = 30).format("yyyy.MM.dd HH:mm:ss").sequential.getStrings(10)
+    val res = Dates()
+              .dateAndTime
+              .from(y = 2012, m = 1, d = 1)
+              .step(hh = 4, mm = 30)
+              .format("yyyy.MM.dd HH:mm:ss")
+              .sequential
+              .getStrings(10)
     val expect = List("2012.01.01 00:00:00", "2012.01.01 04:30:00", "2012.01.01 09:00:00", "2012.01.01 13:30:00",
       "2012.01.01 18:00:00", "2012.01.01 22:30:00", "2012.01.02 03:00:00", "2012.01.02 07:30:00",
       "2012.01.02 12:00:00", "2012.01.02 16:30:00")
@@ -200,17 +206,17 @@ class DatesSuite extends FunSuite with Printer {
   }
 
   test("unique list") {
-    val  res= Dates().from(y = 2012, m=12, d=1).to(y = 2012, m=12, d=30).unique.get(30)
+    val  res= Unique(Dates().from(y = 2012, m=12, d=1).to(y = 2012, m=12, d=30)).get(30)
     for (i<-1 to 30) assert(res contains new DateTime(2012,12,i,0,0,0,0), i)
   }
 
   test("unique string list") {
-    val  res= Dates().from(y = 2012, m=12, d=1).to(y = 2012, m=12, d=30).format("d").unique.getStrings(30)
+    val  res= Unique(Dates().from(y = 2012, m=12, d=1).to(y = 2012, m=12, d=30).format("d")).getStrings(30)
     for (i<-1 to 30) assert(res contains i+"", i)
   }
 
   test("unique long list") {
-    val res= Dates().from(y=2000).to(y=2010).unique.get(500).toSet
+    val res= Unique(Dates().from(y=2000).to(y=2010)).get(500).toSet
     assert(res.size==500)
   }
 

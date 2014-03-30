@@ -4,7 +4,7 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.Printer
+import no.mesan.testdatagen.{Unique, Printer}
 
 @RunWith(classOf[JUnitRunner])
 class IntsSuite extends FunSuite with Printer {
@@ -98,12 +98,12 @@ class IntsSuite extends FunSuite with Printer {
   }
 
   test("unique list") {
-    val res = generator.from(-1500).to(-1400).unique.getStrings(100).toSet
+    val res = Unique(generator from -1500 to -1400).getStrings(100).toSet
     assert(res.size == 100)
   }
 
   test("unique string list") {
-    val res = generator.from(1500).to(1599).format("%12d").unique.getStrings(99).toSet
+    val res = Unique(generator from 1500 to 1599 format "%12d").getStrings(99).toSet
     assert(res.size == 99)
   }
 }

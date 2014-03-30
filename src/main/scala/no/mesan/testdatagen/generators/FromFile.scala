@@ -28,9 +28,6 @@ class FromFile[T](fileName: String, encoding:String) extends ExtendedGenerator[T
   /** Not supported. */
   override def to(f:T) = throw new UnsupportedOperationException
 
-  private var filterFuns: List[T => Boolean] = List(t => true)
-  override def filter(f: T => Boolean): this.type = { filterFuns ::= f; this }
-
   private var readAll= false
   /** Choose if only N, or all lines, are read when generating N values. */
   def allLines(all:Boolean=true): this.type = { readAll= all; this }
@@ -42,16 +39,16 @@ class FromFile[T](fileName: String, encoding:String) extends ExtendedGenerator[T
     while (source.hasNext && (i<n || readAll)) {
       val s= source.next
       val v = s.asInstanceOf[T] // Does not actually work :-(
-      if (filterFuns.forall(f=> f(v))) {
-        res ::= v
-        i+=1
-      }
+      res ::= v
+      i+=1
     }
     res.reverse
   }
 
-  override def get(n: Int): List[T] = listGen.fromList(getContents(n)).get(n)
-  override def getStrings(n: Int): List[String] = listGen.fromList(getContents(n)).getStrings(n)
+  override def get(n: Int): List[T] =
+    listGen.fromList(getContents(n)).get(n)
+  override def getStrings(n: Int): List[String] =
+    listGen.fromList(getContents(n)).getStrings(n)
 }
 
 object FromFile {

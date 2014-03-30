@@ -4,7 +4,7 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.Printer
+import no.mesan.testdatagen.{Unique, Printer}
 
 @RunWith(classOf[JUnitRunner])
 class CharsSuite extends FunSuite with Printer {
@@ -86,7 +86,7 @@ class CharsSuite extends FunSuite with Printer {
   }
 
   test("unique list") {
-    val res = Chars().chars("ABCDEF").unique.get(6).toSet
+    val res = Unique(Chars().chars("ABCDEF")).get(6).toSet
     assert(res.size === 6)
   }
 }

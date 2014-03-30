@@ -4,7 +4,7 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.Printer
+import no.mesan.testdatagen.{Unique, Printer}
 
 @RunWith(classOf[JUnitRunner])
 class BooleansSuite extends FunSuite with Printer {
@@ -60,7 +60,7 @@ class BooleansSuite extends FunSuite with Printer {
   }
 
   test("unique list") {
-    val  res= Booleans().unique.get(2)
+    val  res= Unique(Booleans()).get(2)
     assert(res== List(false, true) || res==List(true, false))
   }
 }

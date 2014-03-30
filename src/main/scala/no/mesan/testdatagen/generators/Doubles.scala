@@ -48,8 +48,7 @@ class Doubles extends ExtendedImpl[Double] {
       if (soFar.length>=n) soFar
       else {
         val nxt= min + (max-min)*Random.nextDouble()
-        if (filterAll(nxt) && (!isUnique || !(soFar contains nxt)))
-          getRandomly(nxt::soFar)
+        if (filterAll(nxt)) getRandomly(nxt::soFar)
         else getRandomly(soFar)
       }
 

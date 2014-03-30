@@ -54,8 +54,7 @@ class Longs extends ExtendedImpl[Long] {
       if (soFar.length>=n) soFar
       else {
         val nxt= (min + (BigInt(Random.nextLong()) mod span)).toLong
-        if (filterAll(nxt)  && (!isUnique || !(soFar contains nxt)))
-          randomly(nxt::soFar)
+        if (filterAll(nxt)) randomly(nxt::soFar)
         else randomly(soFar)
       }
 

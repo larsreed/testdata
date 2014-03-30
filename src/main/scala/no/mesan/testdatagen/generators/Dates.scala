@@ -169,7 +169,7 @@ class Dates extends ExtendedImpl[DateTime] {
         }
         try {
           val dt= new DateTime(y,m,d,hh,mm,ss,ms)
-          if (filterAll(dt) && (!isUnique || !(soFar contains dt))) dt else getAdate
+          if (filterAll(dt)) dt else getAdate
         }
         catch { // Catches illegal dates (like Nov 31st)
           case ex: IllegalArgumentException => getAdate

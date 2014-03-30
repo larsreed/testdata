@@ -7,13 +7,13 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 
 import no.mesan.testdatagen.generators.{FromList, Ints}
-import no.mesan.testdatagen.Printer
+import no.mesan.testdatagen.{Unique, Printer}
 
 @RunWith(classOf[JUnitRunner])
 class UniqueWithFallbackSuite extends FunSuite with Printer {
 
   trait Setup {
-    val ints= (Ints() from -50 to 50 unique) get 101
+    val ints= Unique(Ints() from -50 to 50) get 101
     val mainGen= FromList(ints)
     val altGen= Ints() from 1000 to 5000
     val xgen= UniqueWithFallback(mainGen, altGen)

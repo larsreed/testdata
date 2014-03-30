@@ -4,7 +4,7 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.{ExtendedGenerator, Printer}
+import no.mesan.testdatagen.{Unique, ExtendedGenerator, Printer}
 
 
 @RunWith(classOf[JUnitRunner])
@@ -86,23 +86,17 @@ class FromListSuite extends FunSuite with Printer {
   }
 
   test("unique list") {
-    val res = FromList(('a' to 'z').toList).unique.getStrings(26).toSet
+    val res = Unique(FromList(('a' to 'z').toList)).getStrings(26).toSet
     assert(res.size == 26)
   }
 
   test("unique string list") {
-    val res = FromList((900 to 999).toList).unique.getStrings(100).toSet
+    val res = Unique(FromList((900 to 999).toList)).getStrings(100).toSet
     assert(res.size == 100)
   }
 
   test("short list") {
-    val res = FromList(List("a")).unique.get(1).toSet
+    val res = Unique(FromList(List("a"))).get(1).toSet
     assert(res.size == 1)
-  }
-
-  test("tooshort list") {
-    intercept[IllegalArgumentException] {
-      FromList(List("a", "b", "c")).unique.get(4).toSet
-    }
   }
 }

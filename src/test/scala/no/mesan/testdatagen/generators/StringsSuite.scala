@@ -4,17 +4,14 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.{Unique, Printer}
+import no.mesan.testdatagen.{Reverse, Unique, Printer}
 
 @RunWith(classOf[JUnitRunner])
 class StringsSuite extends FunSuite with Printer {
     print(false) {
-       println(Strings().lengthBetween(1,3).chars('a' to 'c').reversed.get(120))
        println(Strings().lengthBetween(1,3).chars('a' to 'c').sequential.get(100))
        println(Strings().lengthBetween(1000,1003).chars('0' to '1').sequential.get(2))
-       println(Strings().lengthBetween(1000,1003).chars(' ' to 'Z').reversed.get(2))
        println(Strings().chars("abx").lengthBetween(1, 2).sequential.get(25))
-       println(Strings().chars("abx").lengthBetween(1, 2).reversed.get(25))
        println(Strings().chars("abx").lengthBetween(2, 3).sequential.get(25))
        println(Strings().chars("abx").lengthBetween(2, 3).get(25))
     }
@@ -63,7 +60,8 @@ class StringsSuite extends FunSuite with Printer {
   }
 
   test("reverted sequence") {
-    assert(Strings().chars("abc").length(1).reversed.get(5)===List("c", "b", "a", "c", "b"))
+    assert(Reverse(Strings().chars("abc").sequential.length(1)).get(5)
+      ===List("b", "a", "c", "b", "a"))
   }
 
   test("sequence of 1 & 2") {

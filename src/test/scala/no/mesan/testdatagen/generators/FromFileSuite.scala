@@ -4,7 +4,7 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.{Unique, ExtendedGenerator, Printer}
+import no.mesan.testdatagen.{Reverse, Unique, ExtendedGenerator, Printer}
 
 @RunWith(classOf[JUnitRunner])
 class FromFileSuite extends FunSuite with Printer {
@@ -62,15 +62,15 @@ class FromFileSuite extends FunSuite with Printer {
 
   test("reverted sequence") {
     new Setup {
-      val res= FromFile(ints).reversed.get(8)
-      val exp= List("1000000", "100000", "10000", "1000", "100", "10", "1", "1000000")
+      val res= Reverse(FromFile(ints).sequential).get(8)
+      val exp= List("1", "1000000", "100000", "10000", "1000", "100", "10", "1")
       assert(res === exp)
     }
   }
 
   test("0 sequential elements") {
     new Setup {
-      val res= FromFile(strings).reversed.allLines().get(0)
+      val res= Reverse(FromFile(strings).allLines()).get(0)
       val exp= Nil
       assert(res === exp)
     }

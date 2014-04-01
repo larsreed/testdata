@@ -20,7 +20,7 @@ class Doubles extends ExtendedImpl[Double] {
   /** Step size, implies sequential values. */
   def step(step: Double): Doubles= {
     require(step!=0, "Step cannot be 0")
-    stepSize= math.abs(step)
+    stepSize= step
     sequential
   }
 
@@ -29,15 +29,15 @@ class Doubles extends ExtendedImpl[Double] {
     val min= lower.getOrElse(Double.MinValue)
     val max= upper.getOrElse(Double.MaxValue)
     require(max>=min, "from >= to")
+    val isReversed= stepSize < 0
 
     def getSequentially: List[Double]= {
-      val step = if (isReversed) -stepSize else stepSize
       @tailrec def next(last: Double, soFar:List[Double]): List[Double]=
         if (soFar.length>=n) soFar
         else {
           val k= if (last>max) min else if (last<min) max else last
-          if ( filterAll(k) ) next(k+step, k::soFar)
-          else next(k+step, soFar)
+          if ( filterAll(k) ) next(k+stepSize, k::soFar)
+          else next(k+stepSize, soFar)
         }
       if (isReversed) next(max, Nil).reverse
       else next(min, Nil).reverse

@@ -1,5 +1,5 @@
-# Testdatagenerator
-This project contains a simple set of tools to help generate test data. It is primarily a way to train myself in Scala (by porting and enhancing some very old AWK scripts :), but can hopefully be useful to someone...
+# Testdata generator
+This project contains a set of tools to help generate test data. It is primarily a way to train myself in Scala (by porting and enhancing some very old AWK scripts :), but can hopefully be useful to someone...
 
 ## Overview
 The basic component is the `Generator[T]` trait, which is able to provide a (possibly filtered) list of instances of a given type, as well as the same list converted to strings.
@@ -113,10 +113,6 @@ The ExtendedGenerator trait extends the Generator  trait with methods to control
       def to(max: T): this.type
       /** Generate sequential, not random. */
       def sequential: this.type
-      /** Generate unique, random values. */
-      def unique: this.type
-      /** Generate reversed sequential values. */
-      def reversed: this.type
     }
 
 The general methods are:
@@ -125,32 +121,25 @@ The general methods are:
 * `from(T) / to(T)`: defines a lower/upper bound for generated values (takes a value of the output type, subclasses may provide variants)
 * `sequential`: Signals that sequential values are to be generated (subclasses may define a step size)   by default, random values are generated.
 Generation starts at the lower bound, generating towards the upper. If the upper bound is reached without providing the wanted *n* occurrences, it wraps around from the start. E.g.: when getting 6 numbers from `Ints() from(0) to(1) sequential` you get `0,1,0,1,0,1`.
-* `reversed`: Calling this implies a call to sequential ; additionally, generation starts at the upper bound, stepping towards the lower.
-* `unique`: Calling this sets the generation to random, and then checks to see that each generated value is unique.
 
-All the methods return `this.type` (ending up in the type of the class implementing the trait), to allow *builders* like `Ints() from(1) to(10) reversed`. As the method definitions imply, generators will by default pick *random* sequences from their value space (the range of the underlying data type(s), possibly limited by from/to-arguments). When `unique` is added, it will check to see that the same value is never drawn twice. For generators with a limited value space, you should be careful with this setting   `FromList(List(1,2)).unique.get(3)` will probably crash or run forever...
-
-The methods `sequential` and `reversed` (and for some subclasses, a `step` method) change this behaviour   instead a series of increasing (or decreasing) values will be produced.
+All the methods return `this.type` (ending up in the type of the class implementing the trait), to allow *builders* like `Ints() from(1) to(10) sequential`. As the method definitions imply, generators will by default pick *random* sequences from their value space (the range of the underlying data type(s), possibly limited by from/to-arguments). The method `sequential` (and for some subclasses, a `step` method) change this behaviour, instead a series of increasing (or decreasing) values will be produced.
 Sometimes you will find it necessary to have two generators A and B draw from the same value space. In that case, you could use a generator to fill a list, and then use a `FromList` to produce the final values.
 
-#### SingleGenerator
-SingleGenerator is an abstract base class extending `ExtendedGenerator[T]` backed by `GeneratorImpl[T]`. All methods except `get(n)` are defined.
+#### ExtendedImpl
+ExtendedImpl is a trait extending `GeneratorImpl[T]` that implements all `ExtendedGenerator`-methods (except `get(n)`).
 Subclasses get the following `protected` members:
 
 * `var lower: Option[T]`
 * `var upper: Option[T]`
 * `var isSequential`
 * `final def isRandom= !isSequential`
-* `var isUnique`
-* `var isReversed`
 
-#### ExtendedDelegate
-The final basic building block is the `trait ExtendedDelegate[G, T]`.
-This trait
+#### GeneratorDelegate / ExtendedDelegate
+The final basic building blocks are the traits `GeneratorDelegate[G, T]` / `ExtendedDelegate[G, T]`.
+These traits
 
-* can only be used on a type implementing `Generator[T]`
-* requires the implementing type to have a `var generator:Generator[G]` containing the actual generator
-* to override the methods of `ExtendedGenerator` you need to change the definition of
+* requires the implementing type to have a `var generator:Generator[G]` (resp. `ExtendedGenerator[G]`) containing the actual generator
+* to override the methods of the delegate generator you may need to change the definition of
 `def conv2gen(f: T): G` and / or `conv2result(f: G): T` to convert between the types of the generator and the implementing class (by default both are implemented with `asInstanceOf`)
 
 ## Basic generators
@@ -165,20 +154,20 @@ This class has the rather simple job of generating Booleans... It uses `FromList
     * `Booleans(trueString, falseString)`
 
 ### Ints
-returns ints from the entire range. The only special method is `step(Int)` to define step size for sequences.
+returns ints from the entire range. The only special method is `step(Int)` to define step size for sequences.  A negative step size means starting from the max value, working towards the min value.
 Apply methods (defaults for all parameters):
 
 * `Ints(from:Int=Int.MinValue+1, to:Int=Int.MaxValue-1, step:Int=1)`
 
 ### Longs
-returns longs from the entire range. The only special method is `step(Long)` to define step size for sequences
+returns longs from the entire range. The only special method is `step(Long)` to define step size for sequences, as for `Ints`, a negative step means starting at max.
 
 Apply methods (defaults for all parameters):
 
 * `Longs(from:Long=0, to:Long=Long.MaxValue-1, step:Long=1)` (note default 0 for start)
 
 ### Chars
-uses `ExtendedDelegate` and a 1-character `Strings`-generator to do its work. It adds the `chars(Seq[Char])` method   also supported by Strings   to add a range of available characters. Accepts a string (`chars("aeiouy")`), an interval (`chars('a' to 'z')`) etc.
+uses `ExtendedDelegate` and a 1-character `Strings`-generator to do its work. It adds the `chars(Seq[Char])` method also supported by Strings to add a range of available characters. Accepts a string (`chars("aeiouy")`), an interval (`chars('a' to 'z')`) etc.
 
 Apply methods:
 
@@ -186,7 +175,7 @@ Apply methods:
 * `Chars(seq)`
 
 ### Doubles
-returns doubles from the entire range. The only special method is `step(Double)` to define step size for sequences
+returns doubles from the entire range. The only special method is `step(Double)` to define step size for sequences, as for `Ints`, a negative step means starting at max.
 
 Apply methods: `Double()`
 
@@ -199,10 +188,11 @@ A simple enough data type, this is still one of the more complex generators. It 
 * `setStdDate(y: Int, m:Int, d:Int)`: set the standard date parts used when generating (default today's date)
 * `from(java.util.Date)` / `to(java.util.Date)`: limit using JDK Dates rather than Joda DateTimes.
 * `from(y: Int=1753, m: Int=1, d:Int=1, hh: Int=0, mm: Int=0, ss:Int=0, ms: Int=0)` / `to(y:Int=9999, m: Int=12, d:Int= -31, hh: Int=23, mm: Int=59, ss:Int=59, ms: Int=999)`: These are designed to be used with named arguments, like `from(y=1980, m=1) to(y=1999, m=12)`
-* `step(y: Int=0, m: Int=0, d:Int=0, hh: Int=0, mm: Int=0, ss:Int=0, ms:Int=0)`: Another candidate for named arguments, this method sets the interval for sequential generation
+* `step(y: Int=0, m: Int=0, d:Int=0, hh: Int=0, mm: Int=0, ss:Int=0, ms:Int=0)`: Another candidate for named arguments, this method sets the interval for sequential generation.  Do not use negative values, apply the `reverse` method to count backwards.
 * `format(DateTimeFormatter)`: Use one of Joda's formatters
 * `getJavaDates(n:Int)`: same as `get`, but converts to `java.util.Date`
 * `Dates.dateFormatter(formatString)`: returns a partial function to format dates according to a given string
+* `reversed(reverse:Boolean=true)`: means to start at the max value (if true), working with negative periods towards the start.  Only meaningful for `sequential` generation. 
 
 ### Strings
 The Strings generator generate strings, would you believe it...
@@ -298,6 +288,25 @@ Apply methods:
 
 * `SomeNulls(percent, generator)`: supply both the factor and the generator
 
+### Unique
+This generator takes another generator as input, and forwards all calls to that generator.  However, it adds a filter function that remembers all previously seen values and excludes them if they reappear.
+This generator should be **used with caution**!
+
+1. If the value space of the underlying generator is smaller than the requested number of entries, it will loop forever trying to find a suitable value.
+2. As the number of requested elements grow, memory consumption grows accordingly, as it must remember all previously generated values.
+
+Apply methods:
+
+* `Unique(generator)`: supply the generator
+
+### Reverse
+This generator takes another generator as input, and forwards all calls to that generator.  However, it reverses the output from the `get` / `getStrings`-functions.
+It does not make sense to use this unless the underlying generator generates sequential values...  Look for `step`- or `reversed`-methods in the included generator that could make this wrapper superfluous.
+
+Apply methods:
+
+* `Reverse(generator)`: supply the generator
+ 
 ### WeightedGenerator
 This generator takes one or more generators as input, and selects randomly between them for each value to generate. It is typed as a `Generator[Any]`, since it can wrap a free mix of generator types. Each generator is given a weight &ndash;  the probability for each one is its own weight relative to the sum of all weights.
 
@@ -406,8 +415,6 @@ There are 4 different "apply" methods:
 * `CreditCards.visas`: 16 digit Visa numbers (starts with 4)
 * `CreditCards.masterCards`: 16 digit MasterCard numbers (starts with 51..55)
 * `CreditCards(prefixes: List[Long], length: Int)`: you decide the prefixes and length; make sure you leave room for the check digit.
-
-Additionally, you may add a call to `unique()` , to ensure unique values.
 
 ### Markov
 A generator for Markov chain text generation, i.e. random text based on existing text (see [http://en.wikipedia.org/wiki/Markov_chain#Markov_text_generators](http://en.wikipedia.org/wiki/Markov_chain#Markov_text_generators)).  A sample...:

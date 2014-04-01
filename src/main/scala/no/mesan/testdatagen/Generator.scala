@@ -66,13 +66,6 @@ trait ExtendedGenerator[T] extends Generator[T] {
    * it wraps around from the start.
    */
   def sequential: this.type
-
-  /**
-   * Calling this implies a call to sequential();
-   * additionally, generation starts at the upper bound, stepping towards
-   * the lower.
-   */
-  def reversed: this.type
 }
 
 /** A default implementation of the Generator interface. */
@@ -139,7 +132,6 @@ trait ExtendedDelegate[G, T] /*extends GeneratorDelegate[G, T]*/  {
   override def from(min: T): self.type = { generator.from(conv2gen(min)); this }
   override def to(max: T): self.type = { generator.to(conv2gen(max)); this }
   override def sequential: self.type = { generator.sequential; this }
-  override def reversed: self.type = { generator.reversed; this }
 }
 
 /** Default implementations for extended generators. */
@@ -160,8 +152,4 @@ trait ExtendedImpl[T] extends GeneratorImpl[T] with ExtendedGenerator[T] {
   /** Inverts isSequential. */
   protected final def isRandom= !isSequential
   override def sequential: this.type= { isSequential=true; this }
-
-  /** True= reversed, sequential values. */
-  protected var isReversed= false
-  override def reversed: this.type= { isReversed=true; sequential }
 }

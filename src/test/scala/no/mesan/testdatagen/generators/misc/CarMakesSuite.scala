@@ -10,7 +10,6 @@ import no.mesan.testdatagen.{ExtendedGenerator, Printer}
 class CarMakesSuite extends FunSuite with Printer {
   print(false) {
     println(CarMakes().get(25))
-    println(CarMakes().reversed.get(25))
   }
 
   test("negative get") {
@@ -30,10 +29,6 @@ class CarMakesSuite extends FunSuite with Printer {
     intercept[UnsupportedOperationException] {
       l.to("<").get(1)
     }
-  }
-
-  test("reverted sequence") {
-    assert(CarMakes().reversed.get(25).size === 25)
   }
 
   test("0 sequential elements") {

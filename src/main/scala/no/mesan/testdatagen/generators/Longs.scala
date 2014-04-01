@@ -20,9 +20,9 @@ class Longs extends ExtendedImpl[Long] {
 
   private var stepSize: Long= 1
   /** Step size, used only for sequential values. */
-  def step(s: Long): this.type= {
-    require(s!=0, "Step cannot be 0")
-    stepSize= math.abs(s)
+  def step(step: Long): this.type= {
+    require(step!=0, "Step cannot be 0")
+    stepSize= step
     this
   }
 
@@ -35,15 +35,15 @@ class Longs extends ExtendedImpl[Long] {
     require(min>Long.MinValue, "min > " + Long.MinValue)
 
     val span= BigInt(max) - BigInt(min) +1
-    var step= if (isReversed) -stepSize else stepSize
+    val isReversed= stepSize<0
 
     def sequentially(): List[Long]= {
       @tailrec def next(last: Long, soFar:List[Long]): List[Long]=
         if (soFar.length>=n) soFar
         else {
           val k= if (last>max) min else if (last<min) max else last
-          if ( filterAll(k) ) next(k+step, k::soFar)
-          else next(k+step, soFar)
+          if ( filterAll(k) ) next(k+stepSize, k::soFar)
+          else next(k+stepSize, soFar)
         }
       if (isReversed) next(max, Nil).reverse
       else next(min, Nil).reverse

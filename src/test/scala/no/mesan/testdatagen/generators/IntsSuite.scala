@@ -13,7 +13,7 @@ class IntsSuite extends FunSuite with Printer {
 
   print(false) {
     println(generator.from(4).to(44).get(30))
-    println(generator.step(7).from(4).to(44).reversed.get(30))
+    println(generator.step(-7).from(4).to(44).get(30))
   }
 
   test("from<to") {
@@ -48,16 +48,12 @@ class IntsSuite extends FunSuite with Printer {
   test("wrap the edge") {
     assert(generator.sequential.from(Int.MaxValue-3).get(5) ===
       List(Int.MaxValue-3, Int.MaxValue-2, Int.MaxValue-1, Int.MaxValue-3, Int.MaxValue-2))
-    assert(generator.reversed.to(Int.MinValue+3).get(5) ===
+    assert(generator.step(-1).to(Int.MinValue+3).sequential.get(5) ===
       List(Int.MinValue+3, Int.MinValue+2, Int.MinValue+1, Int.MinValue+3, Int.MinValue+2))
   }
 
   test("reverted sequence") {
-    assert(generator.from(1).to(6).reversed.get(5) === List(6, 5, 4, 3, 2))
-  }
-
-  test("negative step ignored") {
-    assert(generator.step(-3).sequential.from(1).to(6).get(5) === List(1, 4, 1, 4, 1))
+    assert(generator.from(1).to(6).step(-1).sequential.get(5) === List(6, 5, 4, 3, 2))
   }
 
   test("sequence of 1 & 2") {

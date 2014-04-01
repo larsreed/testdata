@@ -124,8 +124,7 @@ class Strings extends ExtendedImpl[String] {
       recurseLengths(startLen, Nil)
     }
 
-    if (isSequential && isReversed) getSequentially(maxLength, minLength, chars.length-1, 0, -1)
-    else if (isSequential) getSequentially(minLength, maxLength, 0, chars.length-1, +1)
+    if (isSequential) getSequentially(minLength, maxLength, 0, chars.length-1, +1)
     else getRandomly(Nil)
   }
 }

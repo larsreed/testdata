@@ -11,7 +11,6 @@ import no.mesan.testdatagen.{Unique, ExtendedGenerator, Printer}
 class FromListSuite extends FunSuite with Printer {
   print(false) {
     println(FromList(List(1, 2, 3, 4, 5, 6)).get(25))
-    println(FromList(List("A", "B", "C")).reversed.get(25))
   }
 
   test("negative get") {
@@ -47,7 +46,7 @@ class FromListSuite extends FunSuite with Printer {
   }
 
   test("reverted sequence") {
-    assert(FromList(List("A", "B", "C")).reversed.get(25) ===
+    assert(FromList(List("A", "B", "C").reverse).sequential.get(25) ===
       List("C", "B", "A", "C", "B", "A", "C", "B", "A", "C", "B", "A", "C", "B", "A",
         "C", "B", "A", "C", "B", "A", "C", "B", "A", "C"))
   }

@@ -50,7 +50,7 @@ class DatesSuite extends FunSuite with Printer {
   }
 
   test("reversed date sequence") {
-    val res = Dates().from(y = 2012, m = 10, d = 10).to(y = 2012, m = 10, d = 30).reversed.get(10)
+    val res = Dates().from(y = 2012, m = 10, d = 10).to(y = 2012, m = 10, d = 30).reversed().get(10)
     for (i <- 30 to 21 by -1) assert(res.contains(new DateTime(2012, 10, i, 0, 0)))
   }
 
@@ -73,7 +73,7 @@ class DatesSuite extends FunSuite with Printer {
   test("sequence that passes limit repeats itself") {
     val res = Dates().from(y = 1900, m = 1, d = 1).to(y = 1900, m = 1, d = 3).sequential.get(6).toSet
     assert(res.size === 3)
-    val res2 = Dates().from(y = 4040, m = 12, d = 1).to(y = 4040, m = 12, d = 4).reversed.get(40).toSet
+    val res2 = Dates().from(y = 4040, m = 12, d = 1).to(y = 4040, m = 12, d = 4).reversed().get(40).toSet
     assert(res2.size === 4)
   }
 
@@ -87,9 +87,8 @@ class DatesSuite extends FunSuite with Printer {
 
   test("limits with underspecified date") {
     // With m=2, d defaults to 31 ... should become 29 for a leap year
-    val dt: DateTime = Dates().from(y = 2004, m = 2).to(y = 2004, m = 2).reversed.get(1)(0)
-    val (y, m, d, hh, mm, ss, ms) = (dt.getYear, dt.getMonthOfYear, dt.getDayOfMonth,
-      dt.getHourOfDay, dt.getMinuteOfHour, dt.getSecondOfMinute, dt.getMillisOfSecond)
+    val dt: DateTime = Dates().from(y = 2004, m = 2).to(y = 2004, m = 2).reversed().get(1)(0)
+    val (y, m, d) = (dt.getYear, dt.getMonthOfYear, dt.getDayOfMonth)
     assert(y === 2004)
     assert(m === 2)
     assert(d === 29)

@@ -4,7 +4,7 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.{Unique, Printer}
+import no.mesan.testdatagen.{Reverse, Unique, Printer}
 
 @RunWith(classOf[JUnitRunner])
 class BooleansSuite extends FunSuite with Printer {
@@ -27,7 +27,7 @@ class BooleansSuite extends FunSuite with Printer {
   }
 
   test("reverted sequence") {
-    assert(Booleans().reversed.get(5)===List(true, false, true, false, true))
+    assert(Reverse(Booleans().sequential).get(4)===List(true, false, true, false))
   }
 
   test("only false by filter") {
@@ -35,7 +35,7 @@ class BooleansSuite extends FunSuite with Printer {
   }
 
   test("0 sequential elements") {
-    assert(Booleans().reversed.get(0)===List())
+    assert(Reverse(Booleans()).get(0)===List())
   }
 
   test("0 random elements") {

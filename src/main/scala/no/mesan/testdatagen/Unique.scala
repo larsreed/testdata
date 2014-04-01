@@ -1,7 +1,7 @@
 package no.mesan.testdatagen
 
 /**
- * A mixin that requires all generated values to be unique.
+ * A wrapper that requires all generated values to be unique.
  * TAKE CARE! If the underlying generator has too few possible values, this addon may make
  * the generator loop forever.
  * Also -- if the underlying generator has a smaller value space than the requested number

@@ -11,7 +11,7 @@ class DoublesSuite extends FunSuite with Printer {
 
   print(false) {
     println(Doubles().from(4).to(44).get(30))
-    println(Doubles().step(7).from(4).to(44).reversed.get(30))
+    println(Doubles().step(-7).from(4).to(44).get(30))
   }
 
   test("from<to") {
@@ -45,11 +45,7 @@ class DoublesSuite extends FunSuite with Printer {
   }
 
   test("reverted sequence") {
-    assert(Doubles().from(-1.0).to(6.0).reversed.get(5) === List(6.0, 5.0, 4.0, 3.0, 2.0))
-  }
-
-  test("negative step ignored") {
-    assert(Doubles().step(-3.5).sequential.from(1.5).to(11).get(5) === List(1.5, 5.0, 8.5, 1.5, 5.0))
+    assert(Doubles().from(-1.0).to(6.0).step(-1).get(5) === List(6.0, 5.0, 4.0, 3.0, 2.0))
   }
 
   test("sequence of 1 & 2") {

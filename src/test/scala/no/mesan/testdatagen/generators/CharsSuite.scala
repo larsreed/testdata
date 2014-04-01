@@ -4,12 +4,12 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.{Unique, Printer}
+import no.mesan.testdatagen.{Reverse, Unique, Printer}
 
 @RunWith(classOf[JUnitRunner])
 class CharsSuite extends FunSuite with Printer {
   print(false) {
-    println(Chars().chars('a' to 'c').reversed.get(120))
+    println(Reverse(Chars() chars('a' to 'c')).get(120))
   }
 
   test("from<=to") {
@@ -42,7 +42,7 @@ class CharsSuite extends FunSuite with Printer {
   }
 
   test("reverted sequence") {
-    assert(Chars().chars("abc").reversed.getStrings(5) === List("c", "b", "a", "c", "b"))
+    assert(Reverse(Chars().chars("abc").sequential).getStrings(5) === List("b", "a", "c", "b", "a"))
   }
 
   test("sequence of 1 & 2") {

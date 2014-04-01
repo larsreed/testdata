@@ -12,7 +12,7 @@ class LongsSuite extends FunSuite with Printer {
 
   print(false) {
     println(generator from 4 to 44  get 0)
-    println((generator step 7 from 4 to 44).reversed get 30)
+    println((generator step -7 from 4 to 44) get 30)
     println(generator from Long.MinValue get 30)
   }
 
@@ -60,17 +60,13 @@ class LongsSuite extends FunSuite with Printer {
     val longs = generator.sequential from Long.MaxValue - 3  get 5
     assert(longs ===
       List(Long.MaxValue-3, Long.MaxValue-2, Long.MaxValue-1, Long.MaxValue-3, Long.MaxValue-2))
-    val longs1 = generator.reversed from Long.MinValue + 1 to Long.MinValue + 3 get 5
+    val longs1 = (generator step -1 from Long.MinValue + 1 to Long.MinValue + 3).sequential.get(5)
     assert(longs1 ===
       List(Long.MinValue+3, Long.MinValue+2, Long.MinValue+1, Long.MinValue+3, Long.MinValue+2))
   }
 
   test("reverted sequence") {
-    assert(generator.from(1).to(6).reversed.get(5) === List(6L, 5L, 4L, 3L, 2L))
-  }
-
-  test("negative step ignored") {
-    assert(generator.step(-3).sequential.from(1).to(6).get(5) === List(1L, 4L, 1L, 4L, 1L))
+    assert(generator.from(1).to(6).step(-1).sequential.get(5) === List(6L, 5L, 4L, 3L, 2L))
   }
 
   test("sequence of 1 & 2") {

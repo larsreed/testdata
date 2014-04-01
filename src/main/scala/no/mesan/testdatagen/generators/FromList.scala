@@ -29,7 +29,7 @@ class FromList[T] extends ExtendedImpl[T] with RandomElem {
     val accepted= inputList.toList
 
     def getSequentially: List[T]= {
-      val basis= (if (isReversed) accepted.reverse else accepted) filter filterAll
+      val basis= accepted filter filterAll
       @tailrec def next(soFar:List[T]): List[T]=
         if (soFar.length>=n) soFar.take(n)
         else  next(basis ++ soFar)

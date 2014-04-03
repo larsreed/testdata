@@ -49,7 +49,7 @@ class StringsSuite extends FunSuite with Printer {
     val res= Strings().chars("ab").lengthBetween(1, 2).sequential.get(1000)
     assert(res.length===1000)
     val exp= List("a", "b", "aa", "ab", "ba", "bb")
-    exp.foreach(s=> assert(res contains s, s))
+    exp.foreach(s=> assert(res contains s, res + "<" + s))
   }
 
   test("normal sequence 2") {
@@ -101,11 +101,6 @@ class StringsSuite extends FunSuite with Printer {
     assert(res.forall(s=> s contains "e"), res)
   }
 
-  test("impossible filter 2") {
-    val res= Strings().chars("ABCDEF").lengthBetween(2, 3).sequential.filter(s=>false).get(10)
-    assert(res.length===0)
-  }
-
   test("formatting") {
     val  res= Strings().length(2).chars("ABC").sequential.formatWith(i=>f"$i%7s").getStrings(3)
     assert(res=== List("     AA", "     AB", "     AC"))
@@ -115,7 +110,7 @@ class StringsSuite extends FunSuite with Printer {
     assert(res2=== Nil)
   }
   test("unique list") {
-    val  res= Unique(Strings() chars "ABC" length 2).get(9).toSet
+    val  res= (Strings() chars "ABC" length 2 distinct).get(9).toSet
     assert(res.size===9)
   }
 }

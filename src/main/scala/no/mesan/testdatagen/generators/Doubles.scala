@@ -1,9 +1,8 @@
 package no.mesan.testdatagen.generators
 
-import scala.annotation.tailrec
 import scala.util.Random
 
-import no.mesan.testdatagen.ExtendedImpl
+import no.mesan.testdatagen.{StreamGeneratorImpl, ExtendedImpl}
 
 /**
  * Generate doubles.
@@ -11,7 +10,7 @@ import no.mesan.testdatagen.ExtendedImpl
  *
  * @author lre
  */
-class Doubles extends ExtendedImpl[Double] {
+class Doubles extends ExtendedImpl[Double] with StreamGeneratorImpl[Double] {
 
   filter(x=> lower match { case Some(low)=>  x>=low;  case _=> true })
   filter(x=> upper match { case Some(high)=> x<=high; case _=> true })
@@ -24,36 +23,22 @@ class Doubles extends ExtendedImpl[Double] {
     sequential
   }
 
-  override def get(n: Int): List[Double] = {
-    require(n>=0, "cannot get negative count")
+  def getStream: Stream[Double] = {
     val min= lower.getOrElse(Double.MinValue)
     val max= upper.getOrElse(Double.MaxValue)
     require(max>=min, "from >= to")
-    val isReversed= stepSize < 0
 
-    def getSequentially: List[Double]= {
-      @tailrec def next(last: Double, soFar:List[Double]): List[Double]=
-        if (soFar.length>=n) soFar
-        else {
-          val k= if (last>max) min else if (last<min) max else last
-          if ( filterAll(k) ) next(k+stepSize, k::soFar)
-          else next(k+stepSize, soFar)
-        }
-      if (isReversed) next(max, Nil).reverse
-      else next(min, Nil).reverse
+    def next(curr: Double): Stream[Double]= {
+      val k= if (curr>max) min else if (curr<min) max else curr
+      Stream.cons(k, next(k+stepSize))
     }
 
-    @tailrec
-    def getRandomly(soFar: List[Double]): List[Double]=
-      if (soFar.length>=n) soFar
-      else {
-        val nxt= min + (max-min)*Random.nextDouble()
-        if (filterAll(nxt)) getRandomly(nxt::soFar)
-        else getRandomly(soFar)
-      }
+    def getRandomly: Stream[Double]=
+      Stream.cons(min + (max - min) * Random.nextDouble(), getRandomly)
 
-    if (isSequential) getSequentially
-    else getRandomly(Nil)
+    if (isRandom) getRandomly
+    else if (stepSize < 0) next(max)
+    else next(min)
   }
 
 }

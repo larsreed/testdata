@@ -72,10 +72,11 @@ trait ExtendedGenerator[T] extends Generator[T] {
 trait GeneratorImpl[T] extends Generator[T] {
 
   private var filterFuns: List[T => Boolean] = List(t => true)
+  /** Return the list of filters. */
+  def allFilters = filterFuns
   override def filter(f: T => Boolean): this.type = { filterFuns ::= f; this }
-
   /** Check that all filters are satisfied. */
-  protected def filterAll(t: T): Boolean = filterFuns.forall(f => f(t))
+  def filterAll(t: T): Boolean = allFilters.forall(f => f(t))
 
   private var formatFun: T => String = t => if (t == null) null else t.toString
   override def formatWith(f: T => String): this.type = { formatFun = f; this }
@@ -152,4 +153,70 @@ trait ExtendedImpl[T] extends GeneratorImpl[T] with ExtendedGenerator[T] {
   /** Inverts isSequential. */
   protected final def isRandom= !isSequential
   override def sequential: this.type= { isSequential=true; this }
+}
+
+/**
+ * An extension of Generator for generating Streams.
+ * @tparam T The generator type
+ */
+trait StreamGenerator[+T] extends Generator[T] {
+  /** Get a stream of entries. */
+  def gen : Stream[T]
+
+  /** Get a stream of entries converted to strings and formatted. */
+  def genStrings: Stream[String]
+
+  /** Make returned values unique. */
+  def distinct: this.type
+}
+
+import scala.language.postfixOps
+
+trait StreamGeneratorImpl[T] extends StreamGenerator[T] {
+  self :  {
+    def getStream : Stream[T]
+    def allFilters: List[T => Boolean]
+  } =>
+
+  private var isDistinct= false
+  override def distinct: this.type= {
+    isDistinct= true
+    this
+  }
+
+  private def genFiltered= getStream filter (t => allFilters.forall(f => f(t)))
+
+  override def gen: Stream[T]= if (isDistinct) genFiltered.distinct else genFiltered
+
+  def get(n: Int): List[T] = {
+    require(n>=0, "cannot get negative count")
+    gen take n toList
+  }
+
+  override def genStrings: Stream[String] = gen map formatOne
+
+  override def getStrings(n: Int): List[String] = {
+    require(n>=0, "cannot get negative count")
+    genStrings take n toList
+  }
+}
+
+/**
+ * A trait to help build delegates for Generators.
+ * Used in a generator[T], wraps a delegate[G].
+ */
+trait StreamDelegate[G, T]   {
+  self: StreamGenerator[T] =>
+
+  /** The delegate. */
+  protected var generator: StreamGenerator[G]
+
+  /** Convert from this type to the generator's type. */
+  protected def conv2gen(f: T): G = f.asInstanceOf[G]
+  /** Convert from the generator's type to this type. */
+  protected def conv2result(f: G): T= f.asInstanceOf[T]
+
+  override def gen: Stream[T]= generator.gen map conv2result
+  override def genStrings: Stream[String]= generator.genStrings
+  override def distinct: this.type= { generator.distinct; this }
 }

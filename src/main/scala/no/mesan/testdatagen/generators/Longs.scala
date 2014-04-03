@@ -1,22 +1,21 @@
 package no.mesan.testdatagen.generators
 
-import scala.annotation.tailrec
 import scala.util.Random
 
-import no.mesan.testdatagen.ExtendedImpl
+import no.mesan.testdatagen.{StreamGeneratorImpl, ExtendedImpl}
 
 /**
  * Generate longs.
- * Special methods: step(n) -- only used for sequential generation -- sets the step size (default 1)
+ * Special methods: step(n) -- only used for sequential generation -- sets the step size (default 1),
+ *                             with negative value steps from max down towards min
  * Default limits: 0 .. Long.MaxValue-1
  *
  * @author lre
  */
-class Longs extends ExtendedImpl[Long] {
+class Longs extends ExtendedImpl[Long] with StreamGeneratorImpl[Long] {
 
   filter(x=> lower match { case Some(low)=>  x>=low;  case _=> true })
   filter(x=> upper match { case Some(high)=> x<=high; case _=> true })
-
 
   private var stepSize: Long= 1
   /** Step size, used only for sequential values. */
@@ -26,8 +25,7 @@ class Longs extends ExtendedImpl[Long] {
     this
   }
 
-  override def get(n: Int): List[Long] = {
-    require(n>=0, "cannot get negative count")
+  protected def getStream: Stream[Long] = {
     val min= lower.getOrElse(0L)
     val max= upper.getOrElse(Long.MaxValue-1)
     require(max>=min, "from >= to")
@@ -35,31 +33,19 @@ class Longs extends ExtendedImpl[Long] {
     require(min>Long.MinValue, "min > " + Long.MinValue)
 
     val span= BigInt(max) - BigInt(min) +1
-    val isReversed= stepSize<0
+    val startAt= if (stepSize<0) max else min
 
-    def sequentially(): List[Long]= {
-      @tailrec def next(last: Long, soFar:List[Long]): List[Long]=
-        if (soFar.length>=n) soFar
-        else {
-          val k= if (last>max) min else if (last<min) max else last
-          if ( filterAll(k) ) next(k+stepSize, k::soFar)
-          else next(k+stepSize, soFar)
-        }
-      if (isReversed) next(max, Nil).reverse
-      else next(min, Nil).reverse
+    def sequentially(last: Long): Stream[Long]= {
+      val possibly= last + stepSize
+      val really= if (possibly>max) min else if (possibly<min) max else possibly
+      Stream.cons(really, sequentially(really))
     }
 
-    @tailrec
-    def randomly(soFar: List[Long]): List[Long]=
-      if (soFar.length>=n) soFar
-      else {
-        val nxt= (min + (BigInt(Random.nextLong()) mod span)).toLong
-        if (filterAll(nxt)) randomly(nxt::soFar)
-        else randomly(soFar)
-      }
+    def randomly(): Stream[Long]=
+      Stream.cons((min + (BigInt(Random.nextLong()) mod span)).toLong, randomly)
 
-    if (isSequential) sequentially
-    else randomly(Nil)
+    if (isSequential) Stream.cons(startAt, sequentially(startAt))
+    else randomly
   }
 }
 

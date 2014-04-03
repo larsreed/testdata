@@ -1,7 +1,6 @@
 package no.mesan.testdatagen.generators
 
-import no.mesan.testdatagen.ExtendedGenerator
-import no.mesan.testdatagen.ExtendedDelegate
+import no.mesan.testdatagen.{StreamGenerator, ExtendedGenerator, ExtendedDelegate}
 
 /**
  * Generate Chars.
@@ -9,15 +8,23 @@ import no.mesan.testdatagen.ExtendedDelegate
  *
  * @author lre
  */
-class Chars extends ExtendedGenerator[Char] with ExtendedDelegate[String, Char] {
+class Chars extends ExtendedGenerator[Char] with ExtendedDelegate[String, Char]
+            with StreamGenerator[Char] {
 
-  protected var generator: ExtendedGenerator[String]= Strings(1)
+  private val embedded= Strings(1)
+  protected var generator: ExtendedGenerator[String]= embedded
 
   /** Set character range. */
   def chars(seq: Seq[Char]): this.type = { generator.asInstanceOf[Strings].chars(seq); this }
 
   override def conv2gen(f: Char): String= f+""
   override def conv2result(f: String): Char= f(0)
+
+
+  // TODO: Delegate
+  override def distinct: this.type = { embedded.distinct; this }
+  override def genStrings: Stream[String] = embedded.genStrings
+  override def gen: Stream[Char] = embedded.gen map conv2result
 }
 
 object Chars {

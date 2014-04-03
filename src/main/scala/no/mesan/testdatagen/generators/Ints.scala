@@ -1,6 +1,6 @@
 package no.mesan.testdatagen.generators
 
-import no.mesan.testdatagen.{ExtendedDelegate,ExtendedGenerator}
+import no.mesan.testdatagen.{StreamGenerator, ExtendedDelegate, ExtendedGenerator}
 
 /**
  * Generate Ints.
@@ -9,19 +9,21 @@ import no.mesan.testdatagen.{ExtendedDelegate,ExtendedGenerator}
  *
  * @author lre
  */
-class Ints extends ExtendedGenerator[Int] with ExtendedDelegate[Long, Int] {
+class Ints extends ExtendedGenerator[Int] with ExtendedDelegate[Long, Int] with StreamGenerator[Int] {
 
-  private val gen= Longs() from (Int.MinValue + 1).toLong to (Int.MaxValue - 1).toLong
-  protected var generator: ExtendedGenerator[Long]= gen
+  private val embedded= Longs() from (Int.MinValue + 1).toLong to (Int.MaxValue - 1).toLong
+  protected var generator: ExtendedGenerator[Long] = embedded
 
   override protected def conv2gen(f: Int): Long = f+0L
   override protected def conv2result(f: Long): Int= f.toInt
 
   /** Step size, used only for sequential values. */
-  def step(s: Int): this.type= {
-	  gen.step(s)
-	  this
-  }
+  def step(s: Int): this.type= { embedded.step(s); this }
+
+  // TODO: Delegate
+  override def distinct: this.type = { embedded.distinct; this }
+  override def genStrings: Stream[String] = embedded.genStrings
+  override def gen: Stream[Int] = embedded.gen map conv2result
 }
 
 object Ints {

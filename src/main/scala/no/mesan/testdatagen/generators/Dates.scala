@@ -8,8 +8,8 @@ import org.joda.time.{DateTime, Period}
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.scala_tools.time.Imports.{RichDateTime, RichReadableInstant}
 
-import no.mesan.testdatagen.ExtendedImpl
-import scala.annotation.tailrec
+import no.mesan.testdatagen.{StreamGeneratorImpl, ExtendedImpl}
+import scala.language.postfixOps
 
 /**
  * Generate dates.
@@ -18,7 +18,7 @@ import scala.annotation.tailrec
  *
  * @author lre
  */
-class Dates extends ExtendedImpl[DateTime] {
+class Dates extends ExtendedImpl[DateTime] with StreamGeneratorImpl[DateTime] {
 
   from()
   to()
@@ -117,7 +117,7 @@ class Dates extends ExtendedImpl[DateTime] {
   /* Format using a Joda-Time format string. */
   override def format(f: String): this.type= format(DateTimeFormat.forPattern(f))
 
-  override def get(n: Int): List[DateTime] = {
+  def getStream: Stream[DateTime] = {
     val minOrg= lower.getOrElse(new DateTime)
     val maxOrg= upper.getOrElse(new DateTime)
     val min= if (!showTime)
@@ -132,26 +132,20 @@ class Dates extends ExtendedImpl[DateTime] {
              else if (!showDate)
                 maxOrg.withYear(stdYear).withMonthOfYear(stdMonth).withDayOfMonth(stdDay)
              else maxOrg
-    require(n>=0, "cannot get negative count")
     require(showTime||showDate, "either date or time must be shown")
     require(min<=max, "from must not be after to")
 
-    def getSequentially: List[DateTime]= {
-      @tailrec def next(last: DateTime, soFar:List[DateTime]): List[DateTime]=
-        if (soFar.length>=n) soFar
-        else {
-          val d= if (last>max) min else if (last<min) max else last
-          val nextVal= if (isReversed) d - stepPeriod
-                       else d + stepPeriod
-          if ( filterAll(d) ) next(nextVal, d::soFar)
-          else next(nextVal, soFar)
-        }
-      if (isReversed) next(max, Nil).reverse
-      else next(min, Nil).reverse
+    def getSequentially: Stream[DateTime]= {
+      def next(curr: DateTime): Stream[DateTime]= {
+        val d= if (curr>max) min else if (curr<min) max else curr
+        val nextVal= if (isReversed) d - stepPeriod
+                     else d + stepPeriod
+        Stream.cons(curr, next(nextVal))
+      }
+      next(if (isReversed) max else min)
     }
 
-    @tailrec
-    def getRandomly(soFar: List[DateTime]): List[DateTime]= {
+    def getRandomly: Stream[DateTime]= {
       def getAdate: DateTime = {
         var hasVariance= false // true as soon as we different upper/lower limits
         var (y,m,d,hh,mm,ss,ms)= (stdYear, stdMonth, stdDay, stdHour, stdMin, stdSec, stdMilli)
@@ -175,24 +169,24 @@ class Dates extends ExtendedImpl[DateTime] {
           ms= setOne(min.getMillisOfSecond, max.getMillisOfSecond, 0, 999)
         }
         try {
-          val dt= new DateTime(y,m,d,hh,mm,ss,ms)
-          if (filterAll(dt)) dt else getAdate
+          new DateTime(y,m,d,hh,mm,ss,ms)
         }
         catch { // Catches illegal dates (like Nov 31st)
           case ex: IllegalArgumentException => getAdate
         }
       }
-      if (soFar.length>=n) soFar
-      else getRandomly(getAdate::soFar)
+      Stream.cons(getAdate, getRandomly)
     }
 
     if (isSequential) getSequentially
-    else getRandomly(Nil)
+    else getRandomly
   }
 
   /** Get a list of JDK dates. */
-  def getJavaDates(n:Int): List[Date]= get(n) map {jd=> jd.toDate}
+  def getJavaDates(n:Int): List[Date]= genJavaDates take n toList
 
+  /** Get a stream of JDK dates. */
+  def genJavaDates: Stream[Date]= gen map {jd=> jd.toDate}
 }
 
 object Dates {

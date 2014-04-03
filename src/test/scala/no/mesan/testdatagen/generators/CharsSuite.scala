@@ -3,8 +3,9 @@ package no.mesan.testdatagen.generators
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
+import scala.language.postfixOps
 
-import no.mesan.testdatagen.{Reverse, Unique, Printer}
+import no.mesan.testdatagen.{Reverse, Printer}
 
 @RunWith(classOf[JUnitRunner])
 class CharsSuite extends FunSuite with Printer {
@@ -71,11 +72,6 @@ class CharsSuite extends FunSuite with Printer {
            res)
   }
 
-  test("impossible filter 2") {
-    val res = Chars().chars("ABCDEF").sequential.filter(s => false).get(10)
-    assert(res.length === 0)
-  }
-
   test("formatting") {
     val res = Chars().chars("ABC").sequential.formatWith(c => f"$c%7s").getStrings(3)
     assert(res === List("      A", "      B", "      C"))
@@ -86,7 +82,7 @@ class CharsSuite extends FunSuite with Printer {
   }
 
   test("unique list") {
-    val res = Unique(Chars().chars("ABCDEF")).get(6).toSet
+    val res = (Chars() chars "ABCDEF" distinct).get(6).toSet
     assert(res.size === 6)
   }
 }

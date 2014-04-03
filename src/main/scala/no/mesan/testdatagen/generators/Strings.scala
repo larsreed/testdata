@@ -2,8 +2,9 @@ package no.mesan.testdatagen.generators
 
 import scala.util.Random
 
-import no.mesan.testdatagen.ExtendedImpl
+import no.mesan.testdatagen.{StreamGeneratorImpl, ExtendedImpl}
 import scala.annotation.tailrec
+import scala.language.postfixOps
 
 /**
  * Generate Strings.
@@ -15,7 +16,7 @@ import scala.annotation.tailrec
  *
  * @author lre
  */
-class Strings extends ExtendedImpl[String] {
+class Strings extends ExtendedImpl[String] with StreamGeneratorImpl[String] {
 
   filter(x=> lower match { case Some(low)=>  x>=low;  case _=> true })
   filter(x=> upper match { case Some(high)=> x<=high; case _=> true })
@@ -48,15 +49,13 @@ class Strings extends ExtendedImpl[String] {
     this
   }
 
-  override def get(n: Int): List[String] = {
-    require(n>=0, "cannot get negative count")
+  def getStream: Stream[String] = {
     val chars= charRange.toList
     val min= lower.getOrElse("")
     val max= upper.getOrElse("\uFFFF" * maxLength)
     require(max>=min, "min>max")
 
-    @tailrec
-    def getRandomly(soFar: List[String]): List[String]= {
+    def getRandomly: Stream[String]= {
       def makeRandomString: String = {
         val width= if (minLength==maxLength) maxLength
                    else minLength + Random.nextInt(maxLength-minLength+1)
@@ -67,71 +66,40 @@ class Strings extends ExtendedImpl[String] {
         }
         mkString("")
       }
-      if (soFar.length>=n) soFar
-      else {
-        val nxt= makeRandomString
-        if (filterAll(nxt)) getRandomly(nxt::soFar)
-        else getRandomly(soFar)
-      }
+      Stream.cons(makeRandomString, getRandomly)
     }
 
-    def getSequentially(startLen: Int, endLen: Int, startChr: Int,
-                        endChr: Int,  step: Int): List[String]= {
-      // Recurse from shortest to largest [largest to smallest] acceptable string length
-      @tailrec def recurseLengths(len: Int, accum: List[String]): List[String] = {
-        // General stop criterion: n accepted strings (repeated in inner loops)
-        if (accum.length>=n) accum.take(n)
-        // Restart from smallest [longest] after reaching the end,
-        // but abort if no strings were accepted during first pass
-        else if (len<minLength || len>maxLength)
-          if (accum.isEmpty) Nil
-          else recurseLengths(startLen, accum)
-        else {
-          // Recurse through each position from right to left end of String for this length
-          @tailrec
-         def recursePositions(pos:Int, suffixes:List[String], accum:List[String]): List[String]= {
-         // Stop at beginning of string (or we have enough)
-           if (pos<0 || accum.length>=n) accum
-           else {
-             // Recurse through each character from min to max [max to min]
-             @tailrec
-              def recurseChars(char:Int, accum:List[String]): List[String]= {
-                if (char<0 || char>=chars.length) accum
-                else {
-                  // Construct a new string from
-                  //  1) positions before current -- min [max] char
-                  //  2) current position: current char
-                  //  3) positions after current: all combinations generated for
-                  //     those positions in previous steps
-                  val pfx= chars(startChr).toString * pos
-                  // All possible (but accumulate only those acceptable by filter)
-                  val list= suffixes.map(s=> pfx + chars(char) + s)
-                  recurseChars(char+step, accum ++ list.filter(filterAll))
-                }
-              }
-              val newAccum= recurseChars(if (pos==len-1) startChr else startChr+1, accum)
-              val newSuffs= for {
-                c <- startChr to endChr by step
-                suff <- suffixes} yield chars(c) + suff
-              recursePositions(pos-1, newSuffs.toList, newAccum)
-            }
-          }
-          // So far there are no accumulated suffixes
-          val newAccum= recursePositions(len-1, List(""), accum)
-          recurseLengths(len + step, newAccum)
-        }
-      }
-      recurseLengths(startLen, Nil)
+    val charCount: BigInt= chars length
+
+    def next(len: Int, curr: BigInt): Stream[String] = {
+      // Too long, start again
+      if (len>maxLength) return next(minLength, 0)
+      // Empty strings are easy
+      if (len==0) return Stream.cons("", next(1, 0))
+      // Have we exhausted all possibilites for this length?
+      val possibilites= charCount pow len
+      if (curr>=possibilites) return next(len+1, 0)
+      // We are OK, generate the string.  This is a bit hairy, so let's explain:
+      //   All characters may vary as an index into the chars-sequence, let's shorten
+      //   charCount to C.  For a string of length len (shortened to L), there are
+      //   C^L (where ^ denotes power) possible combinations. We count through each one, with the
+      //   current entry (curr, denoted N).
+      //   Then the last character is (N mod C), the next to last ((N div C) mod C), then
+      //   ((N div C*C) mod C) and so on, generally ((N div C^idx) mod C).
+      //   These indexes are mapped against the char range and converted to a string.
+      val indexes= for (i<- len-1 to 0 by -1) yield (curr / (charCount pow i)) % charCount
+      val res= indexes map { i => chars(i.toInt) }
+      Stream.cons(res.mkString, next(len, curr+1))
     }
 
-    if (isSequential) getSequentially(minLength, maxLength, 0, chars.length-1, +1)
-    else getRandomly(Nil)
+    if (isSequential) next(minLength, 0)
+    else getRandomly
   }
 }
 
 object Strings {
   val asciiUpperLower= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
   val digits= "0123456789"
-  def apply(length: Int=1):Strings = new Strings().length(length)
-  def apply(length: Int, chars:Seq[Char]):Strings = new Strings().length(length).chars(chars)
+  def apply(length: Int=1):Strings = new Strings() length length
+  def apply(length: Int, chars:Seq[Char]):Strings = new Strings() length length chars chars
 }

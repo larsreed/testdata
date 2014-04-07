@@ -66,7 +66,7 @@ class Strings extends ExtendedImpl[String] with StreamGeneratorImpl[String] {
         }
         mkString("")
       }
-      Stream.cons(makeRandomString, getRandomly)
+      makeRandomString #:: getRandomly
     }
 
     val charCount: BigInt= chars length
@@ -89,7 +89,7 @@ class Strings extends ExtendedImpl[String] with StreamGeneratorImpl[String] {
       //   These indexes are mapped against the char range and converted to a string.
       val indexes= for (i<- len-1 to 0 by -1) yield (curr / (charCount pow i)) % charCount
       val res= indexes map { i => chars(i.toInt) }
-      Stream.cons(res.mkString, next(len, curr+1))
+      res.mkString #:: next(len, curr+1)
     }
 
     if (isSequential) next(minLength, 0)

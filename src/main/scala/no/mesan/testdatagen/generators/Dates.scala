@@ -135,15 +135,12 @@ class Dates extends ExtendedImpl[DateTime] with StreamGeneratorImpl[DateTime] {
     require(showTime||showDate, "either date or time must be shown")
     require(min<=max, "from must not be after to")
 
-    def getSequentially: Stream[DateTime]= {
-      def next(curr: DateTime): Stream[DateTime]= {
-        val d= if (curr>max) min else if (curr<min) max else curr
-        val nextVal= if (isReversed) d - stepPeriod
-                     else d + stepPeriod
-        Stream.cons(curr, next(nextVal))
-      }
-      next(if (isReversed) max else min)
-    }
+   def next(curr: DateTime): Stream[DateTime]= {
+      val d= if (curr>max) min else if (curr<min) max else curr
+      val nextVal= if (isReversed) d - stepPeriod
+                   else d + stepPeriod
+      curr #:: next(nextVal)
+   }
 
     def getRandomly: Stream[DateTime]= {
       def getAdate: DateTime = {
@@ -175,11 +172,11 @@ class Dates extends ExtendedImpl[DateTime] with StreamGeneratorImpl[DateTime] {
           case ex: IllegalArgumentException => getAdate
         }
       }
-      Stream.cons(getAdate, getRandomly)
+      getAdate #:: getRandomly
     }
 
-    if (isSequential) getSequentially
-    else getRandomly
+    if (isRandom) getRandomly
+    else next(if (isReversed) max else min)
   }
 
   /** Get a list of JDK dates. */

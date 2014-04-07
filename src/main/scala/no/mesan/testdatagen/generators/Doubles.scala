@@ -6,7 +6,7 @@ import no.mesan.testdatagen.{StreamGeneratorImpl, ExtendedImpl}
 
 /**
  * Generate doubles.
- * Default limits: Double.MIN/MAX_VALUE
+ * Default limits: 0..Double.MaxValue
  *
  * @author lre
  */
@@ -24,17 +24,17 @@ class Doubles extends ExtendedImpl[Double] with StreamGeneratorImpl[Double] {
   }
 
   def getStream: Stream[Double] = {
-    val min= lower.getOrElse(Double.MinValue)
+    val min= lower.getOrElse(0D)
     val max= upper.getOrElse(Double.MaxValue)
     require(max>=min, "from >= to")
+    require(!(max-min).isInfinite, "too wide range")
 
     def next(curr: Double): Stream[Double]= {
       val k= if (curr>max) min else if (curr<min) max else curr
-      Stream.cons(k, next(k+stepSize))
+      k #:: next(k+stepSize)
     }
 
-    def getRandomly: Stream[Double]=
-      Stream.cons(min + (max - min) * Random.nextDouble(), getRandomly)
+    def getRandomly: Stream[Double]=  (min + (max - min) * Random.nextDouble()) #:: getRandomly
 
     if (isRandom) getRandomly
     else if (stepSize < 0) next(max)

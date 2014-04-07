@@ -38,13 +38,12 @@ class Longs extends ExtendedImpl[Long] with StreamGeneratorImpl[Long] {
     def sequentially(last: Long): Stream[Long]= {
       val possibly= last + stepSize
       val really= if (possibly>max) min else if (possibly<min) max else possibly
-      Stream.cons(really, sequentially(really))
+      really #:: sequentially(really)
     }
 
-    def randomly(): Stream[Long]=
-      Stream.cons((min + (BigInt(Random.nextLong()) mod span)).toLong, randomly)
+    def randomly(): Stream[Long]= (min + (BigInt(Random.nextLong()) mod span)).toLong #:: randomly
 
-    if (isSequential) Stream.cons(startAt, sequentially(startAt))
+    if (isSequential) startAt #:: sequentially(startAt)
     else randomly
   }
 }

@@ -8,23 +8,11 @@ import scala.language.postfixOps
 import no.mesan.testdatagen.{Reverse, Printer}
 
 @RunWith(classOf[JUnitRunner])
-class CharsSuite extends FunSuite with Printer {
-  print(false) {
-    println(Reverse(Chars() chars('a' to 'c')).get(120))
-  }
+class CharsSuite extends FunSuite {
 
   test("from<=to") {
     intercept[IllegalArgumentException] {
       Chars().from('z').to('a').get(1)
-    }
-  }
-
-  test("negative get") {
-    intercept[IllegalArgumentException] {
-      Chars().get(-1)
-    }
-    intercept[IllegalArgumentException] {
-      Chars().getStrings(-1)
     }
   }
 
@@ -40,10 +28,6 @@ class CharsSuite extends FunSuite with Printer {
     val expect = Set('a', 'b', 'x')
     assert(res === expect)
     assert(res.size === expect.size, expect)
-  }
-
-  test("reverted sequence") {
-    assert(Reverse(Chars().chars("abc").sequential).getStrings(5) === List("b", "a", "c", "b", "a"))
   }
 
   test("sequence of 1 & 2") {

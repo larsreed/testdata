@@ -34,12 +34,13 @@ class StreamGeneratorSpec extends FlatSpec  {
 
   it should "return an empty list on get(0)" in {
     generatorList map { g=> assert(List()===g.get(0)) }
+    generatorList map { g=> assert(List()===g.getStrings(0)) }
   }
 
   it should "throw an exception if asked for a negative number of values" in {
     generatorList map { g =>
-        intercept[IllegalArgumentException] { g get -1 }
-        intercept[IllegalArgumentException] { g getStrings -1000 }
+      intercept[IllegalArgumentException] { g get -1 }
+      intercept[IllegalArgumentException] { g getStrings -1000 }
     }
   }
 }

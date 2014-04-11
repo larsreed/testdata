@@ -25,7 +25,7 @@ class Dates extends ExtendedImpl[DateTime] with StreamGeneratorImpl[DateTime] {
   filter(x=> lower match { case Some(low)=>  x>=low;  case _=> true })
   filter(x=> upper match { case Some(high)=> x<=high; case _=> true })
 
-  private var stepPeriod: Period= new Period(0, 0, 0, 1, 0, 0, 0, 0)
+  private var stepPeriod: Option[Period]= None
   private var showDate= true
   private var showTime= false
 
@@ -34,28 +34,25 @@ class Dates extends ExtendedImpl[DateTime] with StreamGeneratorImpl[DateTime] {
     showTime= true
     showDate= false
     val wasSeq= isSequential // FIXME hack
-    val ret= step(ss=1)
+    if (!stepPeriod.isDefined) step(ss=1)
     isSequential= wasSeq
-    ret
+    this
   }
   /** Show date and time, set period to 1 hour if sequential. */
   def dateAndTime: this.type= {
     showTime= true
     showDate= true
     val wasSeq= isSequential
-    val ret= step(hh=1)
+    if (!stepPeriod.isDefined) step(hh=1)
     isSequential= wasSeq
-    ret
+    this
   }
 
   private val now= new DateTime()
   private var stdYear= now.getYear
   private var stdMonth= now.getMonthOfYear
   private var stdDay= now.getDayOfMonth
-  private var stdHour= 0
-  private var stdMin= 0
-  private var stdSec= 0
-  private var stdMilli= 0
+  private var (stdHour, stdMin, stdSec, stdMilli)= (0, 0, 0, 0)
   private var isReversed= false
 
   /** Set default time for "date only". */
@@ -100,12 +97,12 @@ class Dates extends ExtendedImpl[DateTime] with StreamGeneratorImpl[DateTime] {
   def step(y: Int=0, m: Int=0, d:Int=0, hh: Int=0, mm: Int=0, ss:Int=0, ms:Int=0): this.type = {
     require(y!=0 || m!=0 || d!=0 || hh!=0 || mm!=0 || ss!=0 || ms!=0,
         "at leat one step must be non-zero")
-    stepPeriod= new Period(y, m, 0, d, hh, mm, ss, ms)
+    stepPeriod= Some(new Period(y, m, 0, d, hh, mm, ss, ms))
     sequential
   }
 
   /** Steps for sequential dates givens as a Joda Period. */
-  def step(p: Period): this.type = { stepPeriod= p; this }
+  def step(p: Period): this.type = { stepPeriod= Some(p); sequential }
 
   /** Go sequential descending. */
   def reversed(rev: Boolean=true): this.type = { isReversed= rev; sequential }
@@ -134,12 +131,11 @@ class Dates extends ExtendedImpl[DateTime] with StreamGeneratorImpl[DateTime] {
              else maxOrg
     require(showTime||showDate, "either date or time must be shown")
     require(min<=max, "from must not be after to")
+    val period= stepPeriod.getOrElse(new Period().withDays(1)) multipliedBy(if (isReversed) -1 else 1)
 
    def next(curr: DateTime): Stream[DateTime]= {
-      val d= if (curr>max) min else if (curr<min) max else curr
-      val nextVal= if (isReversed) d - stepPeriod
-                   else d + stepPeriod
-      curr #:: next(nextVal)
+     val nextVal= (if (curr > max) min else if (curr < min) max else curr) + period
+     curr #:: next(nextVal)
    }
 
     def getRandomly: Stream[DateTime]= {

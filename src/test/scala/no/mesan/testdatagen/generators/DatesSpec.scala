@@ -1,11 +1,11 @@
 package no.mesan.testdatagen.generators
 
+import scala.language.{existentials, postfixOps}
 import org.joda.time.DateTime
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
 import java.util.Date
-
 
 @RunWith(classOf[JUnitRunner])
 class DatesSpec extends FlatSpec {
@@ -26,7 +26,7 @@ class DatesSpec extends FlatSpec {
   }
 
   it should "generate a straight sequence of days when requested" in {
-    val gen = (Dates() from(y = 2012, m = 10, d = 10) to(y = 2012, m = 10, d = 30)).sequential
+    val gen = (Dates() from(y = 2012, m = 10, d = 10) to(y = 2012, m = 10, d = 30)) sequential
     val res= gen get 5
     for (i <- 10 to 14) assert(res.contains(new DateTime(2012, 10, i, 0, 0)))
   }
@@ -172,7 +172,7 @@ class DatesSpec extends FlatSpec {
   it should "be able to use and generate Java dates" in {
     val start= new Date()
     val end= new Date(start.getTime+100000000L)
-    val res= (Dates() from(start) to(end) dateAndTime) getJavaDates 500
+    val res= (Dates() from start to end dateAndTime) getJavaDates 500
     assert(res.size==500)
     res.foreach { dt=> assert(dt.getTime >= start.getTime && dt.getTime <= end.getTime, dt) }
   }

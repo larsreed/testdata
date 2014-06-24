@@ -1,10 +1,12 @@
 package no.mesan.testdatagen.generators
 
+import scala.language.postfixOps
+
 import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.{Reverse, Unique, Printer}
+import no.mesan.testdatagen.{Reverse, Printer}
 
 @RunWith(classOf[JUnitRunner])
 class StringsSuite extends FunSuite with Printer {

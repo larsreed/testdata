@@ -10,6 +10,7 @@ import org.scala_tools.time.Imports.{RichDateTime, RichReadableInstant}
 
 import no.mesan.testdatagen.{StreamGeneratorImpl, ExtendedImpl}
 import scala.language.postfixOps
+import scala.annotation.tailrec
 
 /**
  * Generate dates.
@@ -133,12 +134,13 @@ class Dates extends ExtendedImpl[DateTime] with StreamGeneratorImpl[DateTime] {
     require(min<=max, "from must not be after to")
     val period= stepPeriod.getOrElse(new Period().withDays(1)) multipliedBy(if (isReversed) -1 else 1)
 
-   def next(curr: DateTime): Stream[DateTime]= {
-     val nextVal= (if (curr > max) min else if (curr < min) max else curr) + period
-     curr #:: next(nextVal)
-   }
+    def next(curr: DateTime): Stream[DateTime]= {
+      val nextVal= (if (curr > max) min else if (curr < min) max else curr) + period
+      curr #:: next(nextVal)
+    }
 
     def getRandomly: Stream[DateTime]= {
+      @tailrec
       def getAdate: DateTime = {
         var hasVariance= false // true as soon as we different upper/lower limits
         var (y,m,d,hh,mm,ss,ms)= (stdYear, stdMonth, stdDay, stdHour, stdMin, stdSec, stdMilli)

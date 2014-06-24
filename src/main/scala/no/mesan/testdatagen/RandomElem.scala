@@ -7,5 +7,5 @@ import scala.util.Random
  * @author lre
  */
 trait RandomElem {
-  def randomFrom[T](l: List[T]): T = l(Random.nextInt(l.length))
+  def randomFrom[T](l: Seq[T]): T = l(Random.nextInt(l.length))
 }

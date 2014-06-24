@@ -2,7 +2,7 @@ package no.mesan.testdatagen
 
 import org.scalatest.FlatSpec
 import scala.language.postfixOps
-import no.mesan.testdatagen.generators.{Doubles, Chars, Longs, Ints, Dates, Strings}
+import no.mesan.testdatagen.generators.{Booleans, FromList, Doubles, Chars, Longs, Ints, Dates, Strings}
 
 /** General tests for StreamGenerators. */
 class StreamGeneratorSpec extends FlatSpec  {
@@ -14,7 +14,9 @@ class StreamGeneratorSpec extends FlatSpec  {
          (Dates().reversed(), 123),
          (Ints().distinct, 400),
          (Longs(from= -42).sequential, 317),
-         (Doubles(), 39)
+         (Doubles(), 39),
+         (FromList("a", "foo", "test", "alpha", "beta", "gamma", "delta"), 7),
+         (Booleans(), 2)
     )
   def generatorList= generators map { tuple => tuple._1 }
 
@@ -27,7 +29,7 @@ class StreamGeneratorSpec extends FlatSpec  {
 
   it should "generate unique values when asked to" in {
     generators map { g=>
-      val res= (g._1.distinct.genStrings).take(g._2).toSet
+      val res= g._1.distinct.genStrings.take(g._2).toSet
       assert(res.size===g._2, g._1.toString)
     }
   }

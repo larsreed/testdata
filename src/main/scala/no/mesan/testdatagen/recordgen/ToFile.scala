@@ -31,7 +31,7 @@ class ToFile[T](fileName:String,
   }
 
   /** Writes a list of strings to a named file. */
-  protected def toFile(list: List[String]) {
+  protected def writeToFile(list: List[String]) {
     val writer = new OutputStreamWriter(
                    new FileOutputStream(fileName, append),
                    Charset.forName(charSet).newEncoder())
@@ -53,13 +53,13 @@ class ToFile[T](fileName:String,
 
   override def get(n: Int): List[T]= {
     var res= generator.get(n)
-    toFile(res map {_.toString})
+    writeToFile(res map {_.toString})
     res
   }
 
   override def getStrings(n: Int): List[String]= {
     var res= generator.getStrings(n)
-    toFile(res)
+    writeToFile(res)
     res
   }
 

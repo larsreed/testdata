@@ -2,7 +2,7 @@ package no.mesan.testdatagen.generators
 
 import scala.annotation.tailrec
 
-import no.mesan.testdatagen.{ExtendedImpl, RandomElem}
+import no.mesan.testdatagen.{StreamGeneratorImpl, ExtendedImpl, RandomElem}
 
 /** * Probably the most versatile of all the generators, the FromList takes a list of
  * "anything" as input and generates its values from that, it is typed (FromList[T]),
@@ -12,7 +12,7 @@ import no.mesan.testdatagen.{ExtendedImpl, RandomElem}
  *
  * @author lre
  */
-class FromList[T] extends ExtendedImpl[T] with RandomElem {
+class FromList[T] extends ExtendedImpl[T] with RandomElem with StreamGeneratorImpl[T] {
 
   override def from(f:T) = throw new UnsupportedOperationException
   override def to(f:T) = throw new UnsupportedOperationException
@@ -21,33 +21,22 @@ class FromList[T] extends ExtendedImpl[T] with RandomElem {
   /** Enter the list of values. */
   def fromList(l: Seq[T]): this.type= { inputList= l; this }
 
-  // FIXME Weighted values!
-
-  override def get(n: Int): List[T] = {
-    require(n>=0, "cannot get negative count")
+  // TODO Weighted values!
+  def getStream: Stream[T] = {
     require(inputList.length>0, "cannot extract from empty list")
-    val accepted= inputList.toList
 
-    def getSequentially: List[T]= {
-      val basis= accepted filter filterAll
-      @tailrec def next(soFar:List[T]): List[T]=
-        if (soFar.length>=n) soFar.take(n)
-        else  next(basis ++ soFar)
-      next(basis)
+    def sequentially(inx: Int): Stream[T]=
+      if (inx>=inputList.length) inputList(0) #:: sequentially(1)
+      else inputList(inx) #:: sequentially(inx+1)
+
+    def randomly: Stream[T]= {
+      val nxt= randomFrom(inputList)
+      nxt #:: randomly
     }
 
-    @tailrec def getRandomly(soFar: List[T]): List[T]=
-      if (soFar.length>=n) soFar
-      else {
-        val nxt= randomFrom(accepted)
-        if (filterAll(nxt)) getRandomly(nxt::soFar)
-        else getRandomly(soFar)
-      }
-
-      if (isSequential) getSequentially
-      else getRandomly(Nil)
+    if (isSequential) sequentially(0)
+    else randomly
   }
-
 }
 
 object FromList {

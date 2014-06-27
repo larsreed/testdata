@@ -70,7 +70,7 @@ class FromFileSuite extends FunSuite with Printer {
 
   test("0 sequential elements") {
     new Setup {
-      val res= Reverse(FromFile(strings).allLines()).get(0)
+      val res= Reverse(FromFile(strings)).get(0)
       val exp= Nil
       assert(res === exp)
     }
@@ -78,7 +78,7 @@ class FromFileSuite extends FunSuite with Printer {
 
   test("0 random elements") {
     new Setup {
-      val res= FromFile(strings).allLines().get(0)
+      val res= FromFile(strings).get(0)
       val exp= Nil
       assert(res === exp)
     }

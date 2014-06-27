@@ -1,6 +1,6 @@
 package no.mesan.testdatagen.generators.norway
 
-import no.mesan.testdatagen.ExtendedGenerator
+import no.mesan.testdatagen.{StreamGenerator, ExtendedGenerator}
 import no.mesan.testdatagen.generators.FromFile
 
 /**
@@ -9,6 +9,6 @@ import no.mesan.testdatagen.generators.FromFile
  * @author lre
  */
 object Land {
-  def apply(allLines:Boolean=true): ExtendedGenerator[String]=
-    FromFile("land.txt", allLines)
+  def apply(): ExtendedGenerator[String] with StreamGenerator[String]=
+    FromFile("land.txt", "ISO-8859-1")
 }

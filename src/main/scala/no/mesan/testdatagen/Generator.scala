@@ -68,15 +68,19 @@ trait ExtendedGenerator[T] extends Generator[T] {
   def sequential: this.type
 }
 
-/** A default implementation of the Generator interface. */
-trait GeneratorImpl[T] extends Generator[T] {
-
+trait GeneratorFilters[T] {
   private var filterFuns: List[T => Boolean] = List(t => true)
+
   /** Return the list of filters. */
   def allFilters = filterFuns
-  override def filter(f: T => Boolean): this.type = { filterFuns ::= f; this }
+
+  def filter(f: T => Boolean): this.type = { filterFuns ::= f; this }
   /** Check that all filters are satisfied. */
   def filterAll(t: T): Boolean = allFilters.forall(f => f(t))
+}
+
+/** A default implementation of the Generator interface. */
+trait GeneratorImpl[T] extends Generator[T] with GeneratorFilters[T] {
 
   private var formatFun: T => String = t => if (t == null) null else t.toString
   override def formatWith(f: T => String): this.type = { formatFun = f; this }

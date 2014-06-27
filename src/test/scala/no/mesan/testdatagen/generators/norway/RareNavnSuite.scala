@@ -4,32 +4,26 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.Printer
-
 @RunWith(classOf[JUnitRunner])
-class RareNavnSuite extends FunSuite with Printer {
-
-  print(false) {
-    println(RareNavn().get(120))
-  }
+class RareNavnSuite extends FunSuite  {
 
   test("negative get") {
     intercept[IllegalArgumentException] {
-      RareNavn(false).get(-1)
+      RareNavn().get(-1)
     }
     intercept[IllegalArgumentException] {
-      RareNavn(false).getStrings(-1)
+      RareNavn().getStrings(-1)
     }
   }
 
   test("count") {
-    assert(RareNavn(true).get(30).size === 30)
+    assert(RareNavn().get(30).size === 30)
   }
 
   test("contents") {
     val res = RareNavn().sequential.get(300)
     assert(res.contains("Buster Minal"))
-    val res2 = RareNavn(false).sequential.getStrings(300)
+    val res2 = RareNavn().sequential.getStrings(300)
     assert(res2.contains("Buster Minal"))
   }
 }

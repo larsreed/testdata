@@ -9,6 +9,5 @@ import no.mesan.testdatagen.generators.FromFile
  * @author lre
  */
 object RareNavn {
-  def apply(allLines:Boolean=true): ExtendedGenerator[String] =
-    FromFile("rareNavn.txt", allLines)
+  def apply(): ExtendedGenerator[String] = FromFile("rareNavn.txt", "ISO-8859-1")
 }

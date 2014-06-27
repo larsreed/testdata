@@ -1,7 +1,5 @@
 package no.mesan.testdatagen.generators
 
-import scala.annotation.tailrec
-
 import no.mesan.testdatagen.{StreamGeneratorImpl, ExtendedImpl, RandomElem}
 
 /** * Probably the most versatile of all the generators, the FromList takes a list of

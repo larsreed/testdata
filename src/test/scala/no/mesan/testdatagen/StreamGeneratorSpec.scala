@@ -2,7 +2,8 @@ package no.mesan.testdatagen
 
 import org.scalatest.FlatSpec
 import scala.language.postfixOps
-import no.mesan.testdatagen.generators.{Booleans, FromList, Doubles, Chars, Longs, Ints, Dates, Strings}
+import no.mesan.testdatagen.generators.{Fixed, Booleans, FromList, Doubles, Chars, Longs, Ints, Dates, Strings}
+import no.mesan.testdatagen.generators.norway.{Poststeder, Land, Kommuner}
 
 /** General tests for StreamGenerators. */
 class StreamGeneratorSpec extends FlatSpec  {
@@ -16,7 +17,11 @@ class StreamGeneratorSpec extends FlatSpec  {
          (Longs(from= -42).sequential, 317),
          (Doubles(), 39),
          (FromList("a", "foo", "test", "alpha", "beta", "gamma", "delta"), 7),
-         (Booleans(), 2)
+         (Booleans(), 2),
+         (Fixed(42), 1),
+         (Kommuner(), 12),
+         (Land(), 15),
+         (Poststeder(), 19)
     )
   def generatorList= generators map { tuple => tuple._1 }
 

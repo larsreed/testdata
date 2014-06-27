@@ -4,20 +4,11 @@ import org.junit.runner.RunWith
 import org.scalatest.FunSuite
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.Printer
-
 @RunWith(classOf[JUnitRunner])
-class NorskeNavnSuite extends FunSuite with Printer {
+class NorskeNavnSuite extends FunSuite  {
 
   trait Setup {
-    val xgen= NorskeNavn(false)
-  }
-
-  print(false) {
-    println(NorskeNavn(false).get(50))
-    println(NorskeNavn(true).get(50))
-    println(NorskeNavn(true).kunFornavn.get(20))
-    println(NorskeNavn(true).kunEtternavn.get(20))
+    val xgen= NorskeNavn()
   }
 
   test("negative get") {

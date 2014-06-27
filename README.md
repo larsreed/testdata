@@ -214,14 +214,11 @@ This "generator" is actually just an apply method taking a single value; it is b
 ### FromFile
 This generator reads lines from an input file and creates a list of values, from which a delegate `FromList` can take its values. The values may be typed (does not currently work as expected...), even though they are read as strings.
 Specialities:
-
-* The `from` and `to` methods are not supported.
-* `allLines(all:Boolean=true)`: to support large input files, the generator only reads the first *n* lines from the file when asked to produce *n* values. To utilize the entire file, call
-* `allLines` before getting input, this is meaningless for sequential output, but increases the value space for random generation.
+The `from` and `to` methods are not supported.
 
 Apply method:
 
-* `FromFile(resourceName: String, allLines:Boolean=false, encoding: String= "ISO-8859-1")`: A file name must be given, allLines is optional (see the similar method), so is the encoding to be used (defaults to ISO-8859-1). The file to be read is first searched for on the classpath, then as a regular file name. Since reading is not done until a get-method is called, invalid file names will not be detected when *constructing* the generator.
+* `FromFile(resourceName: String, encoding: String= "UTF-8")`: A file name must be given, the encoding to be used defaults to UTF-8). The file to be read is first searched for on the classpath, then as a regular file name. Since reading is not done until a get-method is called, invalid file names will not be detected when *constructing* the generator.
 
 ### FromList
 Probably the most versatile of all the generators, the FromList takes a list of "anything" as input and generates its values from that, it is typed (`FromList[T]`), so you keep the type of the input list.
@@ -485,7 +482,7 @@ This generator (object) reads the supplied "land.txt" file containing country na
 
 #### Poststeder
 (Postal code generator.)
-This one is also based on a `FromFile` reading the supplied "postnr.txt" which contains Norwegian postal codes, formatted as "NNNN Ssss....", where NNNN is the 4-digit code, followed by a space, then the name.   There are 3 alternative invokations, they all have an optional `allLines` parameter (default true) for the `FromFile` generator:
+This one is also based on a `FromFile` reading the supplied "postnr.txt" which contains Norwegian postal codes, formatted as "NNNN Ssss....", where NNNN is the 4-digit code, followed by a space, then the name.   There are 3 alternative invocations:
 
 * `Poststeder`: returns full strings as described above
 * `Poststeder.postnr`: returns the numeric code only
@@ -495,7 +492,7 @@ Source: [http://www.bring.no/hele-bring/produkter-og-tjenester/brev-og-postrekla
 
 #### Kommuner
 (County generator.)
-Another one based on a `FromFile`, reading "kommuner.txt" which contains Norwegian county names, formatted as "NNNN Ssss....", where NNNN is a 4-digit code, followed by a space, then the name. There are 3 alternative invokations, they all have an optional `allLines` parameter (default `true`) for the `FromFile` generator:
+Another one based on a `FromFile`, reading "kommuner.txt" which contains Norwegian county names, formatted as "NNNN Ssss....", where NNNN is a 4-digit code, followed by a space, then the name. There are 3 alternative invocations:
 
 * `Kommuner`: returns full strings as described above
 * `Kommuner.kommunenr`: returns the numeric code only
@@ -509,14 +506,13 @@ First a bit about the background for this generator... Over the years, I have "s
 
 To generate names:
 
-1. You start with the the apply method   `NorskeNavn(allLines:Boolean=true)` (with `allLines=true` , all 12500 names are read at least once)
+1. You start with the the apply method  `NorskeNavn`
 2. and may optionally add `forOgEtternavn` (default, both first and last names, creating names with 1 or 2 of each), `kunFornavn` (single first names only) or `kunEtternavn`
 (single last names only)
 3. the standard `filter` and `formatWith` may also be used.
 
 #### RareNavn
 This is a simpler name generator, picking from a list of about 100 names. These names are meant to sound "funny", read the right way, they form other words or expressions, e.g. "Buster Minal" and "Mary Christmas".. :)
-It supports the `allLines` parameter of `FromFile`.
 
 #### Adresser
 A generator to create strings that look like Norwegian street addresses. It uses surnames (from `NorskeNavn.kunEtternavn`) and places (from `Poststeder.poststed`), and optionally a house number (sometimes with a letter suffix).

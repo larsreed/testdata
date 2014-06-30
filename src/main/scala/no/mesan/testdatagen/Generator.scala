@@ -182,15 +182,17 @@ trait StreamGeneratorImpl[T] extends StreamGenerator[T] {
     def allFilters: List[T => Boolean]
   } =>
 
-  private var isDistinct= false
+  private var isDistinctGen= false
+  /** Is this generator distinct? */
+  def isDistinct: Boolean= isDistinctGen
   override def distinct: this.type= {
-    isDistinct= true
+    isDistinctGen= true
     this
   }
 
   private def genFiltered= getStream filter (t => allFilters.forall(f => f(t)))
 
-  override def gen: Stream[T]= if (isDistinct) genFiltered.distinct else genFiltered
+  override def gen: Stream[T]= if (isDistinctGen) genFiltered.distinct else genFiltered
 
   def get(n: Int): List[T] = {
     require(n>=0, "cannot get negative count")

@@ -8,22 +8,14 @@ import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSuite
 
 import no.mesan.testdatagen.generators.FromList
-import no.mesan.testdatagen.{Percentage, Printer}
+import no.mesan.testdatagen.Percentage
 
 @RunWith(classOf[JUnitRunner])
-class TwoFromFunctionSuite extends FunSuite with Printer with Percentage {
+class TwoFromFunctionSuite extends FunSuite with Percentage {
 
   trait Setup {
     val listGen= FromList("abc", "" ,"d", "ef")
     val xgen= TwoFromFunction(listGen, (v:String)=> v.length)
-  }
-
-  print(false) {
-    new Setup {
-      println(xgen.get(12))
-      println(xgen.getStrings(12))
-      println(xgen.getFormatted(12))
-    }
   }
 
   test("negative get") {

@@ -44,7 +44,13 @@ class FromListSpec extends FlatSpec {
         "C", "B", "A", "C", "B", "A", "C", "B", "A", "C"))
   }
 
-  it should "be generate short sequences" in {
+  it should "handle input lengths of one" in {
+    assert(FromList(List(42)).sequential.get(2) === List(42, 42))
+    assert(FromList(List(42)).get(2) === List(42, 42))
+    assert(FromList(List(42)).gen.take(2).toList === List(42, 42))
+  }
+
+  it should "generate from short sequences" in {
     assert(FromList(List(1, 2)).sequential.get(2) === List(1, 2))
     assert(FromList(List(1)).sequential.get(2) === List(1, 1))
   }

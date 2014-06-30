@@ -23,9 +23,10 @@ class FromList[T] extends ExtendedImpl[T] with RandomElem with StreamGeneratorIm
   def getStream: Stream[T] = {
     require(inputList.length>0, "cannot extract from empty list")
 
-    def sequentially(inx: Int): Stream[T]=
-      if (inx>=inputList.length) inputList(0) #:: sequentially(1)
-      else inputList(inx) #:: sequentially(inx+1)
+    def sequentially(inx: Int): Stream[T]= {
+      if (inx >= inputList.length) inputList(0) #:: sequentially(1)
+      else inputList(inx) #:: sequentially(inx + 1)
+    }
 
     def randomly: Stream[T]= {
       val nxt= randomFrom(inputList)

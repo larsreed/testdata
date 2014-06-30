@@ -113,7 +113,6 @@ class FromFileSuite extends FunSuite with Printer {
       val exp= List("1000000", "100000", "10000", "1000", "100", "10", "1").toSet.toList.sorted
       val res= {
         val ss: List[String] = Unique(FromFile(ints)).get(exp.size)
-        println(ss)
         ss.toSet.toList.sorted
       }
       assert(res === exp)

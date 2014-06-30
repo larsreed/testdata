@@ -11,8 +11,9 @@ import no.mesan.testdatagen.StreamGenerator
 
 class Fixed[T](value: T) extends FromList[T] {
   fromList(List(value))
+
   override def filter(f: T=>Boolean) = {
-    if (!f(value)) throw new IllegalArgumentException(s"filter does not accept value $value")
+    if (!f(value)) throw new IllegalArgumentException(s"filter does not accept single value $value")
     super.filter(f)
   }
 }

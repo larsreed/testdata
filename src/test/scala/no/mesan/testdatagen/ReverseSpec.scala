@@ -1,12 +1,15 @@
 package no.mesan.testdatagen
 
 import no.mesan.testdatagen.generators.{Dates, Booleans, Chars, FromList}
+import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
 import org.joda.time.DateTime
+import org.scalatest.junit.JUnitRunner
 
 /**
  * Misc. tests for Reverse.
  */
+@RunWith(classOf[JUnitRunner])
 class ReverseSpec extends FlatSpec {
   "Reverse" should "reverse itself" in {
     assert(List(1,2,3)===Reverse(Reverse(FromList(1, 2, 3, 4).sequential)).get(3))

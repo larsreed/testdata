@@ -1,6 +1,6 @@
 package no.mesan.testdatagen
 
-import no.mesan.testdatagen.generators.misc.{Fibonaccis, CreditCards, CarMakes}
+import no.mesan.testdatagen.generators.misc.{Guids, Fibonaccis, CreditCards, CarMakes}
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
@@ -36,7 +36,8 @@ class StreamGeneratorSpec extends FlatSpec  {
       List(
         (Fnr(), 35),
         (CreditCards(), 72),
-        (Fibonaccis(), 11)
+        (Fibonaccis(), 11),
+        (Guids(), 91)
       )
   def generatorList= generators map { tuple => tuple._1 }
   def extendedGeneratorList= extendedGenerators map { tuple => tuple._1 }

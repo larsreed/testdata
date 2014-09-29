@@ -1,7 +1,8 @@
 package no.mesan.testdatagen.generators.misc
 
-import no.mesan.testdatagen.GeneratorImpl
-import no.mesan.testdatagen.generators.{Ints, Longs}
+import no.mesan.testdatagen.generators.Longs
+import no.mesan.testdatagen.{GeneratorImpl, StreamGeneratorImpl}
+
 import scala.language.postfixOps
 
 /**
@@ -10,30 +11,22 @@ import scala.language.postfixOps
  *
  * @author lre
  */
-class Guids extends GeneratorImpl[Seq[Long]] {
-  private val p1Gen= Ints() from 0
-  private val p23Gen= Ints() from 0 to 65535
+class Guids extends GeneratorImpl[Seq[Long]] with StreamGeneratorImpl[Seq[Long]] {
+  private val p1Gen= Longs() from 0 to Int.MaxValue
+  private val p2Gen= Longs() from 0 to 65535
+  private val p3Gen= Longs() from 0 to 65535
   private val p4Gen= Longs() from 0
 
-  override def get(n:Int): List[Seq[Long]] = {
-    val p1= p1Gen get n map(_.toLong)
-    val p2= p23Gen get n map(_.toLong)
-    val p3= p23Gen get n map(_.toLong)
-    val p4= p4Gen.get(n)
-    List(p1, p2, p3, p4) transpose
-  }
+  def getStream: Stream[Seq[Long]]=
+    p1Gen.gen.zip(p2Gen.gen).zip(p3Gen.gen).zip(p4Gen.gen).map(v=>
+      Seq(v._1._1._1, v._1._1._2, v._1._2, v._2)) // ugly, but works...
 
   /** get values as BigInts rather than tuples. */
-  def getBigInts(n:Int):List[BigInt] = {
-    val res= getStrings(n)
-    res map (s=> BigInt(s.replaceAll("-", ""), 16))
-  }
+  def getBigInts: Stream[BigInt] = genStrings map (s=> BigInt(s.replaceAll("-", ""), 16))
 
-  formatWith{
+  formatWith {
     case Seq(p1,p2,p3,p4)=> f"$p1%08x-$p2%04x-$p3%04x-$p4%016x"
   }
-
-  override def filter(f: Seq[Long]=>Boolean)= throw new UnsupportedOperationException
 }
 
 object Guids {

@@ -5,7 +5,7 @@ import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
 import scala.language.postfixOps
 import no.mesan.testdatagen.generators.{Fixed, Booleans, FromList, Doubles, Chars, Longs, Ints, Dates, Strings}
-import no.mesan.testdatagen.generators.norway.{Fnr, Poststeder, Land, Kommuner}
+import no.mesan.testdatagen.generators.norway._
 
 /** General tests for StreamGenerators. */
 @RunWith(classOf[JUnitRunner])
@@ -25,7 +25,8 @@ class StreamGeneratorSpec extends FlatSpec  {
          (Poststeder(), 19),
          (Fixed(42), 1),
          (FromList("a", "foo", "test", "alpha", "beta", "gamma", "delta"), 6),
-         (Fnr(), 35)
+         (Fnr(), 35),
+         (Orgnr(), 97)
     )
   def generatorList= generators map { tuple => tuple._1 }
 

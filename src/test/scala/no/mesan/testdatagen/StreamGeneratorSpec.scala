@@ -1,5 +1,6 @@
 package no.mesan.testdatagen
 
+import no.mesan.testdatagen.generators.misc.CarMakes
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
@@ -12,7 +13,8 @@ import no.mesan.testdatagen.generators.norway._
 class StreamGeneratorSpec extends FlatSpec  {
 
   // (generator, no.of. unique values)
-  def generators: List[(StreamGenerator[_], Int)]=
+
+  def extendedGenerators: List[(StreamGenerator[_] with ExtendedGenerator[_], Int)]=
     List((Strings().lengthBetween(from=100, to=144).distinct, 701),
          (Chars(), 91),
          (Dates().reversed(), 123),
@@ -25,11 +27,15 @@ class StreamGeneratorSpec extends FlatSpec  {
          (Poststeder(), 19),
          (Fixed(42), 1),
          (FromList("a", "foo", "test", "alpha", "beta", "gamma", "delta"), 6),
-         (Fnr(), 35),
-         (Orgnr(), 97)
+         (Orgnr(), 97),
+         (CarMakes(), 19)
     )
+  def generators: List[(StreamGenerator[_], Int)]=
+    extendedGenerators ++
+      List((Fnr(), 35)
+      )
   def generatorList= generators map { tuple => tuple._1 }
-
+  def extendedGeneratorList= extendedGenerators map { tuple => tuple._1 }
 
   "A StreamGenerator" should "be lazy" in {
     generatorList map { g=>
@@ -60,5 +66,15 @@ class StreamGeneratorSpec extends FlatSpec  {
       intercept[IllegalArgumentException] { g get -1 }
       intercept[IllegalArgumentException] { g getStrings -1000 }
     }
+  }
+
+  "An Extended generator" should "return an empty list on get(0).sequential" in {
+    extendedGeneratorList map { g=> assert(List()===g.sequential.get(0)) }
+    extendedGeneratorList map { g=> assert(List()===g.sequential.getStrings(0)) }
+  }
+
+  it should "return the specified number of sequential entries" in {
+    extendedGeneratorList map { g=> assert(g.sequential.get(17).size===17) }
+    extendedGeneratorList map { g=> assert(g.sequential.getStrings(19).size===19) }
   }
 }

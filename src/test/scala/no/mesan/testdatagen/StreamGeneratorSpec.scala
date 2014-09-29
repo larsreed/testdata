@@ -1,6 +1,6 @@
 package no.mesan.testdatagen
 
-import no.mesan.testdatagen.generators.misc.CarMakes
+import no.mesan.testdatagen.generators.misc.{CreditCards, CarMakes}
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
@@ -15,24 +15,28 @@ class StreamGeneratorSpec extends FlatSpec  {
   // (generator, no.of. unique values)
 
   def extendedGenerators: List[(StreamGenerator[_] with ExtendedGenerator[_], Int)]=
-    List((Strings().lengthBetween(from=100, to=144).distinct, 701),
-         (Chars(), 91),
-         (Dates().reversed(), 123),
-         (Ints().distinct, 400),
-         (Longs(from= -42).sequential, 317),
-         (Doubles(), 39),
-         (Kommuner(), 12),
-         (Land(), 15),
-         (Booleans(), 2),
-         (Poststeder(), 19),
-         (Fixed(42), 1),
-         (FromList("a", "foo", "test", "alpha", "beta", "gamma", "delta"), 6),
-         (Orgnr(), 97),
-         (CarMakes(), 19)
+    List(
+      (Strings().lengthBetween(from=100, to=144).distinct, 701),
+       (Chars(), 91),
+       (Dates().reversed(), 123),
+       (Ints().distinct, 400),
+       (Longs(from= -42).sequential, 317),
+       (Doubles(), 39),
+       (Kommuner(), 12),
+       (Land(), 15),
+       (Booleans(), 2),
+       (Poststeder(), 19),
+       (Fixed(42), 1),
+       (FromList("a", "foo", "test", "alpha", "beta", "gamma", "delta"), 6),
+       (Orgnr(), 97),
+       (CarMakes(), 19)
     )
   def generators: List[(StreamGenerator[_], Int)]=
     extendedGenerators ++
-      List((Fnr(), 35)
+      List(
+        (Fnr(), 35),
+        (CreditCards(), 72),
+        (CreditCards.visas, 3)
       )
   def generatorList= generators map { tuple => tuple._1 }
   def extendedGeneratorList= extendedGenerators map { tuple => tuple._1 }

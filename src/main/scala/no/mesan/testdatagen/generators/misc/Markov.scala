@@ -1,9 +1,8 @@
 package no.mesan.testdatagen.generators.misc
 
-import no.mesan.testdatagen.{RandomElem, Generator}
 import no.mesan.testdatagen.utils.IO
-import scala.util.Random
-import scala.annotation.tailrec
+import no.mesan.testdatagen.{GeneratorImpl, RandomElem, StreamGeneratorImpl}
+
 import scala.annotation.tailrec
 
 /**
@@ -15,13 +14,14 @@ import scala.annotation.tailrec
  * The get methods return a string containing N words randomly selected from
  * the input.
  */
-class Markov extends Generator[String] with RandomElem {
+class Markov extends GeneratorImpl[String] with RandomElem with StreamGeneratorImpl[String] {
 
   type WordMap= Map[String, List[String]]
 
+  // Mapping from a word to possible successors
   var words: WordMap= Map[String, List[String]]()
 
-  def build(wordList: List[String]): WordMap= {
+  protected[misc] def build(wordList: List[String]): WordMap= {
     @tailrec def build(map: WordMap, list: List[String]): WordMap =
       list match {
         case Nil => map
@@ -51,30 +51,22 @@ class Markov extends Generator[String] with RandomElem {
     this
   }
 
-  /** The main function - provide a list of n entries. */
-  def get(n: Int): List[String] = {
-    require(n>=0, "n cannot be negative")
+  def getStream: Stream[String] = {
     require(words.size > 0, "must load words")
     @tailrec def selectNext(from: List[String]): String= from match {
-      case Nil =>
-        selectNext(words.keys.toList)
-      case _ =>
-        randomFrom(from)
+      case Nil => selectNext(words.keys.toList)
+      case _ => randomFrom(from)
     }
-    @tailrec def getNext(word:String, soFar: List[String]): List[String] =
-      if (soFar.length>=n) soFar
-      else getNext(selectNext(words(word)), word::soFar)
-    getNext(selectNext(List()), List()).reverse
+    def getNext(word:String): Stream[String] = {
+      val w= selectNext(words(word))
+      w #:: getNext(w)
+    }
+    getNext(selectNext(List()))
   }
 
-  override def getStrings(n: Int): List[String] = {
-    val res= get(n)
-    res.reduceLeft((total, word)=> total + " " + word) :: res.tail
-  }
-
-  override def filter(f: (String) => Boolean) = throw new UnsupportedOperationException("filter")
-  override def formatWith(f: (String) => String) = throw new UnsupportedOperationException("formatWith")
   override def formatOne[S>:String](v: S): String = s"$v"
+
+  def mkString(n: Int): String =  get(n).mkString(" ")
 }
 
 object Markov {
@@ -83,4 +75,5 @@ object Markov {
 
   def apply(): Markov = apply(inputFiles)
   def apply(fileList: List[String]): Markov = new Markov().buildFrom(fileList)
+
 }

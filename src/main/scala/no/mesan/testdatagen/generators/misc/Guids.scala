@@ -1,7 +1,7 @@
 package no.mesan.testdatagen.generators.misc
 
+import no.mesan.testdatagen.GeneratorImpl
 import no.mesan.testdatagen.generators.Longs
-import no.mesan.testdatagen.{GeneratorImpl, StreamGeneratorImpl}
 
 import scala.language.postfixOps
 
@@ -11,7 +11,7 @@ import scala.language.postfixOps
  *
  * @author lre
  */
-class Guids extends GeneratorImpl[Seq[Long]] with StreamGeneratorImpl[Seq[Long]] {
+class Guids extends GeneratorImpl[Seq[Long]]  {
   private val p1Gen= Longs() from 0 to Int.MaxValue
   private val p2Gen= Longs() from 0 to 65535
   private val p3Gen= Longs() from 0 to 65535

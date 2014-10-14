@@ -1,16 +1,14 @@
 package no.mesan.testdatagen.recordgen
 
+import no.mesan.testdatagen.aggreg.SomeNulls
+import no.mesan.testdatagen.generators.misc.{Names, Urls}
+import no.mesan.testdatagen.generators.{Chars, Dates, Ints, Strings}
 import org.junit.runner.RunWith
-import org.scalatest.FunSuite
+import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.Printer
-import no.mesan.testdatagen.aggreg.SomeNulls
-import no.mesan.testdatagen.generators.{Chars, Dates, Ints, Strings}
-import no.mesan.testdatagen.generators.misc.{Names, Urls}
-
 @RunWith(classOf[JUnitRunner])
-class XmlGeneratorSuite extends FunSuite with Printer {
+class XmlGeneratorSpec extends FlatSpec {
 
   trait Setup {
     val idGen= Ints().from(1).sequential
@@ -48,97 +46,27 @@ class XmlGeneratorSuite extends FunSuite with Printer {
                      add("born", bornGen)
   }
 
-  print(false) {
-    new SetupElement {
-      println(rootGen.getStrings(120).mkString("\n  "))
-    }
-    new SetupAttribute {
-      println(rootGen.getStrings(120).mkString("\n  "))
-    }
+  "The ToXmlElements generator" should "demand at least one generator" in {
+    intercept[IllegalArgumentException] { ToXmlElements(recordName="x").get(1) }
   }
 
-
-  test("negative get") {
-    intercept[IllegalArgumentException] {
-      new SetupElement {
-        rootGen.get(-1)
-      }
-    }
-    intercept[IllegalArgumentException] {
-      new SetupElement {
-        fragmentGen.getStrings(-1)
-      }
-    }
-    intercept[IllegalArgumentException] {
-      new SetupAttribute {
-        rootGen.get(-1)
-      }
-    }
-    intercept[IllegalArgumentException] {
-      new SetupAttribute {
-        fragmentGen.getStrings(-1)
-      }
-    }
-  }
-
-  test("needs one generator") {
-    intercept[IllegalArgumentException] {
-      ToXmlElements(recordName="x").get(1)
-    }
-    intercept[IllegalArgumentException] {
-      ToXmlAttributes(recordName="x").get(1)
-    }
-  }
-
-  test("count elem") {
+  it should "produce the expected number of records" in {
     new SetupElement {
       assert(rootGen.get(3).size === 1)
       assert(fragmentGen.get(4).size === 4, fragmentGen.get(4))
       assert(rootGen.getStrings(5).size === 1)
       assert(fragmentGen.getStrings(6).size === 6)
-    }
-  }
-  test("count attr") {
-    new SetupAttribute {
-      assert(rootGen.get(3).size === 1)
-      assert(fragmentGen.get(4).size === 4, fragmentGen.get(4))
-      assert(rootGen.getStrings(5).size === 1)
-      assert(fragmentGen.getStrings(6).size === 6)
-    }
-  }
-
-  test("count no root elem") {
-    new SetupElement {
       val nGen= ToXmlElements(recordName="data").
                      add("id", idGen).
                      add("born", bornGen)
       assert(nGen.get(30).size === 30)
     }
   }
-  test("count no root attr") {
-    new SetupAttribute {
-      val nGen= ToXmlAttributes(recordName="data").
-                     add("id", idGen).
-                     add("born", bornGen)
-      assert(nGen.get(30).size === 30)
-    }
-  }
 
-  test("format elem") {
+  it should "format its output as expected" in {
     new SetupElement {
       val res= rootGen.get(30).mkString(" ").replaceAll("[\n\r]", " ")
       assert(res.matches("<root>\\s+<data>.*</data>.*</data>\\s+</root>"), res)
-    }
-  }
-  test("format attr") {
-    new SetupAttribute {
-      val res= rootGen.get(3).mkString(" ").replaceAll("[\n\r\t ]+", " ")
-      assert(res.matches("<root>(\\s*<data[^>]*(></data>|/>))+\\s*</root>"), res)
-    }
-  }
-
-  test("format no root attr") {
-    new SetupAttribute {
       val nGen= ToXmlAttributes(recordName="data").
                      add("id", idGen).
                      add("born", bornGen)
@@ -148,18 +76,7 @@ class XmlGeneratorSuite extends FunSuite with Printer {
     }
   }
 
-  test("format no root elem") {
-    new SetupElement {
-      val nGen= ToXmlElements(recordName="data").
-                     add("id", idGen).
-                     add("born", bornGen)
-      val v= nGen.getStrings(1)(0)
-      // ?s is dotall-mode, accepts multiline data
-      assert(v.matches("(?s)^\\s*<data>.*</id>.*</data>\\s*$"), "|" + v + "|")
-    }
-  }
-
-  test("keepNulls elem") {
+  it should "keep nulls if expected" in {
     new SetupElement {
       val gen = ToXmlElements(recordName = "data", nulls = KeepNull).
           add("id", SomeNulls(100, idGen))
@@ -167,16 +84,8 @@ class XmlGeneratorSuite extends FunSuite with Printer {
       assert(res.matches("(?s)^\\s*<data>\\s*<id>\\s*null\\s*</id>\\s*</data>\\s*$"), res)
     }
   }
-  test("keepNulls attr") {
-    new SetupAttribute {
-      val gen = ToXmlAttributes(recordName = "data", nulls = KeepNull).
-          add("id", SomeNulls(100, idGen))
-      val res = gen.get(1)(0).toString()
-      assert(res.matches("(?s)^\\s*<data\\s*id=.null.\\s*(/>|></data>)\\s*$"), res)
-    }
-  }
 
-  test("skipNulls elem") {
+  it should "skip nulls if expected" in {
     new SetupElement {
       val gen = ToXmlElements(recordName = "data", nulls = SkipNull).
           add("id", SomeNulls(100, idGen))
@@ -184,16 +93,8 @@ class XmlGeneratorSuite extends FunSuite with Printer {
       assert(res.matches("(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"), res)
     }
   }
-  test("skipNulls attr") {
-    new SetupAttribute {
-      val gen = ToXmlAttributes(recordName = "data", nulls = SkipNull).
-          add("id", SomeNulls(100, idGen))
-      val res = gen.get(1)(0).toString()
-      assert(res.matches("(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"), res)
-    }
-  }
 
-  test("emptyNulls elem") {
+  it should "use empty nulls if expected" in {
     new SetupElement {
       val gen = ToXmlElements(recordName = "data", nulls = EmptyNull).
           add("id", SomeNulls(100, idGen))
@@ -201,16 +102,8 @@ class XmlGeneratorSuite extends FunSuite with Printer {
       assert(res.matches("(?s)^\\s*<data>\\s*(<id>\\s*</id>|<id/>)\\s*</data>\\s*$"), res)
     }
   }
-  test("emptyNulls attr") {
-    new SetupAttribute {
-      val gen = ToXmlAttributes(recordName = "data", nulls = EmptyNull).
-          add("id", SomeNulls(100, idGen))
-      val res = gen.get(1)(0).toString()
-      assert(res.matches("(?s)^\\s*<data\\s*id=..\\s*(/>|></data>)\\s*$"), res)
-    }
-  }
 
-  test("quoting elem") {
+  it should "quote special characters" in {
     new SetupElement {
       val gen = ToXmlElements(recordName = "i").
           add("x", Chars("<&\"' >").sequential)
@@ -221,7 +114,67 @@ class XmlGeneratorSuite extends FunSuite with Printer {
                i+":"+res(i))
     }
   }
-  test("quoting attr") {
+
+  "The ToXmlAttribute generator" should "demand at least one generator" in {
+    intercept[IllegalArgumentException] { ToXmlAttributes(recordName="x").get(1) }
+  }
+
+  it should "produce the expected number of records" in {
+    new SetupAttribute {
+      val res1= fragmentGen.get(4)
+      assert(res1.size === 4, res1.toString)
+      val res2= rootGen.get(3)
+      assert(res2.size === 1, res2)
+      assert(rootGen.getStrings(5).size === 1)
+      assert(fragmentGen.getStrings(6).size === 6)
+      val nGen= ToXmlAttributes(recordName="data").
+                     add("id", idGen).
+                     add("born", bornGen)
+      assert(nGen.get(30).size === 30)
+    }
+  }
+
+  it should "format its output as expected" in {
+    new SetupAttribute {
+      val res= rootGen.get(3).mkString(" ").replaceAll("[\n\r\t ]+", " ")
+      assert(res.matches("<root>(\\s*<data[^>]*(></data>|/>))+\\s*</root>"), res)
+      val nGen= ToXmlElements(recordName="data").
+                     add("id", idGen).
+                     add("born", bornGen)
+      val v= nGen.getStrings(1)(0)
+      // ?s is dotall-mode, accepts multiline data
+      assert(v.matches("(?s)^\\s*<data>.*</id>.*</data>\\s*$"), "|" + v + "|")
+    }
+  }
+
+  it should "keep nulls if expected" in {
+    new SetupAttribute {
+      val gen = ToXmlAttributes(recordName = "data", nulls = KeepNull).
+          add("id", SomeNulls(100, idGen))
+      val res = gen.get(1)(0).toString()
+      assert(res.matches("(?s)^\\s*<data\\s*id=.null.\\s*(/>|></data>)\\s*$"), res)
+    }
+  }
+
+  it should "skip nulls if expected" in {
+    new SetupAttribute {
+      val gen = ToXmlAttributes(recordName = "data", nulls = SkipNull).
+          add("id", SomeNulls(100, idGen))
+      val res = gen.get(1)(0).toString()
+      assert(res.matches("(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"), res)
+    }
+  }
+
+  it should "use empty nulls if expected" in {
+    new SetupAttribute {
+      val gen = ToXmlAttributes(recordName = "data", nulls = EmptyNull).
+          add("id", SomeNulls(100, idGen))
+      val res = gen.get(1)(0).toString()
+      assert(res.matches("(?s)^\\s*<data\\s*id=..\\s*(/>|></data>)\\s*$"), res)
+    }
+  }
+
+  it should "quote special characters" in {
     new SetupAttribute {
       val gen = ToXmlAttributes(recordName = "i").
           add("x", Chars("<&\"' >").sequential)

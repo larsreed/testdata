@@ -2,15 +2,14 @@ package no.mesan.testdatagen.generators
 
 import java.util.Date
 
-import scala.util.Random
-
-import org.joda.time.{DateTime, Period}
+import no.mesan.testdatagen.ExtendedImpl
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
+import org.joda.time.{DateTime, Period}
 import org.scala_tools.time.Imports.{RichDateTime, RichReadableInstant}
 
-import no.mesan.testdatagen.{StreamGeneratorImpl, ExtendedImpl}
-import scala.language.postfixOps
 import scala.annotation.tailrec
+import scala.language.postfixOps
+import scala.util.Random
 
 /**
  * Generate dates.
@@ -19,7 +18,7 @@ import scala.annotation.tailrec
  *
  * @author lre
  */
-class Dates extends ExtendedImpl[DateTime] with StreamGeneratorImpl[DateTime] {
+class Dates extends ExtendedImpl[DateTime] {
 
   from()
   to()

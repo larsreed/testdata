@@ -1,8 +1,8 @@
 package no.mesan.testdatagen.aggreg
 
-import scala.collection.immutable.List
+import no.mesan.testdatagen.Generator
 
-import no.mesan.testdatagen.{Generator, GeneratorImpl}
+import scala.collection.immutable.List
 
 /**
  * Traits for generators needing to support one or more nested generators.
@@ -20,7 +20,7 @@ trait MultiGenerator[T] {
 }
 
 trait MultiGeneratorWithWeight[T] {
-  type GenList= List[(Int,Generator[T])]
+  type GenList= List[(Int, Generator[T])]
   private var _generators: GenList = Nil
   def generators: List[(Int, Generator[T])] = _generators.reverse
 
@@ -41,4 +41,7 @@ trait MultiGeneratorWithWeight[T] {
     _generators ++= weighted.toList.reverse
     this
   }
+
+  /** Return the sum of all weights. */
+  def sumOfWeights: Int = _generators.map(_._1).foldLeft(0)(_+_)
 }

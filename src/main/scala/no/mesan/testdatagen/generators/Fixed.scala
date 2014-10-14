@@ -1,7 +1,5 @@
 package no.mesan.testdatagen.generators
 
-import no.mesan.testdatagen.StreamGenerator
-
 /**
  * Generate the same value all time....
  * from/to/unique are not supported

@@ -1,12 +1,11 @@
 package no.mesan.testdatagen.generators
 
-import scala.language.postfixOps
-
+import no.mesan.testdatagen.ExtendedGenerator
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.{Unique, ExtendedGenerator}
+import scala.language.postfixOps
 
 
 @RunWith(classOf[JUnitRunner])
@@ -76,7 +75,7 @@ class FromListSpec extends FlatSpec {
   }
 
   it should "handle single element input list" in {
-    val res = Unique(FromList(List("a"))).get(1).toSet
+    val res = FromList(List("a")).distinct.get(1).toSet
     assert(res.size == 1)
   }
 }

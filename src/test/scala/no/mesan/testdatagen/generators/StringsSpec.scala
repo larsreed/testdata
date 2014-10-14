@@ -3,116 +3,82 @@ package no.mesan.testdatagen.generators
 import scala.language.postfixOps
 
 import org.junit.runner.RunWith
-import org.scalatest.FunSuite
+import org.scalatest.{FlatSpec, FunSuite}
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.{Reverse, Printer}
-
 @RunWith(classOf[JUnitRunner])
-class StringsSuite extends FunSuite with Printer {
-    print(false) {
-       println(Strings().lengthBetween(1,3).chars('a' to 'c').sequential.get(100))
-       println(Strings().lengthBetween(1000,1003).chars('0' to '1').sequential.get(2))
-       println(Strings().chars("abx").lengthBetween(1, 2).sequential.get(25))
-       println(Strings().chars("abx").lengthBetween(2, 3).sequential.get(25))
-       println(Strings().chars("abx").lengthBetween(2, 3).get(25))
+class StringsSpec extends FlatSpec {
+
+  "The Strings generator" should "check that from<=to" in {
+    intercept[IllegalArgumentException] {
+      Strings().from("Z").to("A").get(1)
     }
-
-    test("from<=to") {
-      intercept[IllegalArgumentException] {
-        Strings().from("Z").to("A").get(1)
-      }
   }
 
-  test("negative get") {
-      intercept[IllegalArgumentException] {
-        Strings().get(-1)
-      }
-      intercept[IllegalArgumentException] {
-        Strings().getStrings(-1)
-      }
-  }
-    test("no negative length") {
-      intercept[IllegalArgumentException] {
-        Strings().lengthBetween(-1,1)
-      }
-      intercept[IllegalArgumentException] {
-        Strings().length(-1)
-      }
+  it should "not allow negative lengths" in {
+    intercept[IllegalArgumentException] {
+      Strings().lengthBetween(-1,1)
+    }
+    intercept[IllegalArgumentException] {
+      Strings().length(-1)
+    }
   }
 
-  test("from<=to for lengths") {
-      intercept[IllegalArgumentException] {
-        Strings().lengthBetween(5,4)
-      }
+  it should "check that from<=to for lengths" in {
+    intercept[IllegalArgumentException] {
+      Strings().lengthBetween(5,4)
+    }
   }
 
-  test("normal sequence") {
+  it should "generate expected sequences" in {
     val res= Strings().chars("ab").lengthBetween(1, 2).sequential.get(1000)
     assert(res.length===1000)
     val exp= List("a", "b", "aa", "ab", "ba", "bb")
     exp.foreach(s=> assert(res contains s, res + "<" + s))
   }
 
-  test("normal sequence 2") {
+  it should "generate expected sequences #2" in {
     val res= Set() ++ Strings().chars("abx").lengthBetween(1, 2).sequential.get(5000)
     val expect=Set() ++ List("a", "b", "x", "aa", "ab", "ax", "ba", "bb", "bx", "xa", "xb", "xx")
     assert(res===expect)
     assert(res.size===expect.size, expect)
   }
 
-  test("reverted sequence") {
-    assert(Reverse(Strings().chars("abc").sequential.length(1)).get(5)
-      ===List("b", "a", "c", "b", "a"))
-  }
-
-  test("sequence of 1 & 2") {
+  it should "generate sequences with lenghts 1 & 2" in {
     assert(Strings().chars('a' to 'z').length(1).sequential.get(2)===List("a", "b"))
     assert(Strings().chars("a").length(1).sequential.get(2)===List("a", "a"))
   }
 
-  test("0 sequential elements") {
-    assert(Strings().sequential.from("a").to("z").get(0)===List())
-  }
-
-  test("0 random elements") {
-    assert(Strings().from("a").to("z").get(0)===List())
-  }
-
-  test("normal random") {
+  it should "generate random sequences" in {
     val res= Strings().length(9).chars(' ' to 'Z').get(25)
     assert(res.length===25)
     assert(res.forall(s=> s.length==9 && s>=" " && s<="ZZZZZZZZZ"))
   }
 
-  test("normal random 2") {
+  it should "generate random sequences #2" in {
     val res= Set() ++ Strings().chars("abx").lengthBetween(1, 2).get(5000)
     val expect=Set() ++ List("a", "b", "x", "aa", "ab", "ax", "ba", "bb", "bx", "xa", "xb", "xx")
     assert(res===expect)
   }
 
-  test("filter 1") {
+  it should "filter output" in {
     val res= Strings().length(4).chars('a' to 'z').filter(s=>s contains "e").get(10)
     assert(res.length===10)
     assert(res.forall(s=> s contains "e"), res)
   }
 
-  test("filter 2") {
+  it should "filter output #2" in {
     val res= Strings().length(4).chars('a' to 'z').sequential.filter(s=>s contains "e").get(10)
     assert(res.length===10)
     assert(res.forall(s=> s contains "e"), res)
   }
 
-  test("formatting") {
+  it should "format output" in {
     val  res= Strings().length(2).chars("ABC").sequential.formatWith(i=>f"$i%7s").getStrings(3)
     assert(res=== List("     AA", "     AB", "     AC"))
     val  res3= Strings().length(2).chars("AB").sequential.format("%-5s").getStrings(3)
     assert(res3=== List("AA   ", "AB   ", "BA   "))
     val  res2= Strings().from("A").to("B").sequential.format("%7s").getStrings(0)
     assert(res2=== Nil)
-  }
-  test("unique list") {
-    val  res= (Strings() chars "ABC" length 2 distinct).get(9).toSet
-    assert(res.size===9)
   }
 }

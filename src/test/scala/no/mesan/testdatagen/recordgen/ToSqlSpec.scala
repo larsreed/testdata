@@ -1,17 +1,15 @@
 package no.mesan.testdatagen.recordgen
 
-import org.junit.runner.RunWith
-import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
-
-import no.mesan.testdatagen.Printer
 import no.mesan.testdatagen.aggreg.SomeNulls
-import no.mesan.testdatagen.generators.{Booleans, Chars, Dates, Doubles, FromList, Ints, Strings}
 import no.mesan.testdatagen.generators.misc.{MailAddresses, Names, Urls}
 import no.mesan.testdatagen.generators.norway.{Fnr, Kjennemerker}
+import no.mesan.testdatagen.generators.{Booleans, Chars, Dates, Doubles, FromList, Ints, Strings}
+import org.junit.runner.RunWith
+import org.scalatest.FlatSpec
+import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class ToSqlSuite extends FunSuite with Printer {
+class ToSqlSpec extends FlatSpec {
   val dates = Dates().from(y = 1950).to(y = 2012).get(1000)
 
   trait Setup {
@@ -36,47 +34,21 @@ class ToSqlSuite extends FunSuite with Printer {
       add("active", boolGen).
       add("score", scoreGen).
       addQuoted("car", kjmGen)
+
   }
 
-  print(false) {
-    new Setup {
-      println(recordGen.get(4).mkString("\n"))
-    }
+  "The ToSql generator" should "require at least 1 input" in {
+    intercept[IllegalArgumentException] { ToSql("tab", "go").get(1) }
   }
 
-  test("needs one generator") {
-    intercept[IllegalArgumentException] {
-      ToSql("tab", "go").get(1)
-    }
-  }
-
-  test("negative get") {
-    intercept[IllegalArgumentException] {
-      new Setup {
-        recordGen.get(-1)
-      }
-    }
-    intercept[IllegalArgumentException] {
-      new Setup {
-        recordGen.getStrings(-1)
-      }
-    }
-  }
-
-  test("count") {
-    new Setup {
-      assert(recordGen.get(30).size === 30)
-    }
-  }
-
-  test("contents") {
+  it should "produce expected contents" in {
     new Setup {
       val res=recordGen.get(30).mkString("\n")
       assert(res.matches("(?s)^(insert into .* values .*)+"))
     }
   }
 
-  test("quoting") {
+  it should "quote correctly" in {
     new Setup {
       var fnuttGen = Chars("'")
       val res = ToSql("tbl", "").addQuoted("fnutt", fnuttGen).getStrings(1)(0)

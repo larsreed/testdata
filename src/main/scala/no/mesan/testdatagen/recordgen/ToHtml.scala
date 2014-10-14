@@ -10,12 +10,34 @@ import scala.xml.NodeSeq.seqToNodeSeq
  *
  * @author lre
  */
-class ToHtml(pageTitle: String, nulls:NullHandler) extends XmlGenerator(nulls) {
+class ToHtml(pageTitle: String, nulls:NullHandler) extends XmlGenerator("", nulls) {
 
-  override def get(n: Int): List[NodeSeq] = {
+  override def get(n: Int): List[NodeSeq]= {
+    val titles= fieldNames.map(s=> <th>{s}</th>)
+    val xml= super.get(n)
+    val html= <table border="border">
+        <tr>{titles}</tr>
+      {xml}
+    </table>
+
+    if ("" != pageTitle)
+List(<html>
+  <head>
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <h1>{pageTitle}</h1>
+    {html}
+  </body>
+</html>)
+    else
+      List(html)
+  }
+
+  override def getStream: Stream[NodeSeq] = {
     require(fields.size>0, "at least one  must be given")
 
-    def getRecord(rec: DataRecord)=  List[NodeSeq] {
+    def getRecord(rec: DataRecord)=  Seq[NodeSeq] {
       rec.map{
         case (tag, null)=> nulls match {
           case EmptyNull => <td>&nbsp;</td>
@@ -25,24 +47,11 @@ class ToHtml(pageTitle: String, nulls:NullHandler) extends XmlGenerator(nulls) {
         case (tag,value)=> <td>{value}</td>
       }
     }
-    val data= getRecords(n, KeepNull)
-    val titles= fieldNames.map(s=> <th>{s}</th>)
-    val xml= <table border="border">
-    <tr>{titles}</tr>
-    {data.map{ case nodes =>
+    val data= genRecords(KeepNull)
+    data.map{ case nodes =>
     <tr>
       {getRecord(nodes)}
-    </tr>}}</table>
-    if ("" != pageTitle) List(<html>
-  <head>
-    <title>{pageTitle}</title>
-  </head>
-  <body>
-    <h1>{pageTitle}</h1>
-    {xml}
-  </body>
-</html>)
-    else List(xml)
+    </tr>}
   }
 }
 object ToHtml {

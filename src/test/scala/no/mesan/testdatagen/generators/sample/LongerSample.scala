@@ -1,13 +1,12 @@
 package no.mesan.testdatagen.generators.sample
 
-import no.mesan.testdatagen.aggreg.{UniqueWithFallback, SequenceOf, FieldConcatenator, SomeNulls,
-                                    TextWrapper, WeightedGenerator}
-import no.mesan.testdatagen.generators.{Dates, Doubles, Fixed, FromList, Ints}
+import no.mesan.testdatagen.aggreg.{FieldConcatenator, SequenceOf, SomeNulls, TextWrapper, UniqueWithFallback, WeightedGenerator}
 import no.mesan.testdatagen.generators.misc.Names
-import no.mesan.testdatagen.generators.norway.{NorskeNavn, RareNavn, Adresser, Fnr, Poststeder}
+import no.mesan.testdatagen.generators.norway.{Adresser, Fnr, NorskeNavn, Poststeder, RareNavn}
+import no.mesan.testdatagen.generators.{Dates, Doubles, Fixed, FromList, Ints}
 import no.mesan.testdatagen.recordgen.{ToFile, ToSql}
+
 import scala.language.postfixOps
-import no.mesan.testdatagen.Unique
 
 
 object LongerSample extends App {
@@ -24,10 +23,10 @@ object LongerSample extends App {
   // To be able to reuse values between records, we generate some values in advance.
   // specifically IDs (for foreign keys) and dates (for correlation between birth dates
   // and "fodselsnummer")
-  val customerIds= FromList(Unique(Ints() from 1).get(customerFact*recordsBase))
+  val customerIds= FromList((Ints() from 1 distinct).get(customerFact*recordsBase))
   val birthDates= Dates() from (y=1921) to (y=1996) get(customerFact*recordsBase)
-  val productIds= FromList(Unique(Ints() from 1 to 100000).get(productFact*recordsBase))
-  val orderIds= FromList(Unique(Ints() from 1).get(orderFact*recordsBase)) sequential
+  val productIds= FromList((Ints() from 1 to 100000 distinct).get(productFact*recordsBase))
+  val orderIds= FromList((Ints() from 1 distinct).get(orderFact*recordsBase)) sequential
   val postSteder= FromList(Poststeder() get(customerFact*recordsBase)) sequential
 
   // Populating the customer table - no dependencies

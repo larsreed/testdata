@@ -2,10 +2,11 @@ package no.mesan.testdatagen.aggreg
 
 import scala.collection.immutable.List
 
-import no.mesan.testdatagen.{Generator, GeneratorImpl}
+import no.mesan.testdatagen.{BareGenerator, Generator}
 
 /**
- * The SequenceOf takes a list of generators.
+ * The SequenceOf takes a list of generators. It is itself not a generator, but it supports
+ * a the get(n)/getStrings(n)-methods.
  * When get/getString is called, it calls get(String) on each of its generators in sequence.
  * The number of returned records for get(N) (and equally getStrings) will vary.
  * In non-absolute mode (default), a number "close to N" (+/- 1) will be returned.
@@ -13,7 +14,7 @@ import no.mesan.testdatagen.{Generator, GeneratorImpl}
  *
  * @author lre
  */
-class SequenceOf[S, T] (convert: S=>T) extends GeneratorImpl[T] with MultiGeneratorWithWeight[S] {
+class SequenceOf[S, T] (convert: S=>T) extends BareGenerator[T] with MultiGeneratorWithWeight[S] {
   private var absolute= false
 
   def makeAbsolute(newVal:Boolean= true): this.type = {

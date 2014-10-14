@@ -3,7 +3,7 @@ package no.mesan.testdatagen.recordgen
 import java.io.{BufferedWriter, FileOutputStream, IOException, OutputStreamWriter}
 import java.nio.charset.Charset
 
-import no.mesan.testdatagen.Generator
+import no.mesan.testdatagen.BareGenerator
 
 /**
  * This generator is typically the end of a chain, and called implicitly
@@ -13,9 +13,9 @@ import no.mesan.testdatagen.Generator
  * @author lre
  */
 class ToFile[T](fileName:String,
-                generator: Generator[T],
+                generator: BareGenerator[T],
                 append:Boolean,
-                charSet:String) extends Generator[T] {
+                charSet:String) extends BareGenerator[T] {
 
   protected var prefix= List[String]()
   protected var suffix= List[String]()
@@ -65,17 +65,13 @@ class ToFile[T](fileName:String,
 
   // Nicer name...
   def write(n:Int, strings:Boolean= true) = if (strings) getStrings(n) else get(n)
-
-  override def filter(f: T => Boolean): this.type= { generator.filter(f); this }
-  override def formatWith(f: T => String): this.type= { generator.formatWith(f); this }
-  override def formatOne[S >: T](v: S): String = generator.formatOne(v)
 }
 
 object ToFile {
   val defaultCharSet="ISO-8859-1"
 
   def apply[T](fileName:String,
-               generator: Generator[T],
+               generator: BareGenerator[T],
                append:Boolean=false,
                charSet:String=defaultCharSet): ToFile[T]=
     new ToFile(fileName, generator, append, charSet)

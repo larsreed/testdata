@@ -1,47 +1,85 @@
 package no.mesan.testdatagen
 
+import no.mesan.testdatagen.aggreg._
 import no.mesan.testdatagen.generators.misc._
+import no.mesan.testdatagen.generators.norway._
+import no.mesan.testdatagen.generators._
+import no.mesan.testdatagen.recordgen._
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
+
 import scala.language.postfixOps
-import no.mesan.testdatagen.generators.{Fixed, Booleans, FromList, Doubles, Chars, Longs, Ints, Dates, Strings}
-import no.mesan.testdatagen.generators.norway._
 
 /** General tests for StreamGenerators. */
 @RunWith(classOf[JUnitRunner])
 class StreamGeneratorSpec extends FlatSpec  {
 
-  // (generator, no.of. unique values)
+  case class GenSpec(extended: Boolean, gen: Generator[_], no: Int, count0: Boolean,
+                     countDistinct: Boolean)
+  def genSpec(gen: Generator[_], no: Int= 42, count0: Boolean= true, countDistinct: Boolean= true)=
+    GenSpec(extended=false, gen, no, count0, countDistinct)
+  def extGenSpec(gen: ExtendedGenerator[_], no: Int= 42, count0: Boolean= true, countDistinct: Boolean= true)=
+    GenSpec(extended=true, gen, no, count0, countDistinct)
 
-  def extendedGenerators: List[(StreamGenerator[_] with ExtendedGenerator[_], Int)]=
+
+  def extendedGenerators: List[GenSpec]=
     List(
-      (Strings().lengthBetween(from=100, to=144).distinct, 701),
-       (Chars(), 91),
-       (Dates().reversed(), 123),
-       (Ints().distinct, 400),
-       (Longs(from= -42).sequential, 317),
-       (Doubles(), 39),
-       (Kommuner(), 12),
-       (Land(), 15),
-       (Booleans(), 2),
-       (Poststeder(), 19),
-       (Fixed(42), 1),
-       (FromList("a", "foo", "test", "alpha", "beta", "gamma", "delta"), 6),
-       (Orgnr(), 97),
-       (CarMakes(), 19)
+      extGenSpec(Strings().lengthBetween(from=100, to=144).distinct, 701),
+      extGenSpec(Chars(), 91),
+      extGenSpec(Dates().reversed(), 123),
+      extGenSpec(Ints().distinct, 400),
+      extGenSpec(Longs(from= -42).sequential, 317),
+      extGenSpec(Doubles()),
+      extGenSpec(Kommuner()),
+      extGenSpec(Land(), 15),
+      extGenSpec(Booleans(), 2),
+      extGenSpec(Poststeder()),
+      extGenSpec(Fixed(42), 1),
+      extGenSpec(FromList("a", "foo", "test", "alpha", "beta", "gamma", "delta"), 6),
+      extGenSpec(FromFile("src/test/scala/no/mesan/testdatagen/generators/ints.txt"), 7),
+      extGenSpec(Orgnr()),
+      extGenSpec(CarMakes(), 19)
     )
-  def generators: List[(StreamGenerator[_], Int)]=
-    extendedGenerators ++
-      List(
-        (Fnr(), 35),
-        (CreditCards(), 72),
-        (Fibonaccis(), 11),
-        (Guids(), 91),
-        (Markov(), 72)
-      )
-  def generatorList= generators map { tuple => tuple._1 }
-  def extendedGeneratorList= extendedGenerators map { tuple => tuple._1 }
+  def simpleGenerators: List[GenSpec]=
+    List(
+      genSpec(Fnr()),
+      genSpec(CreditCards()),
+      genSpec(Fibonaccis(), 11),
+      genSpec(Guids()),
+      genSpec(Markov()),
+      genSpec(Adresser()),
+      genSpec(Kjennemerker()),
+      genSpec(NorskeNavn()),
+      genSpec(RareNavn()),
+      genSpec(Names(3)),
+      genSpec(Urls()),
+      genSpec(FieldConcatenator().add(FromList(1, 2, 3)).add(Chars("abc")), 7),
+      genSpec(SomeNulls(50, Ints()), 124, countDistinct=false),
+      genSpec(TextWrapper(Strings().chars('A' to 'Z').sequential).surroundWith("* ", "\n"), 15),
+      genSpec(TwoWithPredicate[Int](Ints() from -50 to 50 format "%08d", (t: (Int, Int))=> t._1 <= t._2)),
+      genSpec(UniqueWithFallback(FromList((Ints() from -50 to 50 distinct) get 101), Ints() from 1000 to 5000)),
+      genSpec(TwoFromFunction(FromList("abc", "" ,"d", "ef"), (v:String)=> v.length), countDistinct=false),
+      genSpec(WeightedGenerator[Any]((1, FromList(1,2,3)), (2, Chars("1abc")), (1, Booleans().format("0", "1"))),
+              3, countDistinct=false),
+      genSpec(MailAddresses()),
+      genSpec(ToCsv(false).add("x", Ints() from 1 sequential), count0=false),
+      genSpec(ToSql("tab").add("col", Ints().from(1).sequential)),
+      genSpec(ToWiki().add("x", Ints().from(1).sequential), count0=false, countDistinct=false),
+      genSpec(ToFixedWidth(false).add("x", Strings().chars('A' to 'Z').length(4), 6)),
+      genSpec(ToHtml("x").add("y", Ints().from(1).sequential), count0=false, countDistinct=false),
+      genSpec(ToXmlAttributes("root", "data", SkipNull).add("y", Ints().from(1).sequential),
+        count0=false, countDistinct=false),
+      genSpec(ToXmlElements("root", "data", SkipNull).add("y", Ints().from(1).sequential),
+        count0=false, countDistinct=false),
+      genSpec(ToHtml("x").add("y", Ints().from(1).sequential), count0=false, countDistinct=false),
+      genSpec(ToSql("x").add("y", Ints().from(1).sequential)),
+      genSpec(ToJson().add("x", Ints().from(1).sequential), count0=false, countDistinct=false)
+    )
+  def generators: List[GenSpec]= extendedGenerators ++ simpleGenerators
+  def generatorList= generators map { spec => spec.gen }
+  def extendedGeneratorList=
+    extendedGenerators map { spec => spec.gen.asInstanceOf[ExtendedGenerator[Any]] }
 
   "A StreamGenerator" should "be lazy" in {
     generatorList map { g=>
@@ -51,20 +89,22 @@ class StreamGeneratorSpec extends FlatSpec  {
   }
 
   it should "generate unique values when asked to" in {
-    generators map { g=>
-      val res= g._1.distinct.genStrings.take(g._2).toSet
-      assert(res.size===g._2, g._1.toString)
+    generators map {
+      case g: GenSpec if g.countDistinct =>
+        val res= g.gen.distinct.genStrings.take(g.no).toSet
+        assert(res.size===g.no, s"$g.gen $g.no: $res")
+      case _ => true
     }
   }
 
   it should "return an empty list on get(0)" in {
-    generatorList map { g=> assert(List()===g.get(0)) }
-    generatorList map { g=> assert(List()===g.getStrings(0)) }
+    generators map { g=> if (g.count0) assert(List()===g.gen.get(0), g) }
+    generators map { g=> if (g.count0) assert(List()===g.gen.getStrings(0)) }
   }
 
   it should "return the specified number of entries" in {
-    generatorList map { g=> assert(g.get(17).size===17) }
-    generatorList map { g=> assert(g.getStrings(19).size===19) }
+    generators map { g=> if (g.countDistinct) assert(g.gen.get(17).size===17, g) }
+    generators map { g=> if (g.countDistinct) assert(g.gen.getStrings(19).size===19, g) }
   }
 
   it should "throw an exception if asked for a negative number of values" in {

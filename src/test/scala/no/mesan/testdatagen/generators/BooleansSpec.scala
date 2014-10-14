@@ -1,49 +1,34 @@
 package no.mesan.testdatagen.generators
 
 import org.junit.runner.RunWith
-import org.scalatest.FunSuite
+import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.{Reverse, Unique, Printer}
-
 @RunWith(classOf[JUnitRunner])
-class BooleansSuite extends FunSuite  {
+class BooleansSpec extends FlatSpec  {
 
-  test("normal sequence") {
+  "The Booleans generator" should "generate an expected sequence" in {
     assert(Booleans().sequential.get(5)===List(false, true, false, true, false))
   }
 
-  test("only false by filter") {
+  it should "filter" in {
     assert(Booleans().sequential.filter(t=> !t).get(3)===List(false, false, false))
   }
 
-  test("0 sequential elements") {
-    assert(Reverse(Booleans()).get(0)===List())
-  }
-
-  test("0 random elements") {
-    assert(Booleans().get(0)===List())
-  }
-
-  test("normal random") {
+  it should "generate randowm values" in {
     val res= Booleans().get(250)
     assert(res.length===250)
     assert(res contains true)
     assert(res contains false)
   }
 
-  test("default formatting") {
+  it should "have default string formatting" in {
     val  res= Booleans().sequential.getStrings(4)
     assert(res=== List("false", "true", "false", "true"))
   }
 
-  test("special formatting") {
+  it should "allow customized formatting" in {
     val  res= Booleans().format("0", "1").sequential.getStrings(4)
     assert(res=== List("0", "1", "0", "1"))
-  }
-
-  test("unique list") {
-    val  res= Unique(Booleans()).get(2)
-    assert(res== List(false, true) || res==List(true, false))
   }
 }

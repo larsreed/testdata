@@ -1,10 +1,7 @@
 package no.mesan.testdatagen.aggreg
 
-import scala.collection.immutable.List
-
-import no.mesan.testdatagen.{GeneratorImpl, Generator}
-import no.mesan.testdatagen.generators.{FromList, Dates}
-import scala.annotation.tailrec
+import no.mesan.testdatagen.{Generator, GeneratorImpl}
+import no.mesan.testdatagen.generators.FromList
 
 /**
  * This generator takes two generators and a predicate as input; it draws tuples from each
@@ -13,28 +10,33 @@ import scala.annotation.tailrec
  * @author lre
  */
 class TwoWithPredicate[T, U](left: Generator[T], right: Generator[U],
-                             predicate: ((T,U))=>Boolean) extends GeneratorImpl[(T, U)]  {
-  override def get(n: Int): List[(T, U)] = {
-    @tailrec def getAbunch(soFar:List[(T, U)]): List[(T, U)] =
-      if (soFar.isEmpty || soFar.length<n)
-        getAbunch(soFar ++ (left.get(n) zip right.get(n)).filter(predicate).filter(filterAll))
-      else soFar.take(n)
-    getAbunch(Nil)
-  }
+                             predicate: ((T,U))=>Boolean)  extends GeneratorImpl[(T, U)] {
 
-  def getFormatted(n: Int): List[(String, String)] =
-    get(n).map { t=>
-      (left.formatOne(t._1), right.formatOne(t._2))
-    }
+  def getStream: Stream[(T, U)]= left.gen zip right.gen filter predicate
 
-  def asListGens(n: Int): (FromList[T], FromList[U]) = {
-    val tuples = get(n)
+  /** Use the generators' formatters to format the tuples. */
+  def genFormatted: Stream[(String, String)] =
+    getStream map { case (l, r) => (left.formatOne(l), right.formatOne(r))}
+
+  /**
+   * Return two ListGenerators corresponding to the parts of the generated tuples,
+   * with a given sample size (number of occurrences read from the original).
+   * TODO: Streams?
+   */
+  def asListGens(sampleSize: Int): (FromList[T], FromList[U]) = {
+    val tuples = get(sampleSize)
     (FromList(tuples map { _._1 }).sequential,
      FromList(tuples map { _._2 }).sequential)
   }
 
-  def asFormattedListGens(n: Int): (FromList[String], FromList[String]) = {
-    val tuples = getFormatted(n)
+  /**
+   * Return two ListGenerators corresponding to the parts of the generated tuples,
+   * with a given sample size (number of occurrences read from the original), formatted
+   * by the respective generators.
+   * TODO: Streams?
+   */
+  def asFormattedListGens(sampleSize: Int): (FromList[String], FromList[String]) = {
+    val tuples = genFormatted.take(sampleSize).toList
     (FromList(tuples map { _._1 }).sequential,
      FromList(tuples map { _._2 }).sequential)
   }

@@ -15,8 +15,8 @@ class DelimitedDataField(name: String, generator: Generator[_], delimiter:String
   override def suffix: String = delimiter
   override def transform(s: String): String =
     if (s==null) null
-    else s.replaceAll(Pattern.quote("\\"), "\\\\\\\\")
-          .replaceAll(Pattern.quote(delimiter), "\\\\" + delimiter)
+    else s.replaceAll(Pattern.quote("""\"""), """\\\\""")
+          .replaceAll(Pattern.quote(delimiter), """\\""" + delimiter)
 }
 
 /**

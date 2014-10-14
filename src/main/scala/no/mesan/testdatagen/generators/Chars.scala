@@ -1,6 +1,6 @@
 package no.mesan.testdatagen.generators
 
-import no.mesan.testdatagen.{StreamGenerator, ExtendedGenerator, ExtendedDelegate}
+import no.mesan.testdatagen.{ExtendedDelegate, ExtendedGenerator}
 
 /**
  * Generate Chars.
@@ -8,8 +8,7 @@ import no.mesan.testdatagen.{StreamGenerator, ExtendedGenerator, ExtendedDelegat
  *
  * @author lre
  */
-class Chars extends ExtendedGenerator[Char] with ExtendedDelegate[String, Char]
-            with StreamGenerator[Char] {
+class Chars extends ExtendedGenerator[Char] with ExtendedDelegate[String, Char] {
 
   private val embedded= Strings(1)
   protected var generator: ExtendedGenerator[String]= embedded

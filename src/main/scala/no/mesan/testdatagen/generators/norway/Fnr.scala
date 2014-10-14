@@ -1,9 +1,9 @@
 package no.mesan.testdatagen.generators.norway
 
-import org.joda.time.DateTime
-
 import no.mesan.testdatagen._
 import no.mesan.testdatagen.generators.{Dates, Ints}
+import org.joda.time.DateTime
+
 import scala.annotation.tailrec
 
 /**
@@ -13,9 +13,7 @@ import scala.annotation.tailrec
  *
  * @author lre
  */
-class Fnr(dateGenerator: ExtendedGenerator[DateTime] with StreamGenerator[DateTime])
-      extends GeneratorImpl[String]
-      with StreamGeneratorImpl[String] with Percentage {
+class Fnr(dateGenerator: ExtendedGenerator[DateTime]) extends GeneratorImpl[String] with Percentage {
 
   private def isOdd(i: Int)= i%2 == 1
   private def isEven(i: Int)= !isOdd(i)
@@ -77,7 +75,7 @@ class Fnr(dateGenerator: ExtendedGenerator[DateTime] with StreamGenerator[DateTi
 
 object Fnr {
   def apply(): Fnr = new Fnr(Dates().from(y=1855).to(new DateTime()))
-  def apply(g: ExtendedGenerator[DateTime] with StreamGenerator[DateTime]): Fnr = new Fnr(g)
+  def apply(g: ExtendedGenerator[DateTime]): Fnr = new Fnr(g)
 
   val fakt1= List(3, 7, 6, 1, 8, 9, 4, 5, 2)
   val fakt2= List(5, 4, 3, 2, 7, 6, 5, 4, 3, 2)

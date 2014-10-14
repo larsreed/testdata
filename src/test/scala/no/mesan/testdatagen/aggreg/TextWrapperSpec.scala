@@ -3,63 +3,38 @@ package no.mesan.testdatagen.aggreg
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 
-import org.scalatest.FunSuite
+import org.scalatest.{FlatSpec, FunSuite}
 import no.mesan.testdatagen.generators.{Fixed, Strings}
 
 import no.mesan.testdatagen.Printer
 
 @RunWith(classOf[JUnitRunner])
-class TextWrapperSuite extends FunSuite with Printer {
+class TextWrapperSpec extends FlatSpec {
 
   trait Setup {
     val xgen= TextWrapper(Strings().chars('A' to 'Z').sequential).surroundWith("* ", "\n")
     val fix= Fixed("ABCDEFG")
   }
 
-  print(false) {
-    new Setup {
-      println(xgen.get(120))
-    }
-  }
-
-  test("negative get") {
-    intercept[IllegalArgumentException] {
-      new Setup {
-        xgen.get(-1)
-      }
-    }
-    intercept[IllegalArgumentException] {
-      new Setup {
-        xgen.getStrings(-1)
-      }
-    }
-  }
-
-  test("count") {
-      new Setup {
-        assert(xgen.get(30).size===30)
-      }
-  }
-
-  test("right substring") {
+  "The TextWrapper" should "be able to take right substring" in {
     new Setup {
       assert(TextWrapper(fix).substring(3).get(1)(0)==="DEFG")
     }
   }
 
-  test("middle substring") {
+  it should "be able to take middle substring" in {
     new Setup {
       assert(TextWrapper(fix).substring(2,4).get(1)(0)==="CD")
     }
   }
 
-  test("transform") {
+  it should "handle user specified transforms" in {
     new Setup {
       assert(TextWrapper(fix).transform(_.toLowerCase).get(1)(0)==="abcdefg")
     }
   }
 
-  test("order of operations") {
+  it should "handle transforms in the order specified" in {
     new Setup {
       assert(TextWrapper(fix).transform(_.toLowerCase).
           substring(1,  4).
@@ -72,7 +47,7 @@ class TextWrapperSuite extends FunSuite with Printer {
     }
   }
 
-  test("upper/lower") {
+  it should "be able to change case" in {
     new Setup {
       assert(TextWrapper(fix).toLower.
           get(1)(0)==="abcdefg")
@@ -81,7 +56,7 @@ class TextWrapperSuite extends FunSuite with Printer {
     }
   }
 
-  test("prefix and suffix") {
+  it should "be able to ad pre- and suffixes" in {
     val v = TextWrapper(Strings().chars("ABC").
         sequential.
         formatWith(s => s.toLowerCase)).
@@ -91,12 +66,11 @@ class TextWrapperSuite extends FunSuite with Printer {
     assert(res.forall(s => s.matches("<[a-c]>")), res)
   }
 
-  test("text replacement") {
+  it should "be able to replace text" in {
     val v = TextWrapper(Strings().chars("ABC").sequential).
                 substitute("[ABC]", "g")
 
     val res = v.getStrings(12)
     assert(res.forall(s => s.matches("^g+$")), res)
   }
-
 }

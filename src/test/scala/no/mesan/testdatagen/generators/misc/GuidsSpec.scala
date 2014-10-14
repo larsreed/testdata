@@ -5,7 +5,7 @@ import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class GuidsSuite extends FlatSpec {
+class GuidsSpec extends FlatSpec {
 
   "The Guids" should "produce correctly formatted strings" in {
     Guids().getStrings(120).foreach(s =>

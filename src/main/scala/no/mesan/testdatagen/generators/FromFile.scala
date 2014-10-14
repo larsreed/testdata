@@ -1,7 +1,7 @@
 package no.mesan.testdatagen.generators
 
-import no.mesan.testdatagen.{StreamGeneratorImpl, ExtendedDelegate, ExtendedGenerator}
 import no.mesan.testdatagen.utils.IO
+import no.mesan.testdatagen.{ExtendedDelegate, ExtendedGenerator}
 
 /**
  * This generator reads lines from an input file and creates a list of values,
@@ -14,23 +14,21 @@ import no.mesan.testdatagen.utils.IO
  * @author lre
  */
 class FromFile[T](fileName: String, encoding:String) extends ExtendedGenerator[T]
-    with ExtendedDelegate[T, T]
-    with StreamGeneratorImpl[T] {
+    with ExtendedDelegate[T, T] {
 
-  private val listGen=new FromList[T]()
+  private val listGen= FromList(getContents)
   protected var generator: ExtendedGenerator[T]= listGen // For the trait
 
   /** Not supported. */
-  override def from(f:T) = throw new UnsupportedOperationException
+  override def from(f: T) = throw new UnsupportedOperationException
   /** Not supported. */
-  override def to(f:T) = throw new UnsupportedOperationException
+  override def to(f: T) = throw new UnsupportedOperationException
 
   def allFilters: List[T => Boolean]= listGen.allFilters
 
-  def getStream : Stream[T] =  listGen.fromList(getContents).getStream
-
-  override def get(n:Int): List[T]= super[StreamGeneratorImpl].get(n)
-
+  def getStream: Stream[T]= {
+    listGen.fromList(getContents).getStream
+  }
   private def getContents: List[T] = {
     val source = IO.fileAsStream(fileName, encoding).getLines
     var res: List[T]= Nil

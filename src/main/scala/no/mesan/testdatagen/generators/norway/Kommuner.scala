@@ -1,8 +1,8 @@
 package no.mesan.testdatagen.generators.norway
 
-import no.mesan.testdatagen.{StreamGenerator, ExtendedGenerator, Generator}
 import no.mesan.testdatagen.aggreg.TextWrapper
 import no.mesan.testdatagen.generators.FromFile
+import no.mesan.testdatagen.{ExtendedGenerator, Generator}
 
 /**
  * Generate Norwegian county codes -- format NNNN Name, where NNNN is an integer.
@@ -10,12 +10,11 @@ import no.mesan.testdatagen.generators.FromFile
  * @author lre
  */
 object Kommuner {
-  def apply(): ExtendedGenerator[String] with StreamGenerator[String] =
-    FromFile("kommuner.txt", "ISO-8859-1")
+  def apply(): ExtendedGenerator[String] = FromFile("kommuner.txt", "ISO-8859-1")
 
-  /** Return the number part part only. */ // TODO Stream
+  /** Return the number part part only. */
   def kommunenr(): Generator[String]= TextWrapper(apply()).substring(0, 4)
 
-  /** Return the name part part only. */ // TODO Stream
+  /** Return the name part part only. */
   def kommunenavn(): Generator[String]=  TextWrapper(apply()).substring(5)
 }

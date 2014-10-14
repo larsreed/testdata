@@ -1,13 +1,15 @@
 package no.mesan.testdatagen.generators
 
+import no.mesan.testdatagen.ExtendedGenerator
+
 import org.junit.runner.RunWith
-import org.scalatest.FunSuite
+import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner
 
-import no.mesan.testdatagen.{Reverse, Unique, ExtendedGenerator, Printer}
+import scala.language.postfixOps
 
 @RunWith(classOf[JUnitRunner])
-class FromFileSuite extends FunSuite with Printer {
+class FromFileSpec extends FlatSpec {
 
   trait Setup {
     val pfx= "src/test/scala/no/mesan/testdatagen/generators/"
@@ -18,29 +20,7 @@ class FromFileSuite extends FunSuite with Printer {
     val strGen= FromFile(strings)
   }
 
-  print(false) {
-    new Setup {
-      println(new java.io.File(".").getCanonicalPath)
-      println(intGen.get(25))
-      // println(FromFileGenerator[Boolean](strings).reversed.get(25))
-    }
-  }
-
-
-  test("negative get") {
-    intercept[IllegalArgumentException] {
-      new Setup {
-          intGen.get(-1)
-      }
-    }
-    intercept[IllegalArgumentException] {
-      new Setup {
-          intGen.getStrings(-1)
-      }
-    }
-  }
-
-  test("from/to not suported") {
+  "The FromFile generator" should "reject from/to" in {
     new Setup {
       val l: ExtendedGenerator[String] = strGen
       intercept[UnsupportedOperationException] {
@@ -52,7 +32,7 @@ class FromFileSuite extends FunSuite with Printer {
     }
   }
 
-  test("cannot get from empty file") {
+  it should "reject input from empty files" in {
     new Setup {
       intercept[IllegalArgumentException] {
         FromFile(empty).get(1)
@@ -60,31 +40,15 @@ class FromFileSuite extends FunSuite with Printer {
     }
   }
 
-  test("reverted sequence") {
+  it should "be able to reverse the file input" in {
     new Setup {
-      val res= Reverse(FromFile(ints).sequential).get(8)
+      val res= FromFile(ints).sequential.get(8).reverse
       val exp= List("1", "1000000", "100000", "10000", "1000", "100", "10", "1")
       assert(res === exp)
     }
   }
 
-  test("0 sequential elements") {
-    new Setup {
-      val res= Reverse(FromFile(strings)).get(0)
-      val exp= Nil
-      assert(res === exp)
-    }
-  }
-
-  test("0 random elements") {
-    new Setup {
-      val res= FromFile(strings).get(0)
-      val exp= Nil
-      assert(res === exp)
-    }
-  }
-
-  test("random (may fail on rare occasions)") {
+  it should "be able to extract randomly (may fail on rare occasions)" in {
     new Setup {
       val res= FromFile(ints).get(250).toSet
       val exp= List("1000000", "100000", "10000", "1000", "100", "10", "1").toSet
@@ -92,7 +56,7 @@ class FromFileSuite extends FunSuite with Printer {
     }
   }
 
-  test("filter (may fail on rare occasions)") {
+  it should "be able to filter (may fail on rare occasions)" in {
     new Setup {
       val res= FromFile(ints).filter(s=> s.toLong > 1000).get(100).toSet
       val exp= List("1000000", "100000", "10000").toSet
@@ -100,7 +64,7 @@ class FromFileSuite extends FunSuite with Printer {
     }
   }
 
-  test("format") {
+  it should "be able to format input" in {
     new Setup {
       val res= FromFile(ints).sequential.formatWith(s=> f"${s.toLong}%015d").getStrings(3)
       val exp= List("000000000000001", "000000000000010", "000000000000100")
@@ -108,11 +72,11 @@ class FromFileSuite extends FunSuite with Printer {
     }
   }
 
-  test("random") {
+  it should "be able to extract randomly" in {
     new Setup {
       val exp= List("1000000", "100000", "10000", "1000", "100", "10", "1").toSet.toList.sorted
       val res= {
-        val ss: List[String] = Unique(FromFile(ints)).get(exp.size)
+        val ss: List[String] = (FromFile(ints) distinct).get(exp.size)
         ss.toSet.toList.sorted
       }
       assert(res === exp)

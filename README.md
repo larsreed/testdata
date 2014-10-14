@@ -285,25 +285,6 @@ Apply methods:
 
 * `SomeNulls(percent, generator)`: supply both the factor and the generator
 
-### Unique
-This generator takes another generator as input, and forwards all calls to that generator.  However, it adds a filter function that remembers all previously seen values and excludes them if they reappear.
-This generator should be **used with caution**!
-
-1. If the value space of the underlying generator is smaller than the requested number of entries, it will loop forever trying to find a suitable value.
-2. As the number of requested elements grow, memory consumption grows accordingly, as it must remember all previously generated values.
-
-Apply methods:
-
-* `Unique(generator)`: supply the generator
-
-### Reverse
-This generator takes another generator as input, and forwards all calls to that generator.  However, it reverses the output from the `get` / `getStrings`-functions.
-It does not make sense to use this unless the underlying generator generates sequential values...  Look for `step`- or `reversed`-methods in the included generator that could make this wrapper superfluous.
-
-Apply methods:
-
-* `Reverse(generator)`: supply the generator
- 
 ### WeightedGenerator
 This generator takes one or more generators as input, and selects randomly between them for each value to generate. It is typed as a `Generator[Any]`, since it can wrap a free mix of generator types. Each generator is given a weight &ndash;  the probability for each one is its own weight relative to the sum of all weights.
 

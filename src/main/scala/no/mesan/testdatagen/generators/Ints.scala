@@ -1,6 +1,6 @@
 package no.mesan.testdatagen.generators
 
-import no.mesan.testdatagen.{StreamGenerator, ExtendedDelegate, ExtendedGenerator}
+import no.mesan.testdatagen.{ExtendedDelegate, ExtendedGenerator}
 
 /**
  * Generate Ints.
@@ -9,7 +9,7 @@ import no.mesan.testdatagen.{StreamGenerator, ExtendedDelegate, ExtendedGenerato
  *
  * @author lre
  */
-class Ints extends ExtendedGenerator[Int] with ExtendedDelegate[Long, Int] with StreamGenerator[Int] {
+class Ints extends ExtendedGenerator[Int] with ExtendedDelegate[Long, Int]  {
 
   private val embedded= Longs() from (Int.MinValue + 1).toLong to (Int.MaxValue - 1).toLong
   protected var generator: ExtendedGenerator[Long] = embedded

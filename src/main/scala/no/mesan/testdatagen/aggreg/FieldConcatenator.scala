@@ -1,25 +1,21 @@
 package no.mesan.testdatagen.aggreg
 
-import scala.collection.immutable.List
-
-import no.mesan.testdatagen.{GeneratorImpl, Generator}
+import no.mesan.testdatagen.{Generator, GeneratorImpl, StreamUtils}
 
 /**
  * The FieldConcatenator is given a set of generators with the add method.
- *  When get is called, it calls getString on each of its generators, and
- *  concatenates the output from each generator (in the same order as the
- *  add calls), and returns the list of concatenated strings.
+ * Its output is the concatenated output of 1 field from each of the generators in the same order
+ * as the add calls).
  *
  * @author lre
  */
-class FieldConcatenator extends GeneratorImpl[String] with MultiGenerator[Any] {
-
-  override def get(n: Int): List[String] = {
-    val allLists = generators.map{ g => g.getStrings(n) }.transpose
-    allLists.map(l => l.reduceLeft(_ + _)).filter(filterAll)
-  }
+class FieldConcatenator(fieldSeparator: String= "") extends GeneratorImpl[String]
+      with MultiGenerator[Any] with StreamUtils {
+  def getStream: Stream[String] =  combineGens(generators) map { _.mkString(fieldSeparator)  }
 }
 
 object FieldConcatenator {
   def apply(gs: Generator[Any]*): FieldConcatenator =  new FieldConcatenator() add(gs:_*)
+  def apply(fieldSeparator: String, gs: Generator[Any]*): FieldConcatenator =
+    new FieldConcatenator(fieldSeparator) add(gs:_*)
 }

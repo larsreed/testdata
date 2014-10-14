@@ -1,7 +1,7 @@
 package no.mesan.testdatagen.generators.misc
 
 import no.mesan.testdatagen.utils.IO
-import no.mesan.testdatagen.{GeneratorImpl, RandomElem, StreamGeneratorImpl}
+import no.mesan.testdatagen.{GeneratorImpl, RandomElem}
 
 import scala.annotation.tailrec
 
@@ -14,7 +14,7 @@ import scala.annotation.tailrec
  * The get methods return a string containing N words randomly selected from
  * the input.
  */
-class Markov extends GeneratorImpl[String] with RandomElem with StreamGeneratorImpl[String] {
+class Markov extends GeneratorImpl[String] with RandomElem {
 
   type WordMap= Map[String, List[String]]
 

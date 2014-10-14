@@ -1,7 +1,7 @@
 package no.mesan.testdatagen.generators.norway
 
 import no.mesan.testdatagen.generators.Ints
-import no.mesan.testdatagen.{ExtendedImpl, GeneratorFilters, StreamGeneratorImpl}
+import no.mesan.testdatagen.{ExtendedImpl, GeneratorFilters}
 
 import scala.language.postfixOps
 
@@ -12,7 +12,8 @@ import scala.language.postfixOps
  *
  * @author lre
  */
-class Orgnr() extends ExtendedImpl[Int] with StreamGeneratorImpl[Int] with GeneratorFilters[Int] {
+class Orgnr() extends ExtendedImpl[Int] with GeneratorFilters[Int] {
+
   from(80000000)
   to(90000000)
 

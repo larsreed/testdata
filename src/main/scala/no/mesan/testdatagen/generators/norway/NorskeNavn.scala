@@ -1,6 +1,6 @@
 package no.mesan.testdatagen.generators.norway
 
-import no.mesan.testdatagen.Generator
+import no.mesan.testdatagen.{GeneratorDelegate, Generator}
 import no.mesan.testdatagen.aggreg.{FieldConcatenator, TextWrapper, WeightedGenerator}
 import no.mesan.testdatagen.generators.{FromFile, Strings}
 
@@ -30,7 +30,7 @@ import no.mesan.testdatagen.generators.{FromFile, Strings}
  *
  * @author lre
  */
-class NorskeNavn extends Generator[String] {
+class NorskeNavn extends Generator[String] with GeneratorDelegate[String, String]{
   private val fornavn= "fornavn.txt"
   private val etternavn= "etternavn.txt"
 
@@ -61,20 +61,6 @@ class NorskeNavn extends Generator[String] {
     this
   }
 
-  override def formatWith(f: String=>String): this.type = {
-    generator.formatWith(f)
-    this
-  }
-
-  override def filter(f: String=>Boolean): this.type = {
-    generator.filter(f)
-    this
-  }
-
-  override def get(n:Int): List[String] = generator.get(n)
-
-  override def getStrings(n:Int): List[String] = generator.getStrings(n)
-
   private def create(antFor: Int, antEtter:Int): Generator[String] = {
    val gen= new FieldConcatenator()
    for ( i<- 0 to antFor-1) {
@@ -87,7 +73,6 @@ class NorskeNavn extends Generator[String] {
    }
    gen
   }
-  override def formatOne[S >: String](v: S): String = generator.formatOne(v)
 }
 
 object NorskeNavn {

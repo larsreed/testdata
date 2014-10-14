@@ -1,5 +1,19 @@
 package no.mesan.testdatagen
 
+import scala.language.postfixOps
+
+/**
+ * This is the bare minimum interface, mostly ment for "end-of-the-line" data generators.
+ */
+trait BareGenerator[+T] {
+
+  /** Provide a list of n entries. */
+  def get(n: Int): List[T]
+
+  /** Get n entries converted to strings. */
+  def getStrings(n: Int): List[String]
+}
+
 /**
  * This is the main testdata generator interface.
  * For default implementation -- see `GeneratorImpl`.
@@ -11,12 +25,15 @@ package no.mesan.testdatagen
  * @tparam T Generated type
  * @author lre
  */
-trait Generator[+T] {
-  /** The main function - provide a list of n entries. */
-  def get(n: Int): List[T]
+trait Generator[+T] extends BareGenerator[T] {
+  /** The main function - Get a stream of entries. */
+  def gen : Stream[T]
 
-  /** Get n entries converted to strings and formatted. */
-  def getStrings(n: Int): List[String]
+  /** Get a stream of entries converted to strings and formatted. */
+  def genStrings: Stream[String]
+
+  /** Make returned values unique. */
+  def distinct: this.type
 
   /**
    * Add a filter function that takes an instance of the generator's type and returns true if
@@ -81,66 +98,43 @@ trait GeneratorFilters[T] {
 
 /** A default implementation of the Generator interface. */
 trait GeneratorImpl[T] extends Generator[T] with GeneratorFilters[T] {
+  self :  {
+    def getStream : Stream[T]
+  } =>
 
   private var formatFun: T => String = t => if (t == null) null else t.toString
   override def formatWith(f: T => String): this.type = { formatFun = f; this }
-
-  override def getStrings(n: Int): List[String] = get(n).map(formatFun)
-
   override def formatOne[S>:T](v: S): String = formatFun(v.asInstanceOf[T])
-}
 
-/**
- * A trait to help build delegates for Generators.
- * Used in a generator[T], wraps a delegate[G].
- */
-trait GeneratorDelegate[G, T]   {
-  self: Generator[T] =>
+  private var isDistinctGen= false
+  /** Is this generator distinct? */
+  def isDistinct: Boolean= isDistinctGen
+  override def distinct: this.type= {
+    isDistinctGen= true
+    this
+  }
 
-  /** The delegate. */
-  protected var generator: Generator[G]
+  private def genFiltered= getStream filter (t => allFilters.forall(f => f(t)))
 
-  /** Convert from this type to the generator's type. */
-  protected def conv2gen(f: T): G = f.asInstanceOf[G]
-  /** Convert from the generator's type to this type. */
-  protected def conv2result(f: G): T= f.asInstanceOf[T]
+  override def gen: Stream[T]= if (isDistinctGen) genFiltered.distinct else genFiltered
+  override def genStrings: Stream[String] = gen map formatOne
 
-  override def formatWith(f: T => String): self.type= { generator.formatWith(v=> f(conv2result(v))); this }
-  override def filter(f: T=>Boolean): this.type = { generator.filter(v=> f(conv2result(v))); this }
-  override def get(n: Int): List[T] = generator.get(n) map conv2result
-  override def getStrings(n: Int): List[String] = generator.getStrings(n)
-  override def formatOne[S>:T](v: S): String= generator.formatOne(v)
-}
+  override def get(n: Int): List[T] = {
+    require(n>=0, "cannot get negative count")
+    gen take n toList
+  }
 
-/**
- * A trait to help build delegates for ExtendedGenerators.
- * Used in a generator[T], wraps a delegate[G].
- */
-trait ExtendedDelegate[G, T] /*extends GeneratorDelegate[G, T]*/  {
-  self: ExtendedGenerator[T] =>
-
-  /** The delegate. */
-  protected var generator: ExtendedGenerator[G]
-
-  /** Convert from this type to the generator's type. */
-  protected def conv2gen(f: T): G = f.asInstanceOf[G]
-  /** Convert from the generator's type to this type. */
-  protected def conv2result(f: G): T= f.asInstanceOf[T]
-
-  override def formatWith(f: T => String): self.type= { generator.formatWith(v=> f(conv2result(v))); this }
-  override def filter(f: T=>Boolean): this.type = { generator.filter(v=> f(conv2result(v))); this }
-  override def get(n: Int): List[T] = generator.get(n) map conv2result
-  override def getStrings(n: Int): List[String] = generator.getStrings(n)
-  override def formatOne[S>:T](v: S): String= generator.formatOne(v)
-
-  override def format(f: String): self.type = { generator.format(f); this }
-  override def from(min: T): self.type = { generator.from(conv2gen(min)); this }
-  override def to(max: T): self.type = { generator.to(conv2gen(max)); this }
-  override def sequential: self.type = { generator.sequential; this }
+  override def getStrings(n: Int): List[String] = {
+    require(n>=0, "cannot get negative count")
+    genStrings take n toList
+  }
 }
 
 /** Default implementations for extended generators. */
 trait ExtendedImpl[T] extends GeneratorImpl[T] with ExtendedGenerator[T] {
+  self :  {
+    def getStream : Stream[T]
+  } =>
 
   override def format(f: String): this.type= formatWith((t:T) => f.format(t))
 
@@ -160,62 +154,14 @@ trait ExtendedImpl[T] extends GeneratorImpl[T] with ExtendedGenerator[T] {
 }
 
 /**
- * An extension of Generator for generating Streams.
- * @tparam T The generator type
- */
-trait StreamGenerator[+T] extends Generator[T] {
-  /** Get a stream of entries. */
-  def gen : Stream[T]
-
-  /** Get a stream of entries converted to strings and formatted. */
-  def genStrings: Stream[String]
-
-  /** Make returned values unique. */
-  def distinct: this.type
-}
-
-import scala.language.postfixOps
-
-trait StreamGeneratorImpl[T] extends StreamGenerator[T] {
-  self :  {
-    def getStream : Stream[T]
-    def allFilters: List[T => Boolean]
-  } =>
-
-  private var isDistinctGen= false
-  /** Is this generator distinct? */
-  def isDistinct: Boolean= isDistinctGen
-  override def distinct: this.type= {
-    isDistinctGen= true
-    this
-  }
-
-  private def genFiltered= getStream filter (t => allFilters.forall(f => f(t)))
-
-  override def gen: Stream[T]= if (isDistinctGen) genFiltered.distinct else genFiltered
-
-  def get(n: Int): List[T] = {
-    require(n>=0, "cannot get negative count")
-    gen take n toList
-  }
-
-  override def genStrings: Stream[String] = gen map formatOne
-
-  override def getStrings(n: Int): List[String] = {
-    require(n>=0, "cannot get negative count")
-    genStrings take n toList
-  }
-}
-
-/**
  * A trait to help build delegates for Generators.
  * Used in a generator[T], wraps a delegate[G].
  */
-trait StreamDelegate[G, T]   {
-  self: StreamGenerator[T] =>
+trait GeneratorDelegate[G, T]   {
+  self: Generator[T] =>
 
   /** The delegate. */
-  protected var generator: StreamGenerator[G]
+  protected var generator: Generator[G]
 
   /** Convert from this type to the generator's type. */
   protected def conv2gen(f: T): G = f.asInstanceOf[G]
@@ -224,5 +170,42 @@ trait StreamDelegate[G, T]   {
 
   override def gen: Stream[T]= generator.gen map conv2result
   override def genStrings: Stream[String]= generator.genStrings
+  override def get(n: Int): List[T] = generator.get(n) map conv2result
+  override def getStrings(n: Int): List[String] = generator.getStrings(n)
+  override def formatWith(f: T => String): self.type= { generator.formatWith(v=> f(conv2result(v))); this }
+  override def filter(f: T=>Boolean): this.type = { generator.filter(v=> f(conv2result(v))); this }
+  override def formatOne[S>:T](v: S): String= generator.formatOne(v)
   override def distinct: this.type= { generator.distinct; this }
+}
+
+/**
+ * A trait to help build delegates for ExtendedGenerators.
+ * Used in a generator[T], wraps a delegate[G].
+ */
+trait ExtendedDelegate[G, T] /*extends GeneratorDelegate[G, T]*/  {
+  self: ExtendedGenerator[T] =>
+
+  /** The delegate. */
+  protected var generator: ExtendedGenerator[G]
+
+  /** Convert from this type to the generator's type. */
+  protected def conv2gen(f: T): G = f.asInstanceOf[G]
+  /** Convert from the generator's type to this type. */
+  protected def conv2result(f: G): T= f.asInstanceOf[T]
+
+  override def gen: Stream[T]= generator.gen map conv2result
+  override def genStrings: Stream[String]= generator.genStrings
+  override def get(n: Int): List[T] = generator.get(n) map conv2result
+  override def getStrings(n: Int): List[String] = generator.getStrings(n)
+
+  override def formatWith(f: T => String): self.type= { generator.formatWith(v=> f(conv2result(v))); this }
+  override def formatOne[S>:T](v: S): String= generator.formatOne(v)
+  override def format(f: String): self.type = { generator.format(f); this }
+
+  override def filter(f: T=>Boolean): this.type = { generator.filter(v=> f(conv2result(v))); this }
+  override def distinct: this.type= { generator.distinct; this }
+  override def sequential: self.type = { generator.sequential; this }
+
+  override def from(min: T): self.type = { generator.from(conv2gen(min)); this }
+  override def to(max: T): self.type = { generator.to(conv2gen(max)); this }
 }

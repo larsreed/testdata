@@ -6,7 +6,7 @@ import no.mesan.testdatagen.{Generator, GeneratorImpl}
 
 /**
  * This generator takes any other generator as input, always uses its
- * getStrings(n) as input, thus acting as "text converter", and adds methods to
+ * genStrings as input, thus acting as "text converter", and adds methods to
  * manipulate the resulting text.
  *
  * @author lre
@@ -22,16 +22,16 @@ class TextWrapper(generator:Generator[_]) extends GeneratorImpl[String] {
     this
   }
 
-  /** Take a substring. */
-  def substring(from:Int, to:Int= -1): this.type =
-    if ( to>=0 ) transform { s => s.substring(from, to)}
-    else transform { s => s.substring(from)}
-
   /** Add a given string transformation. */
   def transform(f: String=>String): this.type = {
     transformers ::= f
     this
   }
+
+  /** Take a substring. */
+  def substring(from:Int, to:Int= -1): this.type =
+    if ( to>=0 ) transform { s => s.substring(from, to)}
+    else transform { s => s.substring(from)}
 
   /** trim the string. */
   def trim(): this.type = transform {s=> s.trim }
@@ -45,15 +45,15 @@ class TextWrapper(generator:Generator[_]) extends GeneratorImpl[String] {
   /** Substitute text. */
   def substitute(fromRegex:String, to:String): this.type = transform { s=> s.replaceAll(fromRegex, to) }
 
+  private def composed = transformers reduce(_ compose _)
+
   private def transformAll(s:List[String]): List[String]= {
     val func= transformers reduce(_ compose _)
     s map func
   }
 
-  override def get(n: Int): List[String] = getStrings(n)
+  def getStream: Stream[String]= generator.genStrings.map(composed)
 
-  override def getStrings(n: Int): List[String]=
-    transformAll(generator.getStrings(n))
 }
 
 object TextWrapper {

@@ -1,8 +1,8 @@
 package no.mesan.testdatagen.generators
 
-import scala.util.Random
+import no.mesan.testdatagen.ExtendedImpl
 
-import no.mesan.testdatagen.{StreamGeneratorImpl, ExtendedImpl}
+import scala.util.Random
 
 /**
  * Generate longs.
@@ -12,7 +12,7 @@ import no.mesan.testdatagen.{StreamGeneratorImpl, ExtendedImpl}
  *
  * @author lre
  */
-class Longs extends ExtendedImpl[Long] with StreamGeneratorImpl[Long] {
+class Longs extends ExtendedImpl[Long] {
 
   filter(x=> lower match { case Some(low)=>  x>=low;  case _=> true })
   filter(x=> upper match { case Some(high)=> x<=high; case _=> true })

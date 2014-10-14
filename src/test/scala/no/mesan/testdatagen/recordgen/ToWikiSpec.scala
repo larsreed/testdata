@@ -1,17 +1,15 @@
 package no.mesan.testdatagen.recordgen
 
-import org.junit.runner.RunWith
-import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
-
-import no.mesan.testdatagen.Printer
 import no.mesan.testdatagen.aggreg.SomeNulls
-import no.mesan.testdatagen.generators.{Booleans, Dates, Fixed, FromList, Ints, Strings}
 import no.mesan.testdatagen.generators.misc.MailAddresses
 import no.mesan.testdatagen.generators.norway.Fnr
+import no.mesan.testdatagen.generators.{Booleans, Dates, Fixed, FromList, Ints, Strings}
+import org.junit.runner.RunWith
+import org.scalatest.FlatSpec
+import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class ToWikiSuite extends FunSuite with Printer {
+class ToWikiSpec extends FlatSpec {
   val dates = Dates().from(y = 1950).to(y = 2012).get(1000)
 
   trait Setup {
@@ -27,51 +25,23 @@ class ToWikiSuite extends FunSuite with Printer {
       add("mail", mailGen).
       add("active", boolGen)
   }
-
-  print(false) {
-    new Setup {
-      println(recordGen.get(120).mkString("\n"))
-    }
+  "The ToWiki generator" should "require at least 1 input" in {
+    intercept[IllegalArgumentException] { ToWiki().get(1) }
   }
 
-  test("negative get") {
-    intercept[IllegalArgumentException] {
-      new Setup {
-        recordGen.get(-1)
-      }
-    }
-    intercept[IllegalArgumentException] {
-      new Setup {
-        recordGen.getStrings(-1)
-      }
-    }
-  }
-
-  test("needs one generator") {
-    intercept[IllegalArgumentException] {
-      ToWiki().get(1)
-    }
-  }
-
-  test("count") {
-    new Setup {
-      assert(recordGen.get(30).size === 30 + 1)
-    }
-  }
-
-  test("contents") {
+  it should "produce expected contents" in {
     new Setup {
       val res=recordGen.get(3).mkString("\n")
       assert(res.matches("(?s)\\s*\\|\\|\\s*id\\s*\\|\\|.*$"),res)
     }
   }
 
-  test("quoting") {
+  it should "quote correctly" in {
     new Setup {
       var badGen = Fixed("""
 [|]
 """)
-      val res = ToWiki().add("", badGen).getStrings(1)(1)
+      val res = ToWiki().add("", badGen).getStrings(1)(0)
       val exp= "\\s*\\|"
       // TODO assert(res.,res +"=" + exp)
     }

@@ -1,17 +1,15 @@
 package no.mesan.testdatagen.recordgen
 
-import org.junit.runner.RunWith
-import org.scalatest.FunSuite
-import org.scalatest.junit.JUnitRunner
-
-import no.mesan.testdatagen.Printer
 import no.mesan.testdatagen.aggreg.SomeNulls
-import no.mesan.testdatagen.generators.{Booleans, Dates, Doubles, FromList, Ints, Strings}
 import no.mesan.testdatagen.generators.misc.{MailAddresses, Urls}
 import no.mesan.testdatagen.generators.norway.{Fnr, Kjennemerker, NorskeNavn}
+import no.mesan.testdatagen.generators.{Booleans, Dates, Doubles, FromList, Ints, Strings}
+import org.junit.runner.RunWith
+import org.scalatest.FlatSpec
+import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class ToHtmlSuite extends FunSuite with Printer {
+class ToHtmlSpec extends FlatSpec {
   val dates = Dates().from(y = 1950).to(y = 2012).get(1000)
 
   trait Setup {
@@ -38,52 +36,25 @@ class ToHtmlSuite extends FunSuite with Printer {
       add("car", kjmGen)
   }
 
-  print(false) {
-    new Setup {
-      println(recordGen.getStrings(12))
-    }
+  "The ToHtml generator" should "demand at least one generator" in {
+    intercept[IllegalArgumentException] { ToHtml("tab").get(1) }
   }
 
-  test("needs one generator") {
-    intercept[IllegalArgumentException] {
-      ToSql("tab", "go").get(1)
-    }
-  }
-
-  test("negative get") {
-    intercept[IllegalArgumentException] {
-      new Setup {
-        recordGen.get(-1)
-      }
-    }
-    intercept[IllegalArgumentException] {
-      new Setup {
-        recordGen.getStrings(-1)
-      }
-    }
-  }
-
-  test("count") {
-    new Setup {
-      assert(recordGen.get(30).size === 1)
-    }
-  }
-
-  ignore("contents") {
+  ignore should "produce correct contents" in {
     new Setup {
       val res=recordGen.get(30).mkString("\n")
       assert(res.matches("(?s)..."))
     }
   }
 
-  test("quoting") {
+  it should "quote special characters correctly" in {
     new Setup {
       var tullGen = Strings().chars("<&>").sequential
       val res = ToHtml().add("tull", tullGen).getStrings(3).mkString(" ")
       val exp= "c"
-      assert(res.contains("&lt;"))
-      assert(res.contains("&gt;"))
-      assert(res.contains("&amp;"))
+      assert(res.contains("&lt;"), res)
+      assert(res.contains("&gt;"), res)
+      assert(res.contains("&amp;"), res)
     }
   }
 }

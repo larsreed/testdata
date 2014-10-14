@@ -1,6 +1,6 @@
 package no.mesan.testdatagen.generators.misc
 
-import no.mesan.testdatagen.{StreamGenerator, ExtendedGenerator}
+import no.mesan.testdatagen.ExtendedGenerator
 import no.mesan.testdatagen.generators.FromList
 
 /**
@@ -29,5 +29,5 @@ object CarMakes {
      "Steyr", "Studebaker", "Subaru", "Suzuki", "Talbot", "Tempo", "Tesla",
      "Toyota", "Trabant", "Triumph", "Unimog", "Vauxhall", "Volga",
      "Volkswagen", "Volvo", "Yamaha", "Zundapp")
-  def apply(): ExtendedGenerator[String] with StreamGenerator[String] = FromList(makes)
+  def apply(): ExtendedGenerator[String] = FromList(makes)
 }

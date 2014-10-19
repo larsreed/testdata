@@ -1,6 +1,6 @@
 package no.mesan.testdatagen.generators.misc
 
-import no.mesan.testdatagen.GeneratorImpl
+import no.mesan.testdatagen.{StreamUtils, GeneratorImpl}
 import no.mesan.testdatagen.generators.Longs
 
 import scala.language.postfixOps
@@ -11,19 +11,16 @@ import scala.language.postfixOps
  *
  * @author lre
  */
-class Guids extends GeneratorImpl[Seq[Long]]  {
+class Guids extends GeneratorImpl[Seq[Long]] with StreamUtils {
   private val p1Gen= Longs() from 0 to Int.MaxValue
   private val p2Gen= Longs() from 0 to 65535
   private val p3Gen= Longs() from 0 to 65535
   private val p4Gen= Longs() from 0
 
-  def getStream: Stream[Seq[Long]]=
-    p1Gen.gen.zip(p2Gen.gen).zip(p3Gen.gen).zip(p4Gen.gen).map {
-      case (((a, b), c), d) => Seq(a, b, c, d)
-    }
+  def getStream: Stream[Seq[Long]]=  combineGens(List(p1Gen, p2Gen, p3Gen, p4Gen))
 
   /** get values as BigInts rather than tuples. */
-  def getBigInts: Stream[BigInt] = genStrings map (s=> BigInt(s.replaceAll("-", ""), 16))
+  def genBigInts: Stream[BigInt] = genStrings map (s=> BigInt(s.replaceAll("-", ""), 16))
 
   formatWith {
     case Seq(p1,p2,p3,p4)=> f"$p1%08x-$p2%04x-$p3%04x-$p4%016x"

@@ -2,7 +2,8 @@ package no.mesan.testdatagen.generators
 
 import no.mesan.testdatagen.{ExtendedImpl, RandomElem}
 
-/** * Probably the most versatile of all the generators, the FromList takes a list of
+/**
+ * Probably the most versatile of all the generators, the FromList takes a list of
  * "anything" as input and generates its values from that, it is typed (FromList[T]),
  * so you keep the type of the input list.
 

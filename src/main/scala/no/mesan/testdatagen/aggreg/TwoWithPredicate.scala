@@ -5,7 +5,7 @@ import no.mesan.testdatagen.generators.FromList
 
 /**
  * This generator takes two generators and a predicate as input; it draws tuples from each
- * and checks those against the predicate.
+ * and filters those against the predicate.
  *
  * @author lre
  */

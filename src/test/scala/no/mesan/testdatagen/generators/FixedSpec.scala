@@ -14,7 +14,7 @@ class FixedSpec extends FlatSpec {
     assert(res forall(l=> l.size==1 && l(0)==42))
   }
 
-  it should "reject a filter that filters its value" in {
+  it should "reject a filter that filters away its only legal value" in {
     intercept[IllegalArgumentException] {
       val gen= Fixed(10) filter {i=> i!=10}
       gen get 4

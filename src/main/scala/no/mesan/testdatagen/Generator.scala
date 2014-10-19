@@ -4,6 +4,8 @@ import scala.language.postfixOps
 
 /**
  * This is the bare minimum interface, mostly ment for "end-of-the-line" data generators.
+ * @tparam T Generated type
+ * @author lre
  */
 trait BareGenerator[+T] {
 
@@ -23,7 +25,6 @@ trait BareGenerator[+T] {
  * to allow _builders_ like Ints() from(1) to(10) reversed.
  *
  * @tparam T Generated type
- * @author lre
  */
 trait Generator[+T] extends BareGenerator[T] {
   /** The main function - Get a stream of entries. */
@@ -45,12 +46,12 @@ trait Generator[+T] extends BareGenerator[T] {
   def filter(f: T => Boolean): this.type
 
   /**
-   * Adds a formatting function that takes an instance of the given type T
+   * Add a formatting function that takes an instance of the given type T
    * and formats it as a string.
    */
   def formatWith(f: T => String): this.type
 
-  /** Runs the defined formatter on one instance*/
+  /** Run the defined formatter on one instance*/
   def formatOne[S>:T](v: S): String
 }
 

@@ -39,7 +39,7 @@ abstract class DataRecordGenerator[T](nulls: NullHandler) extends GeneratorImpl[
     ToFile(fileName, this, append = true, charSet)
 
   /** Return a list of n records. Each record consists of 1 value for each field. */
-  protected def genRecords(recordNulls:NullHandler): Stream[DataRecord] =
+  protected def genRecords(recordNulls: NullHandler): Stream[DataRecord] =
     combine(fields.reverse.map(_.genTuples(recordNulls)))
 
   /** Get records as a Stream. */
@@ -124,6 +124,17 @@ class DoubleQuoteWithEscapeDataField(name: String, generator: Generator[_])
   override def prefix: String = "\""
   override def suffix: String = "\""
   override def transform(s: String): String =
-    if (s==null) null else s.replaceAll(Pattern.quote("""\"""), """\\\\""")
-                            .replaceAll("[\"]", """\\\"""")
+    if (s==null) null
+    else s.replaceAll(Pattern.quote("""\"""), """\\\\""")
+          .replaceAll("[\"]", """\\\"""")
+}
+
+class DelimitedDataField(name: String, generator: Generator[_], delimiter:String)
+      extends DataField(name, generator) {
+  override def prefix: String = delimiter
+  override def suffix: String = delimiter
+  override def transform(s: String): String =
+    if (s==null) null
+    else s.replaceAll(Pattern.quote("""\"""), """\\\\""")
+          .replaceAll(Pattern.quote(delimiter), """\\""" + delimiter)
 }

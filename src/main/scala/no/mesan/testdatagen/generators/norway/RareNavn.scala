@@ -4,7 +4,7 @@ import no.mesan.testdatagen.ExtendedGenerator
 import no.mesan.testdatagen.generators.FromFile
 
 /**
- * Generate funny names....
+ * Generate funny names...
  *
  * @author lre
  */

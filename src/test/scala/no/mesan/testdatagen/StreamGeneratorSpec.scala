@@ -47,7 +47,7 @@ class StreamGeneratorSpec extends FlatSpec  {
       genSpec(CreditCards()),
       genSpec(Fibonaccis(), 11),
       genSpec(Guids()),
-      genSpec(Markov()),
+      genSpec(Markov.norwegian()),
       genSpec(Adresser()),
       genSpec(Kjennemerker()),
       genSpec(NorskeNavn()),

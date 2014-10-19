@@ -3,15 +3,15 @@ package no.mesan.testdatagen.recordgen
 import no.mesan.testdatagen.Generator
 
 /**
- * This generator produces data in fixed width fields, where each value is padded 
+ * This generator produces data in fixed width fields, where each value is padded
  * with blanks (or truncated) to a fixed width.
  * The inherited add method cannot be used.
  */
 class ToFixedWidth(withHeaders:Boolean) extends StringRecordGenerator(EmptyNull) {
+
   private def fix(s:String, width:Int)=
     if (s==null) " " * width
-    else
-      ("%-"+width+"."+width+"s").format(s)
+    else ("%-"+width+"."+width+"s").format(s)
 
   class FixedDataField(name: String, generator: Generator[_], awidth:Int)
         extends DataField(name, generator) {

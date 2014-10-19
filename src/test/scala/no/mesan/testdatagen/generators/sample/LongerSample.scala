@@ -8,7 +8,6 @@ import no.mesan.testdatagen.recordgen.{ToFile, ToSql}
 
 import scala.language.postfixOps
 
-
 object LongerSample extends App {
   // These are the total of numbers we will generate for the different categories
   val recordsBase= 100
@@ -30,9 +29,9 @@ object LongerSample extends App {
   val postSteder= FromList(Poststeder() get(customerFact*recordsBase)) sequential
 
   // Populating the customer table - no dependencies
-  val customerGenerator= ToSql("customer")
+  val customerGenerator= ToSql(tableName="customer")
     .add("id", customerIds)
-    .addQuoted("fnr", SomeNulls(25, Fnr(FromList(birthDates) sequential)))
+    .addQuoted("fnr", SomeNulls(percent=25, Fnr(FromList(birthDates) sequential)))
     .addQuoted("born", FromList(birthDates) formatWith Dates.dateFormatter("yyyy-MM-dd") sequential)
     .addQuoted("name", UniqueWithFallback(RareNavn(), NorskeNavn())) // We want, for the test's sake, unique
                // names. We try to get "funny names" from the RareNavn-generator, but add standard names
@@ -42,21 +41,21 @@ object LongerSample extends App {
     .addQuoted("poststed", TextWrapper(postSteder).substring(5))
 
   // and products - no dependencies either
-  val productGenerator= ToSql("product")
+  val productGenerator= ToSql(tableName="product")
     .add("id", productIds)
     .addQuoted("name", WeightedGenerator()
                          .add(60, Names(1))
                          .add(40, Names(2)))
 
   // Orders are connected to customers through customerIds
-  val orderGenerator= ToSql("order")
+  val orderGenerator= ToSql(tableName="order")
     .add("id", orderIds)
     .addQuoted("status", FromList("Pending", "Ready", "Delivered", "Closed"))
     .add("customer", customerIds)
     .addQuoted("orderDate", Dates() from(y=2010) to(y=2013) format "yyyy-MM-dd")
 
   // And order_lines connected to orders and products
-  val orderLineGenerator= ToSql("order_line")
+  val orderLineGenerator= ToSql(tableName="order_line")
     .add("order", orderIds)
     .add("product", productIds)
     .add("lineNo", Ints() from 1 sequential)

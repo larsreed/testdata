@@ -9,15 +9,6 @@ import java.util.regex.Pattern
  *
  * @author lre
  */
-class DelimitedDataField(name: String, generator: Generator[_], delimiter:String)
-      extends DataField(name, generator) {
-  override def prefix: String = delimiter
-  override def suffix: String = delimiter
-  override def transform(s: String): String =
-    if (s==null) null
-    else s.replaceAll(Pattern.quote("""\"""), """\\\\""")
-          .replaceAll(Pattern.quote(delimiter), """\\""" + delimiter)
-}
 
 /**
  * This generator produces values separated by a comma (or another delimiter,

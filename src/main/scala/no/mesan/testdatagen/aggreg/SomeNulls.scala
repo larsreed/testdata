@@ -20,9 +20,9 @@ class SomeNulls[T](gen: Generator[T]) extends GeneratorImpl[T] with Percentage {
 
   def getStream: Stream[T] = gen.gen.map(if (kill) null.asInstanceOf[T] else _)
   override def genStrings: Stream[String] = getStream.map{v=> if (v==null) null else formatOne(v)}
-
 }
 
 object SomeNulls {
-  def apply[T](n:Int, gen: Generator[T]): SomeNulls[T] = new SomeNulls(gen).nullFactor(n)
+  def apply[T](percent:Int, generator: Generator[T]): SomeNulls[T] =
+    new SomeNulls(generator).nullFactor(percent)
 }

@@ -17,10 +17,11 @@ class WeightedGenerator[T] extends GeneratorImpl[T]
       with StreamUtils
       with RandomElem {
 
+  lazy val drawFrom= generators.zipWithIndex flatMap {
+    case ((weight, _), index) => List.fill(weight)(index)
+  }
+
   private def streamBody[A](stream: Stream[Seq[A]])= {
-    val drawFrom= generators.zipWithIndex flatMap {
-      case ((weight, _), index) => List.fill(weight)(index)
-    }
     stream map { tuple =>
       tuple(randomFrom(drawFrom))
     }

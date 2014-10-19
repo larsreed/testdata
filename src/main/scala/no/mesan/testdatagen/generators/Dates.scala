@@ -56,7 +56,7 @@ class Dates extends ExtendedImpl[DateTime] {
   private var isReversed= false
 
   /** Set default time for "date only". */
-  def setStdTime(h: Int, min:Int, s:Int, ms:Int):this.type = {
+  def setStdTime(h: Int =0, min:Int = 0, s:Int = 0, ms:Int = 0):this.type = {
     stdHour= h
     stdMin= min
     stdSec= s

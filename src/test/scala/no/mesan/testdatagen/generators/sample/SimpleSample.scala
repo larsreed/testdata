@@ -13,12 +13,12 @@ object SimpleSample extends App {
     .add("productName", WeightedGenerator(
                          (3, Names(1)),
                          (2, Names(2))))
-    .add("qty", SomeNulls(33,
+    .add("qty", SomeNulls(33, // 33% has no qty
                  FieldConcatenator()
                    .add(Doubles() from 1 to 300 format "%5.2f")
                    .add(Fixed(" "))
                    .add(FromList("l", "kg", "", "m"))))
-    .add("orderDate", Dates() from(y=2012, m=9) to(y=2014, m=1) format "yyyy-MM-dd")
+    .add("orderDate", Dates() from(y=2012, m=9) to(y=2014, m=11) format "yyyy-MM-dd")
     .toFile("orders.xml")
     .getStrings(1000)
 }

@@ -18,12 +18,6 @@ class Chars extends ExtendedGenerator[Char] with ExtendedDelegate[String, Char] 
 
   override def conv2gen(f: Char): String= f+""
   override def conv2result(f: String): Char= f(0)
-
-
-  // TODO: Delegate
-  override def distinct: this.type = { embedded.distinct; this }
-  override def genStrings: Stream[String] = embedded.genStrings
-  override def gen: Stream[Char] = embedded.gen map conv2result
 }
 
 object Chars {

@@ -11,7 +11,7 @@ import no.mesan.testdatagen.{Generator, GeneratorImpl, StreamUtils}
  */
 class FieldConcatenator(fieldSeparator: String= "") extends GeneratorImpl[String]
       with MultiGenerator[Any] with StreamUtils {
-  def getStream: Stream[String] =  combineGens(generators) map { _.mkString(fieldSeparator)  }
+  def getStream: Stream[String] =  combineStringGens(generators) map { _.mkString(fieldSeparator)  }
 }
 
 object FieldConcatenator {

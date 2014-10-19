@@ -19,7 +19,7 @@ class Markov extends GeneratorImpl[String] with RandomElem {
   type WordMap= Map[String, List[String]]
 
   // Mapping from a word to possible successors
-  var words: WordMap= Map[String, List[String]]()
+  private var words: WordMap= Map[String, List[String]]()
 
   protected[misc] def build(wordList: List[String]): WordMap= {
     @tailrec def build(map: WordMap, list: List[String]): WordMap =
@@ -70,10 +70,8 @@ class Markov extends GeneratorImpl[String] with RandomElem {
 }
 
 object Markov {
-  /** A list of files to read. */
-  val inputFiles= List("markov.txt")
-
-  def apply(): Markov = apply(inputFiles)
+  def norwegian(): Markov = apply(List("markov-no.txt"))
+  def english(): Markov= apply(List("markov-en.txt"))
+  def apply(file: String): Markov = apply(List(file))
   def apply(fileList: List[String]): Markov = new Markov().buildFrom(fileList)
-
 }

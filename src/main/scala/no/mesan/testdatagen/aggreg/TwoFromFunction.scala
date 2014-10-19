@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.aggreg
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.{GeneratorImpl, Generator}
 import no.mesan.testdatagen.generators.FromList
 
@@ -7,8 +9,6 @@ import no.mesan.testdatagen.generators.FromList
  * This generator takes one generator and a generator function as input; it draws values from the first
  * and uses that to generate values for the second.
  * Formats functions are not supported.
- *
- * @author lre
  */
 class TwoFromFunction[T, U](gen: Generator[T], genFun: T=>U) extends GeneratorImpl[(T, U)]  {
 

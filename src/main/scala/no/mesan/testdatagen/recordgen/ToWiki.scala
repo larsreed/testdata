@@ -1,12 +1,10 @@
 package no.mesan.testdatagen.recordgen
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.Generator
 
-/**
- * A data field with special handling of pipes and line feeds.
- *
- * @author lre
- */
+/** A data field with special handling of pipes and line feeds. */
 class WikiDataField(name: String, generator: Generator[_])
       extends DataField(name, generator) {
   override def transform(s: String): String =
@@ -15,11 +13,7 @@ class WikiDataField(name: String, generator: Generator[_])
            replaceAll("[\n\r]+" , """\\\\""")
 }
 
-/**
- * Outputs data as a wiki table (Confluence wiki markup).
- *
- * @author lre
- */
+/** Outputs data as a wiki table (Confluence wiki markup). */
 class ToWiki() extends StringRecordGenerator(EmptyNull) {
   override protected def recordPrefix = "| "
   override protected def recordSuffix = " |"

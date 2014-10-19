@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.aggreg
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.generators.{Dates, Ints}
 import org.joda.time.DateTime
 import org.junit.runner.RunWith

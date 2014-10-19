@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators.misc
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.Generator
 import no.mesan.testdatagen.aggreg.FieldConcatenator
 import no.mesan.testdatagen.generators.{FromList, Strings}
@@ -7,8 +9,6 @@ import no.mesan.testdatagen.generators.{FromList, Strings}
 /**
  * Generate URL-like strings...
  * Pattern: http(s)://(www.)4-10.dom
- *
- * @author lre
  */
 object Urls {
   def apply(): Generator[String] = {

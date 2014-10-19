@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.aggreg
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.{Generator, GeneratorImpl, Percentage}
 
 /**
@@ -7,8 +9,6 @@ import no.mesan.testdatagen.{Generator, GeneratorImpl, Percentage}
  * It gets its values from the input generator, and then replaces approximately N % of the
  * occurrences (decided by a random generator) with null.  N==0 means no nulls,
  * N==100 means only nulls, N==50 50% nulls etc.
- *
- * @author lre
  */
 class SomeNulls[T](gen: Generator[T]) extends GeneratorImpl[T] with Percentage {
 

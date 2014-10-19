@@ -1,10 +1,8 @@
 package no.mesan.testdatagen.generators
 
-/**
- * Generate booleans.
- *
- * @author lre
- */
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
+/** Generate booleans. */
 class Booleans extends FromList[Boolean] {
 
   fromList(List(false, true))

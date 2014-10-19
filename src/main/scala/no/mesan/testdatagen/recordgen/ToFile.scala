@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.recordgen
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import java.io.{BufferedWriter, FileOutputStream, IOException, OutputStreamWriter}
 import java.nio.charset.Charset
 
@@ -9,8 +11,6 @@ import no.mesan.testdatagen.BareGenerator
  * This generator is typically the end of a chain, and called implicitly
  * by either toFile or appendToFile from a record generator,
  * but may also be called through the apply method.
- *
- * @author lre
  */
 class ToFile[T](fileName:String,
                 generator: BareGenerator[T],

@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators.sample
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.aggreg.{FieldConcatenator, SomeNulls, WeightedGenerator}
 import no.mesan.testdatagen.generators.{Dates, Doubles, Fixed, FromList, Ints}
 import no.mesan.testdatagen.generators.misc.Names

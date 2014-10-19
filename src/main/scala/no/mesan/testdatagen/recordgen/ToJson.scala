@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.recordgen
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.Generator
 
 /**
@@ -14,8 +16,6 @@ import no.mesan.testdatagen.Generator
  * 2. bare: This is intended for nesting JSON-generators.
  *    If you want to generate embedded records, use bare=true for the inner generators
  * 3. null handler
- *
- * @author lre
  */
 class ToJson(nulls:NullHandler, header:String, bare:Boolean) extends StringRecordGenerator(nulls) {
 

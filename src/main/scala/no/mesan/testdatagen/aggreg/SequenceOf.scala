@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.aggreg
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import scala.collection.immutable.List
 
 import no.mesan.testdatagen.{BareGenerator, Generator}
@@ -11,8 +13,6 @@ import no.mesan.testdatagen.{BareGenerator, Generator}
  * The number of returned records for get(N) (and equally getStrings) will vary.
  * In non-absolute mode (default), a number "close to N" (+/- 1) will be returned.
  * In absolute mode, the number will be (N*sum(weights)).
- *
- * @author lre
  */
 class SequenceOf[S, T] (convert: S=>T) extends BareGenerator[T] with MultiGeneratorWithWeight[S] {
   private var absolute= false

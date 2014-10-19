@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.{ExtendedImpl, RandomElem}
 
 /**
@@ -8,8 +10,6 @@ import no.mesan.testdatagen.{ExtendedImpl, RandomElem}
  * so you keep the type of the input list.
 
  * from/to are not supported.
- *
- * @author lre
  */
 class FromList[T] extends ExtendedImpl[T] with RandomElem {
 

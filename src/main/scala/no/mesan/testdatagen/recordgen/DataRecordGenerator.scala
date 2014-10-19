@@ -1,16 +1,14 @@
 package no.mesan.testdatagen.recordgen
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import java.util.regex.Pattern
 
 import no.mesan.testdatagen.{Generator, GeneratorImpl, StreamUtils}
 
 import scala.language.postfixOps
 
-/**
- * The base class for record generators.
- *
- * @author lre
- */
+/** The base class for record generators. */
 abstract class DataRecordGenerator[T](nulls: NullHandler) extends GeneratorImpl[T] with StreamUtils {
 
   /** An abstract record is a list of (name,value)-pairs. */

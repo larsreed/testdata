@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import java.util.Date
 
 import no.mesan.testdatagen.ExtendedImpl
@@ -15,8 +17,6 @@ import scala.util.Random
  * Generate dates.
  * Default limits: 1 day sequential steps
  *                 dates between 1753.01.01 and 9999.12.31
- *
- * @author lre
  */
 class Dates extends ExtendedImpl[DateTime] {
 

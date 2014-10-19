@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.recordgen
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import org.junit.runner.RunWith
 import org.scalatest.{FlatSpec, FunSuite}
 import org.scalatest.junit.JUnitRunner

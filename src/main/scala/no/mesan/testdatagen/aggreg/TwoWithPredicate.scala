@@ -1,13 +1,13 @@
 package no.mesan.testdatagen.aggreg
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.{Generator, GeneratorImpl}
 import no.mesan.testdatagen.generators.FromList
 
 /**
  * This generator takes two generators and a predicate as input; it draws tuples from each
  * and filters those against the predicate.
- *
- * @author lre
  */
 class TwoWithPredicate[T, U](left: Generator[T], right: Generator[U],
                              predicate: ((T,U))=>Boolean)  extends GeneratorImpl[(T, U)] {

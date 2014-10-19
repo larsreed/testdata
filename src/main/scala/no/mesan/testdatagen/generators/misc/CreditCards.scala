@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators.misc
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.GeneratorImpl
 import no.mesan.testdatagen.generators.{FromList, Ints}
 
@@ -11,8 +13,6 @@ import scala.annotation.tailrec
  * The last digit is generated using Luhn's algorithm
  * (http://en.wikipedia.org/wiki/Luhn_algorithm], see also
  * http://en.wikipedia.org/wiki/Credit_card_number).
- *
- * @author lre
  */
 class CreditCards (prefixes: List[Long], length:Int) extends GeneratorImpl[Long] {
 

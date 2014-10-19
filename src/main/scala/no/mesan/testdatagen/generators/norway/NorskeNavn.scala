@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators.norway
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.{GeneratorDelegate, Generator}
 import no.mesan.testdatagen.aggreg.{FieldConcatenator, TextWrapper, WeightedGenerator}
 import no.mesan.testdatagen.generators.{FromFile, Strings}
@@ -27,8 +29,6 @@ import no.mesan.testdatagen.generators.{FromFile, Strings}
  *    creating names with 1 or 2 of each), kunFornavn (single first names only)
  *    or kunEtternavn (single last names only)
  * 3. the standard filter (and formatWith) may also be used.
- *
- * @author lre
  */
 class NorskeNavn extends Generator[String] with GeneratorDelegate[String, String]{
   private val fornavn= "fornavn.txt"

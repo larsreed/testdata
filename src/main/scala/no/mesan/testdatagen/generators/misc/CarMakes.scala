@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators.misc
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.ExtendedGenerator
 import no.mesan.testdatagen.generators.FromList
 
@@ -7,9 +9,7 @@ import no.mesan.testdatagen.generators.FromList
  * This generator selects from a list of about a 100 manufacturers of cars,
  * motor cycles etc, like "Porsche" and "Toyota".
 
- * from/to/unique are not supported
- *
- * @author lre
+ * from/to are not supported
  */
 object CarMakes {
   lazy val makes= List("Alfa Romeo", "Aston Martin", "Atlas", "Audi", "Austin",

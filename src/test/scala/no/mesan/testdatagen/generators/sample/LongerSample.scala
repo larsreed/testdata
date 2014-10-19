@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators.sample
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.aggreg.{FieldConcatenator, SequenceOf, SomeNulls, TextWrapper, UniqueWithFallback, WeightedGenerator}
 import no.mesan.testdatagen.generators.misc.Names
 import no.mesan.testdatagen.generators.norway.{Adresser, Fnr, NorskeNavn, Poststeder, RareNavn}

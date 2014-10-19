@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators.norway
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen._
 import no.mesan.testdatagen.generators.{Dates, Ints}
 import org.joda.time.DateTime
@@ -10,8 +12,6 @@ import scala.annotation.tailrec
  * Generate Norwegian "foedselsnummer" (social registration numbers).
  * Special methods: withDnr -- add an amount of "D numbers" (see below)
  *                  boys/girlsOnly
- *
- * @author lre
  */
 class Fnr(dateGenerator: ExtendedGenerator[DateTime]) extends GeneratorImpl[String] with Percentage {
 

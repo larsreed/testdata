@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators.misc
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.Generator
 import no.mesan.testdatagen.aggreg.{WeightedGenerator, FieldConcatenator}
 import no.mesan.testdatagen.generators.Strings
@@ -10,8 +12,6 @@ import no.mesan.testdatagen.generators.Strings
  * a Strings generator, its only parameter is an int telling how many
  * space-separated words to create in each string.
  * Default limits: name length from 3 to 18, first letter upper case
- *
- * @author lre
  */
 object Names {
   private val pfxChars= "ABDEFGHIJKLMNOPRSTUVY"*12 +

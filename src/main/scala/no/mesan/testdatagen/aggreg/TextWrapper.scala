@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.aggreg
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import scala.collection.immutable.List
 
 import no.mesan.testdatagen.{Generator, GeneratorImpl}
@@ -8,8 +10,6 @@ import no.mesan.testdatagen.{Generator, GeneratorImpl}
  * This generator takes any other generator as input, always uses its
  * genStrings as input, thus acting as "text converter", and adds methods to
  * manipulate the resulting text.
- *
- * @author lre
  */
 class TextWrapper(generator:Generator[_]) extends GeneratorImpl[String] {
 

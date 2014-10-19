@@ -1,10 +1,10 @@
 package no.mesan.testdatagen.generators
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 /**
  * Generate the same value all time....
- * from/to/unique are not supported
- *
- * @author lre
+ * from/to are not supported
  */
 
 class Fixed[T](value: T) extends FromList[T] {

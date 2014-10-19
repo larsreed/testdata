@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.recordgen
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.generators.norway.Fnr
 import no.mesan.testdatagen.generators.{Dates, Fixed, FromList, Ints, Strings}
 

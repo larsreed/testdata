@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import scala.language.postfixOps
 
 import org.junit.runner.RunWith

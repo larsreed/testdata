@@ -899,3 +899,6 @@ Of the output formats, only SQL and to a certain extent CSV, has been used "for 
 4. Why does formatOne have to accept supertypes?
 5. `ExtendedDelegate` should extend `GeneratorDelegate`
 6. FromList: add FromStream
+
+### LICENSE ###
+This project, with all contained files, is covered by GNU GENERAL PUBLIC LICENSE, v2.  See the file LICENSE.txt for details.

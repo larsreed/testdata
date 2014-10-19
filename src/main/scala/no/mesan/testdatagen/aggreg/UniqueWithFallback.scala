@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.aggreg
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import scala.collection.mutable.{Set => MutableSet}
 import scala.language.postfixOps
 
@@ -9,9 +11,7 @@ import no.mesan.testdatagen.{Generator, GeneratorImpl}
  * This generator takes two generators as input, it tries to get all values from the first,
  * but when duplicates are discovered, values are drawn from the second until a unigue value
  * is found.
- * "formatWith" is not supported.
- *
- * @author lre
+ * "formatWith/formatOne" are not supported.
  */
 class UniqueWithFallback[T](primary: Generator[T], alt: Generator[T]) extends GeneratorImpl[T]  {
 

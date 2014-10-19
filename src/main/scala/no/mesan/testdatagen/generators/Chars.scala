@@ -1,12 +1,12 @@
 package no.mesan.testdatagen.generators
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.{ExtendedDelegate, ExtendedGenerator}
 
 /**
  * Generate Chars.
  * Defaults: length 1, from a to z
- *
- * @author lre
  */
 class Chars extends ExtendedGenerator[Char] with ExtendedDelegate[String, Char] {
 

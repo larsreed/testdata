@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.ExtendedImpl
 
 import scala.annotation.tailrec
@@ -12,9 +14,6 @@ import scala.util.Random
  *                  lengthBetween(from, to) -- interval of string lengths
  *                  chars(seq) -- accepted characters
  * Defaults: length 1, from a(s) to z(s)
- *
- *
- * @author lre
  */
 class Strings extends ExtendedImpl[String] {
 

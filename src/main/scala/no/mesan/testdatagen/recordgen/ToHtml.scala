@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.recordgen
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import scala.xml.NodeSeq
 import scala.xml.NodeSeq.seqToNodeSeq
 
@@ -7,8 +9,6 @@ import scala.xml.NodeSeq.seqToNodeSeq
  * Generate HTML, either a simple table or a complete page (the latter if a title is given).
  * The get method returns NodeSeqs, while getStrings
  * converts the result to a somewhat indented string format...
- *
- * @author lre
  */
 class ToHtml(pageTitle: String, nulls:NullHandler) extends XmlGenerator("", nulls) {
 

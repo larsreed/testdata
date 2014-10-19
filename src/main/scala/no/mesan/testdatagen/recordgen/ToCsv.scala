@@ -1,13 +1,13 @@
 package no.mesan.testdatagen.recordgen
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.Generator
 import java.util.regex.Pattern
 
 /**
  * Data fields pre/suffixed with a given delimiter, the same delimiter within
  * the value are escaped with a backslash.
- *
- * @author lre
  */
 
 /**

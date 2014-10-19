@@ -1,11 +1,11 @@
 package no.mesan.testdatagen
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import scala.util.Random
 
 /**
  * A random function that answers true in n% of the cases.
- *
- * @author lre
  */
 trait Percentage {
   /** A random function that answers true in n% of the cases. */

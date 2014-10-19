@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.recordgen
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import scala.collection.immutable.List
 import no.mesan.testdatagen.Generator
 
@@ -13,8 +15,6 @@ import no.mesan.testdatagen.Generator
  *
  * The apply method needs to know the table name, you may optionally use a record
  * separator different from ";".
- *
- * @author lre
  */
 class ToSql(tableName: String, exec: String) extends StringRecordGenerator(KeepNull) {
   override protected def recordPrefix =

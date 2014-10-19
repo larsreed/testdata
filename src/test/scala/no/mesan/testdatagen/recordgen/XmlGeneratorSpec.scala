@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.recordgen
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.aggreg.SomeNulls
 import no.mesan.testdatagen.generators.misc.{Names, Urls}
 import no.mesan.testdatagen.generators.{Chars, Dates, Ints, Strings}

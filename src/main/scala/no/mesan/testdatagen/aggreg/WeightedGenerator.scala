@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.aggreg
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import scala.collection.immutable.List
 
 import no.mesan.testdatagen.{Generator, GeneratorImpl, RandomElem, StreamUtils}
@@ -9,8 +11,6 @@ import no.mesan.testdatagen.{Generator, GeneratorImpl, RandomElem, StreamUtils}
  * them for each value to generate.
  * Each generator is given a weight -- the probability for each one is its own weight
  * relative to the sum of all weights.
- *
- * @author lre
  */
 class WeightedGenerator[T] extends GeneratorImpl[T]
       with MultiGeneratorWithWeight[T]

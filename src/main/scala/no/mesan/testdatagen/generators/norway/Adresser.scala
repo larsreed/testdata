@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators.norway
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.Generator
 import no.mesan.testdatagen.aggreg.{FieldConcatenator, WeightedGenerator}
 import no.mesan.testdatagen.generators.{Chars, Fixed, FromList, Ints}
@@ -8,8 +10,6 @@ import no.mesan.testdatagen.generators.{Chars, Fixed, FromList, Ints}
  * A generator to create strings that look like Norwegian street addresses.
  * It uses surnames (from NorskeNavn.kunEtternavn) and places (from
  * Poststeder.poststed), and optionally a house number (sometimes with a letter suffix).
- *
- * @author lre
  */
 class Adresser(withNumbers:Boolean) {
   private val streetGenerator=

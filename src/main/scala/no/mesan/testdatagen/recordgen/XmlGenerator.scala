@@ -1,13 +1,13 @@
 package no.mesan.testdatagen.recordgen
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import scala.xml.{Attribute, NodeSeq, Null, PrettyPrinter, Text}
 
 /**
  * Generate XML, either a record sequence or records collected under
  * one common root.  The get method returns NodeSeqs, while getStrings
  * converts the result to a somewhat indented string format...
- *
- * @author lre
  */
 abstract class XmlGenerator(rootName: String, nulls:NullHandler)
   extends DataRecordGenerator[NodeSeq](nulls) {

@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.ExtendedImpl
 
 import scala.util.Random
@@ -9,8 +11,6 @@ import scala.util.Random
  * Special methods: step(n) -- only used for sequential generation -- sets the step size (default 1),
  *                             with negative value steps from max down towards min
  * Default limits: 0 .. Long.MaxValue-1
- *
- * @author lre
  */
 class Longs extends ExtendedImpl[Long] {
 

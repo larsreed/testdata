@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators.misc
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.{StreamUtils, GeneratorImpl}
 import no.mesan.testdatagen.generators.Longs
 
@@ -8,8 +10,6 @@ import scala.language.postfixOps
 /**
  * Generate simple GUIDs.  The rules of http://www.ietf.org/rfc/rfc4122.txt are NOT followed,
  * these are only random 128-bit integers.
- *
- * @author lre
  */
 class Guids extends GeneratorImpl[Seq[Long]] with StreamUtils {
   private val p1Gen= Longs() from 0 to Int.MaxValue

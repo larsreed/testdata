@@ -1,5 +1,7 @@
 package no.mesan.testdatagen
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.aggreg._
 import no.mesan.testdatagen.generators.misc._
 import no.mesan.testdatagen.generators.norway._

@@ -1,13 +1,13 @@
 package no.mesan.testdatagen.generators
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.{ExtendedDelegate, ExtendedGenerator}
 
 /**
  * Generate Ints.
  * Special methods: step(n) -- only used for sequential generation -- sets the step size (default 1)
  * Default limits: Int.MinValue+1 .. Int.MaxValue-1
- *
- * @author lre
  */
 class Ints extends ExtendedGenerator[Int] with ExtendedDelegate[Long, Int]  {
 

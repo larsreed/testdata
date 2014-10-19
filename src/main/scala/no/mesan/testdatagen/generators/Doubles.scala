@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.ExtendedImpl
 
 import scala.util.Random
@@ -7,8 +9,6 @@ import scala.util.Random
 /**
  * Generate doubles.
  * Default limits: 0..Double.MaxValue
- *
- * @author lre
  */
 class Doubles extends ExtendedImpl[Double] {
 

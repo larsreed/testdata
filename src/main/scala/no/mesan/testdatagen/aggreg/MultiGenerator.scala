@@ -1,13 +1,13 @@
 package no.mesan.testdatagen.aggreg
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.Generator
 
 import scala.collection.immutable.List
 
 /**
  * Traits for generators needing to support one or more nested generators.
- *
- * @author lre
  */
 trait MultiGenerator[T] {
   var generators: List[Generator[T]] = Nil

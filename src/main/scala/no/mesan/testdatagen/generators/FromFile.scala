@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.utils.IO
 import no.mesan.testdatagen.{ExtendedDelegate, ExtendedGenerator}
 
@@ -8,10 +10,8 @@ import no.mesan.testdatagen.{ExtendedDelegate, ExtendedGenerator}
  * from which a delegate FromList can take its values. The values may be typed
  * (does not currently work as expected...), even though they are read as strings.
  *
- * Special methods: from/to/unique -- not supported
+ * Special methods: from/to -- not supported
  * Default limits: n/a
- *
- * @author lre
  */
 class FromFile[T](fileName: String, encoding:String) extends ExtendedGenerator[T]
     with ExtendedDelegate[T, T] {

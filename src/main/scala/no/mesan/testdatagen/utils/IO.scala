@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.utils
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import scala.io.Source
 import java.io.FileNotFoundException
 

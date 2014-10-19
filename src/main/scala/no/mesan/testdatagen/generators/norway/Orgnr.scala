@@ -1,5 +1,7 @@
 package no.mesan.testdatagen.generators.norway
 
+// Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
 import no.mesan.testdatagen.generators.Ints
 import no.mesan.testdatagen.{ExtendedImpl, GeneratorFilters}
 
@@ -9,8 +11,6 @@ import scala.language.postfixOps
  * Generates legal "organisasjonsnummer", Norwegian "organization numbers"
  * (http://www.brreg.no/samordning/organisasjonsnummeret.html).
  * These are integers with 9 digits.
- *
- * @author lre
  */
 class Orgnr() extends ExtendedImpl[Int] with GeneratorFilters[Int] {
 

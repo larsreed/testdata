@@ -33,18 +33,14 @@ class Dates extends ExtendedImpl[DateTime] {
   def timeOnly: this.type= {
     showTime= true
     showDate= false
-    val wasSeq= isSequential // FIXME hack
-    if (!stepPeriod.isDefined) step(ss=1)
-    isSequential= wasSeq
+    if (!stepPeriod.isDefined) stepInternal(ss=1)
     this
   }
   /** Show date and time, set period to 1 hour if sequential. */
   def dateAndTime: this.type= {
     showTime= true
     showDate= true
-    val wasSeq= isSequential
-    if (!stepPeriod.isDefined) step(hh=1)
-    isSequential= wasSeq
+    if (!stepPeriod.isDefined) stepInternal(hh=1)
     this
   }
 
@@ -93,11 +89,18 @@ class Dates extends ExtendedImpl[DateTime] {
     this
   }
 
-  /** Steps for sequential dates. */
-  def step(y: Int=0, m: Int=0, d:Int=0, hh: Int=0, mm: Int=0, ss:Int=0, ms:Int=0): this.type = {
+  private def stepInternal(y: Int=0, m: Int=0, d:Int=0,
+                           hh: Int=0, mm: Int=0, ss:Int=0, ms:Int=0): this.type = {
+    // The private method does not fiddle with the sequential setting
     require(y!=0 || m!=0 || d!=0 || hh!=0 || mm!=0 || ss!=0 || ms!=0,
         "at leat one step must be non-zero")
     stepPeriod= Some(new Period(y, m, 0, d, hh, mm, ss, ms))
+    this
+  }
+
+  /** Steps for sequential dates. */
+  def step(y: Int=0, m: Int=0, d:Int=0, hh: Int=0, mm: Int=0, ss:Int=0, ms:Int=0): this.type = {
+    stepInternal(y, m, d, hh, mm, ss, ms)
     sequential
   }
 

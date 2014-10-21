@@ -13,8 +13,6 @@ import no.mesan.testdatagen.{ExtendedImpl, RandomElem}
  */
 class FromList[T] extends ExtendedImpl[T] with RandomElem {
 
-  // TODO FromStream!
-
   override def from(f:T) = throw new UnsupportedOperationException
   override def to(f:T) = throw new UnsupportedOperationException
 
@@ -22,7 +20,6 @@ class FromList[T] extends ExtendedImpl[T] with RandomElem {
   /** Enter the list of values. */
   def fromList(l: Seq[T]): this.type= { inputList= l; this }
 
-  // TODO Weighted values!
   def getStream: Stream[T] = {
     require(inputList.length>0, "cannot extract from empty list")
 

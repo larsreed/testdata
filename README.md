@@ -271,6 +271,13 @@ Apply methods:
 * `FromList(T*)` e.g. `FromList(1,2,4,8,16,32,64)`
 * `FromList.weighted(Seq[Tuple2[Int, T]])` helps you build weighted choices for simple values. It builds an input list from a sequence of `(weight, value)`-tuples, e.g. `FromList.weighted(List((10, "A"), (20, "B"), (20, "C")))` which will return approx. 20% As, 40% Bs and 40% Cs (for random generation; 10 As followed by 20 Bs and then 20 Cs for sequential). 
 
+### FromStream ###
+This is the simplest implementation of all.  It simply wraps any `Stream` as a `Generator`.
+ 
+Apply methods:
+
+* `FromStream(Stream[T])`
+
 ## Aggregates ##
 There will often be a need to handle more complex data than what the basic generators can produce. A set of generators are provided to facilitate building of aggregate constructs.
 

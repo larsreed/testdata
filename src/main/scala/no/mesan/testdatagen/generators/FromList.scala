@@ -45,4 +45,10 @@ object FromList {
   def apply[T](): FromList[T] = new FromList()
   def apply[T](l: List[T]): FromList[T] = new FromList().fromList(l)
   def apply[T](ls: T*): FromList[T] = new FromList().fromList(ls.toList)
+  def weighted[T](elements: Seq[Tuple2[Int, T]]): FromList[T]= {
+    val list= for {
+      (n, elem) <- elements
+      i <- 1 to n} yield elem
+    apply(list:_*)
+  }
 }

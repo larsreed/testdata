@@ -80,4 +80,20 @@ class FromListSpec extends FlatSpec {
     val res = FromList(List("a")).distinct.get(1).toSet
     assert(res.size == 1)
   }
+
+  "FromLists.weighted" should "return elements according to its weights" in {
+    val gen= FromList.weighted(List(
+      (2, 1),
+      (3, 2),
+      (1, 3)
+    )).sequential
+    val res= gen.get(7)
+    assert(res===List(1, 1, 2, 2, 2, 3, 1))
+  }
+
+  it should "refuse empty input" in {
+    intercept[IllegalArgumentException] {
+      FromList.weighted(List()).get(1)
+    }
+  }
 }

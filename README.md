@@ -263,11 +263,13 @@ Specialities:
 * `from` and `to` are not supported
 * The method `fromList(list)` must be called before you generate values (unless you use the apply method with a list argument).
 
+
 Apply methods:
 
-* `FromList()` then you *must* call `fromList` afterwards
-* `FromList(List)`
+* `FromList()` &ndash; then you *must* call `fromList` afterwards
+* `FromList(List[T])`
 * `FromList(T*)` e.g. `FromList(1,2,4,8,16,32,64)`
+* `FromList.weighted(Seq[Tuple2[Int, T]])` helps you build weighted choices for simple values. It builds an input list from a sequence of `(weight, value)`-tuples, e.g. `FromList.weighted(List((10, "A"), (20, "B"), (20, "C")))` which will return approx. 20% As, 40% Bs and 40% Cs (for random generation; 10 As followed by 20 Bs and then 20 Cs for sequential). 
 
 ## Aggregates ##
 There will often be a need to handle more complex data than what the basic generators can produce. A set of generators are provided to facilitate building of aggregate constructs.
@@ -320,6 +322,8 @@ Apply methods:
 This generator takes one or more generators as input, and selects randomly between them for each value to generate. Each generator is given a weight &ndash;  the probability for each one is its own weight relative to the sum of all weights.
 
 * `add(weight: Int, gen: Generator[_])`
+
+*Note*: If what you want is a certain distribution between a few, given values, you'll probably be better off with `FromList.weighted` (which see).
 
 Apply methods:
 

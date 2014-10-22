@@ -19,11 +19,6 @@ class Ints extends ExtendedGenerator[Int] with ExtendedDelegate[Long, Int, Exten
 
   /** Step size, used only for sequential values. */
   def step(s: Int): this.type= { embedded.step(s); this }
-
-  // TODO: Delegate
-  override def distinct: this.type = { embedded.distinct; this }
-  override def genStrings: Stream[String] = embedded.genStrings
-  override def gen: Stream[Int] = embedded.gen map conv2result
 }
 
 object Ints {

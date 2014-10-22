@@ -40,13 +40,10 @@ class ToWikiSpec extends FlatSpec {
 
   it should "quote correctly" in {
     new Setup {
-      var badGen = Fixed("""
-[|]
-""")
+      var badGen = Fixed("\no[|]")
       val res = ToWiki().add("", badGen).getStrings(1)(0)
-      val exp= "\\s*\\|"
-      // TODO assert(res.,res +"=" + exp)
+      val exp= """|  \\o\[\|\] |"""
+      assert(res===exp)
     }
   }
-
 }

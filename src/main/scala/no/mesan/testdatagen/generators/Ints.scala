@@ -9,10 +9,10 @@ import no.mesan.testdatagen.{ExtendedDelegate, ExtendedGenerator}
  * Special methods: step(n) -- only used for sequential generation -- sets the step size (default 1)
  * Default limits: Int.MinValue+1 .. Int.MaxValue-1
  */
-class Ints extends ExtendedGenerator[Int] with ExtendedDelegate[Long, Int]  {
+class Ints extends ExtendedGenerator[Int] with ExtendedDelegate[Long, Int, ExtendedGenerator[Long]]  {
 
   private val embedded= Longs() from (Int.MinValue + 1).toLong to (Int.MaxValue - 1).toLong
-  protected var generator: ExtendedGenerator[Long] = embedded
+  def delegate: ExtendedGenerator[Long] = embedded // For the trait
 
   override protected def conv2gen(f: Int): Long = f+0L
   override protected def conv2result(f: Long): Int= f.toInt

@@ -900,7 +900,7 @@ The output looks like this (excerpt):
 **2014**: Introduced streams as primary mechanism. Introduced FlatSpec for tests, though not very idomatically. Tried to find an excuse to make it reactive, but it doesn't seem to match too good with the sequential nature of the problem...
 
 ### Caveats ###
-Of the output formats, only SQL and to a certain extent CSV, has been used "for production". Try it carefully!
+Of the output formats, only SQL and to a certain extent CSV, has been used "in production". Try it carefully!
 
 ### TODO ###
 
@@ -908,8 +908,6 @@ Of the output formats, only SQL and to a certain extent CSV, has been used "for 
 2. Xml: nesting not available
 3. Analyzing SQL DDL and/or domain classes to generate a skeleton for test data generators?  After all, that's where it all started...
 4. Why does formatOne have to accept supertypes?
-5. `ExtendedDelegate` should extend `GeneratorDelegate`
-6. FromList: add FromStream
 
 ### LICENSE ###
 This project, with all contained files, is covered by GNU GENERAL PUBLIC LICENSE, v2.  See the file LICENSE.txt for details.

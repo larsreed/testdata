@@ -30,13 +30,14 @@ import no.mesan.testdatagen.generators.{FromFile, Strings}
  *    or kunEtternavn (single last names only)
  * 3. the standard filter (and formatWith) may also be used.
  */
-class NorskeNavn extends Generator[String] with GeneratorDelegate[String, String]{
+class NorskeNavn extends Generator[String] with GeneratorDelegate[String, String, Generator[String]]{
   private val fornavn= "fornavn.txt"
   private val etternavn= "etternavn.txt"
 
   forOgEtternavn
 
   protected var generator: Generator[String]= _
+  def delegate: Generator[String]= generator  // For the trait
 
   /** Return both first and last names (the default). */
   def forOgEtternavn: this.type = {

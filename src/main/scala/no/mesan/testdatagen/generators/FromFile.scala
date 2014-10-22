@@ -14,10 +14,10 @@ import no.mesan.testdatagen.{ExtendedDelegate, ExtendedGenerator}
  * Default limits: n/a
  */
 class FromFile[T](fileName: String, encoding:String) extends ExtendedGenerator[T]
-    with ExtendedDelegate[T, T] {
+    with ExtendedDelegate[T, T, ExtendedGenerator[T]] {
 
   private val listGen= FromList(getContents)
-  protected var generator: ExtendedGenerator[T]= listGen // For the trait
+  def delegate: ExtendedGenerator[T]= listGen // For the trait
 
   /** Not supported. */
   override def from(f: T) = throw new UnsupportedOperationException

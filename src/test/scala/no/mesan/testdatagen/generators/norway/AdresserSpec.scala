@@ -17,7 +17,7 @@ class AdresserSpec extends FlatSpec {
   }
 
   it should "generate right contents without number" in {
-    val res= Adresser(false).get(111)
+    val res= Adresser(withNumbers = false).get(111)
     res.foreach{
       adr => assert(adr.matches("^.*$"), adr)
     }

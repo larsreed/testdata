@@ -10,7 +10,7 @@ import no.mesan.testdatagen.Printer
 import no.mesan.testdatagen.aggreg.SomeNulls
 import no.mesan.testdatagen.generators.{Booleans, Chars, Dates, Fixed, FromList, Ints, Strings}
 import no.mesan.testdatagen.generators.misc.MailAddresses
-import no.mesan.testdatagen.generators.norway.Fnr
+import no.mesan.testdatagen.generators.norway.{NorskeNavn, Fnr}
 
 @RunWith(classOf[JUnitRunner])
 class ToJsonSpec extends FlatSpec {
@@ -63,5 +63,12 @@ class ToJsonSpec extends FlatSpec {
       val res = ToJson().addQuoted("fnutt", fnuttGen).getStrings(1)(0)
       assert(res.matches("""(?s).*["]fnutt["]: ["][\\]["]["].*"""))
     }
+  }
+
+  it should "handle nesting" in {
+    val intGen= Ints() from 1
+    val gen1= ToJson(bare = true).add("int", intGen)
+    val gen2= ToJson(header = "combined").add("name", NorskeNavn()).add("embedded", gen1)
+    // TODO Assert
   }
 }

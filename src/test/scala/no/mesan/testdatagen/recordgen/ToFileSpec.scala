@@ -16,7 +16,7 @@ class ToFileSpec extends FlatSpec {
     val idGen = Ints().from(1).sequential
     val nameGen = NorskeNavn()
     val fnrGen = Fnr(FromList(dates).sequential)
-    val recordGen = ToCsv(true).
+    val recordGen = ToCsv(withHeaders = true).
       add("id", idGen).
       add("name", nameGen).
       add("fnr", fnrGen)
@@ -30,6 +30,6 @@ class ToFileSpec extends FlatSpec {
   }
 
   it should "require at least one generator" in {
-    intercept[IllegalArgumentException] { ToCsv(true).toFile("test.txt").get(1) }
+    intercept[IllegalArgumentException] { ToCsv(withHeaders = true).toFile("test.txt").get(1) }
   }
 }

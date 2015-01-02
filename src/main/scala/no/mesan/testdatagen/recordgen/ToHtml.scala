@@ -55,6 +55,6 @@ List(<html>
   }
 }
 object ToHtml {
-  def apply(pageTitle: String="", nulls:NullHandler=EmptyNull): ToHtml =
+  def apply(pageTitle: String="", nulls:NullHandler = EmptyNull): ToHtml =
     new ToHtml(pageTitle, nulls)
 }

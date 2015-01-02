@@ -3,14 +3,15 @@ package no.mesan.testdatagen.recordgen
 // Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
 
 import no.mesan.testdatagen.aggreg.SomeNulls
+import no.mesan.testdatagen.generators._
 import no.mesan.testdatagen.generators.misc.{Names, Urls}
-import no.mesan.testdatagen.generators.{Chars, Dates, Ints, Strings}
+import no.mesan.testdatagen.generators.norway.NorskeNavn
 import org.junit.runner.RunWith
-import org.scalatest.FlatSpec
+import org.scalatest.{Matchers, FlatSpec}
 import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
-class XmlGeneratorSpec extends FlatSpec {
+class XmlGeneratorSpec extends FlatSpec with Matchers {
 
   trait Setup {
     val idGen= Ints().from(1).sequential
@@ -49,32 +50,32 @@ class XmlGeneratorSpec extends FlatSpec {
   }
 
   "The ToXmlElements generator" should "demand at least one generator" in {
-    intercept[IllegalArgumentException] { ToXmlElements(recordName="x").get(1) }
+    a [IllegalArgumentException] should be thrownBy { ToXmlElements(recordName="x").get(1) }
   }
 
   it should "produce the expected number of records" in {
     new SetupElement {
-      assert(rootGen.get(3).size === 1)
-      assert(fragmentGen.get(4).size === 4, fragmentGen.get(4))
-      assert(rootGen.getStrings(5).size === 1)
-      assert(fragmentGen.getStrings(6).size === 6)
+      rootGen.get(3).size should be (1)
+      fragmentGen.get(4).size should be (4)
+      rootGen.getStrings(5).size should be (1)
+      fragmentGen.getStrings(6).size should be (6)
       val nGen= ToXmlElements(recordName="data").
                      add("id", idGen).
                      add("born", bornGen)
-      assert(nGen.get(30).size === 30)
+       nGen.get(30).size should be (30)
     }
   }
 
   it should "format its output as expected" in {
     new SetupElement {
-      val res= rootGen.get(30).mkString(" ").replaceAll("[\n\r]", " ")
-      assert(res.matches("<root>\\s+<data>.*</data>.*</data>\\s+</root>"), res)
+      rootGen.get(30).mkString(" ").replaceAll("[\n\r]", " ") should
+        include regex "<root>\\s+<data>.*</data>.*</data>\\s+</root>"
       val nGen= ToXmlAttributes(recordName="data").
                      add("id", idGen).
                      add("born", bornGen)
-      val v= nGen.getStrings(1)(0) replaceFirst("born=[^ ]+", "")
       // ?s is dotall-mode, accepts multiline data
-      assert(v.matches("(?s)^\\s*<data\\s+id.*(/>|</data>)\\s*$"), "|" + v + "|")
+      nGen.getStrings(1)(0) replaceFirst("born=[^ ]+", "") should
+        include regex "(?s)^\\s*<data\\s+id.*(/>|</data>)\\s*$"
     }
   }
 
@@ -82,8 +83,7 @@ class XmlGeneratorSpec extends FlatSpec {
     new SetupElement {
       val gen = ToXmlElements(recordName = "data", nulls = KeepNull).
           add("id", SomeNulls(100, idGen))
-      val res = gen.get(1)(0).toString()
-      assert(res.matches("(?s)^\\s*<data>\\s*<id>\\s*null\\s*</id>\\s*</data>\\s*$"), res)
+      gen.get(1)(0).toString() should include regex "(?s)^\\s*<data>\\s*<id>\\s*null\\s*</id>\\s*</data>\\s*$"
     }
   }
 
@@ -91,8 +91,7 @@ class XmlGeneratorSpec extends FlatSpec {
     new SetupElement {
       val gen = ToXmlElements(recordName = "data", nulls = SkipNull).
           add("id", SomeNulls(100, idGen))
-      val res = gen.get(1)(0).toString()
-      assert(res.matches("(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"), res)
+      gen.get(1)(0).toString() should include regex "(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"
     }
   }
 
@@ -100,8 +99,7 @@ class XmlGeneratorSpec extends FlatSpec {
     new SetupElement {
       val gen = ToXmlElements(recordName = "data", nulls = EmptyNull).
           add("id", SomeNulls(100, idGen))
-      val res = gen.get(1)(0).toString()
-      assert(res.matches("(?s)^\\s*<data>\\s*(<id>\\s*</id>|<id/>)\\s*</data>\\s*$"), res)
+      gen.get(1)(0).toString() should include regex "(?s)^\\s*<data>\\s*(<id>\\s*</id>|<id/>)\\s*</data>\\s*$"
     }
   }
 
@@ -112,40 +110,49 @@ class XmlGeneratorSpec extends FlatSpec {
       val res = gen.getStrings(6)
       val expected= List("&lt;", "&amp;", "&quot;", "'", " ", "&gt;")
       for (i<- 0 to expected.length-1)
-        assert(res(i).matches("(?s)^\\s*<i>\\s*<x>\\s*"+expected(i)+"\\s*</x>\\s*</i>\\s*$"),
-               i+":"+res(i))
+        res(i) should include regex "(?s)^\\s*<i>\\s*<x>\\s*"+expected(i)+"\\s*</x>\\s*</i>\\s*$"
     }
   }
 
+  it should "handle nesting" in {
+    val intGen= Ints() from 1
+    val gen1= ToXmlAttributes(recordName="subAttr").add("int", intGen)
+    val gen2= ToXmlElements(recordName="subElem").add("fix", Fixed("<"))
+    val gen3= ToXmlElements(recordName = "combined")
+      .add("name", NorskeNavn())
+      .add("embeddedAttr", gen1)
+      .add("long", Longs())
+      .add("embeddedElem", gen2)
+    // println(gen3.get(4))
+    // TODO Assert
+  }
+
   "The ToXmlAttribute generator" should "demand at least one generator" in {
-    intercept[IllegalArgumentException] { ToXmlAttributes(recordName="x").get(1) }
+    a[IllegalArgumentException] should be thrownBy { ToXmlAttributes(recordName="x").get(1) }
   }
 
   it should "produce the expected number of records" in {
     new SetupAttribute {
-      val res1= fragmentGen.get(4)
-      assert(res1.size === 4, res1.toString)
-      val res2= rootGen.get(3)
-      assert(res2.size === 1, res2)
-      assert(rootGen.getStrings(5).size === 1)
-      assert(fragmentGen.getStrings(6).size === 6)
+      fragmentGen.get(4).size should be (4)
+      rootGen.get(3).size should be (1)
+      rootGen.getStrings(5).size should be (1)
+      fragmentGen.getStrings(6).size should be (6)
       val nGen= ToXmlAttributes(recordName="data").
                      add("id", idGen).
                      add("born", bornGen)
-      assert(nGen.get(30).size === 30)
+      nGen.get(30).size should be (30)
     }
   }
 
   it should "format its output as expected" in {
     new SetupAttribute {
-      val res= rootGen.get(3).mkString(" ").replaceAll("[\n\r\t ]+", " ")
-      assert(res.matches("<root>(\\s*<data[^>]*(></data>|/>))+\\s*</root>"), res)
+      rootGen.get(3).mkString(" ").replaceAll("[\n\r\t ]+", " ") should
+        include regex "<root>(\\s*<data[^>]*(></data>|/>))+\\s*</root>"
       val nGen= ToXmlElements(recordName="data").
                      add("id", idGen).
                      add("born", bornGen)
-      val v= nGen.getStrings(1)(0)
       // ?s is dotall-mode, accepts multiline data
-      assert(v.matches("(?s)^\\s*<data>.*</id>.*</data>\\s*$"), "|" + v + "|")
+      nGen.getStrings(1)(0) should include regex "(?s)^\\s*<data>.*</id>.*</data>\\s*$"
     }
   }
 
@@ -153,8 +160,7 @@ class XmlGeneratorSpec extends FlatSpec {
     new SetupAttribute {
       val gen = ToXmlAttributes(recordName = "data", nulls = KeepNull).
           add("id", SomeNulls(100, idGen))
-      val res = gen.get(1)(0).toString()
-      assert(res.matches("(?s)^\\s*<data\\s*id=.null.\\s*(/>|></data>)\\s*$"), res)
+      gen.get(1)(0).toString() should include regex "(?s)^\\s*<data\\s*id=.null.\\s*(/>|></data>)\\s*$"
     }
   }
 
@@ -162,8 +168,7 @@ class XmlGeneratorSpec extends FlatSpec {
     new SetupAttribute {
       val gen = ToXmlAttributes(recordName = "data", nulls = SkipNull).
           add("id", SomeNulls(100, idGen))
-      val res = gen.get(1)(0).toString()
-      assert(res.matches("(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"), res)
+      gen.get(1)(0).toString() should include regex "(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"
     }
   }
 
@@ -171,8 +176,7 @@ class XmlGeneratorSpec extends FlatSpec {
     new SetupAttribute {
       val gen = ToXmlAttributes(recordName = "data", nulls = EmptyNull).
           add("id", SomeNulls(100, idGen))
-      val res = gen.get(1)(0).toString()
-      assert(res.matches("(?s)^\\s*<data\\s*id=..\\s*(/>|></data>)\\s*$"), res)
+      gen.get(1)(0).toString() should include regex "(?s)^\\s*<data\\s*id=..\\s*(/>|></data>)\\s*$"
     }
   }
 
@@ -183,8 +187,7 @@ class XmlGeneratorSpec extends FlatSpec {
       val res = gen.getStrings(6)
       val expected= List("&lt;", "&amp;", "&quot;", "'", " ", "&gt;")
       for (i<- 0 to expected.length-1)
-        assert(res(i).matches("(?s)^\\s*<i x=."+expected(i)+".\\s*(/>|></i>)\\s*$"),
-               i+":"+res(i))
+        res(i) should include regex "(?s)^\\s*<i x=."+expected(i)+".\\s*(/>|></i>)\\s*$"
     }
   }
 }

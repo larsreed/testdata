@@ -2,7 +2,7 @@ package no.mesan.testdatagen
 
 // Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
 
-import scala.language.postfixOps
+import scala.language.{reflectiveCalls, postfixOps}
 
 /**
  * This is the bare minimum interface, mostly ment for "end-of-the-line" data generators.

@@ -22,7 +22,7 @@ class ToCsvSpec extends FlatSpec {
     val fnrGen = Fnr(FromList(dates) sequential)
     val boolGen = Booleans()
     val mailGen = SomeNulls(20, MailAddresses())
-    val recordGen = ToCsv(true).
+    val recordGen = ToCsv(withHeaders = true).
       add("id", idGen).
       add("userId", codeGen).
       add("ssn", fnrGen).
@@ -32,7 +32,7 @@ class ToCsvSpec extends FlatSpec {
 
   "The ToCsv generator" should "demand at least one input generator" in {
     intercept[IllegalArgumentException] {
-      ToCsv(true).get(1)
+      ToCsv(withHeaders = true).get(1)
     }
   }
 
@@ -46,7 +46,7 @@ class ToCsvSpec extends FlatSpec {
   it should "quote special characters correctly" in {
     new Setup {
       var fnuttGen = Chars("\"")
-      val res = ToCsv(false).add("fnutt", fnuttGen).getStrings(1)(0)
+      val res = ToCsv(withHeaders = false).add("fnutt", fnuttGen).getStrings(1)(0)
       val exp= "\"" + "\\" + "\"" + "\""
       assert(res===exp,res +"=" + exp)
     }

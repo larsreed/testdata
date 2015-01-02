@@ -97,8 +97,13 @@ class Strings extends ExtendedImpl[String] {
 }
 
 object Strings {
-  val asciiUpperLower= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
+  val asciiUpper= "ABCDEFGHIJKLMNOPQRSTUVWXY"
+  val asciiLower= "abcdefghijklmnopqrstuvwxyz"
+  val asciiUpperLower= asciiUpper + asciiLower
   val digits= "0123456789"
-  def apply(length: Int=1):Strings = new Strings() length length
-  def apply(length: Int, chars:Seq[Char]):Strings = new Strings() length length chars chars
+  def apply(length: Int=1) :Strings = new Strings() length length
+  def apply(length: Int, chars:Seq[Char]): Strings = new Strings() length length chars chars
+  def letters(length: Int=1): Strings= apply(length, asciiUpperLower)
+  def alphanum(length: Int=1): Strings= apply(length, asciiUpperLower + digits)
+  def ascii(length: Int=1): Strings= apply(length)
 }

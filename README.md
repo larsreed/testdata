@@ -236,6 +236,11 @@ Apply methods:
 
 * `Strings(length: Int=1)`: default method, exact length may be given
 * `Strings(length: Int, chars:Seq[Char])`: supply length and character set
+* `Strings.letters(length: Int=1)`: use only upper/lowercase a..z
+* `Strings.alfanum(length: Int=1)`: use only upper/lowercase a..z or digits
+* `Strings.ascii(length: Int=1)`: use characters between ASCII space and tilde
+
+
 
 ### Fixed ###
 This generator may seem superfluous... It takes a single value, and returns that same value repeatedly. But it is meant for aggregating values, see `FieldConcatenator` for an example.

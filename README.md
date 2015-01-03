@@ -16,29 +16,18 @@ Furthermore, there are some utility classes like `FieldConcatenator` and `Weight
 Here is an introductory example to give you a sense of what it's all about:
 
 
-    package no.mesan.testdatagen.generators.sample
-
-    import no.mesan.testdatagen.aggreg.{FieldConcatenator, SomeNulls, WeightedGenerator}
-    import no.mesan.testdatagen.generators.{Dates, Doubles, Fixed, FromList, Ints}
-    import no.mesan.testdatagen.generators.misc.Names
-    import no.mesan.testdatagen.recordgen.{SkipNull, ToXmlElements}
-    import scala.language.postfixOps
-
-
-    object SimpleSample extends App {
-      ToXmlElements("order", "orderLine", SkipNull)
-        .add("id", Ints() from 1 sequential)
-        .add("productName", WeightedGenerator(
-                             (3, Names(1)),
-                             (2, Names(2))))
-        .add("qty", SomeNulls(33, // 33% has no qty
-                     FieldConcatenator()
-                       .add(Doubles() from 1 to 300 format "%5.2f")
-                       .add(Fixed(" "))
-                       .add(FromList("l", "kg", "", "m"))))
-        .add("orderDate", Dates() from(y=2012, m=9) to(y=2014, m=11) format "yyyy-MM-dd")
-        .toFile("orders.xml")
-        .getStrings(1000)
+    object SimpleSample extends App with DslLikeSyntax {
+      toFile(fileName = "orders.xml", noOfRecords = 1000) {
+        toXmlElements(rootName = "order", recordName = "orderLine", nulls = SkipNull)
+          .add("id", sequential integers)
+          .add("productName", weighted((3, Names(1)), (2, Names(2))))
+          .add("qty", someNulls(33, // 33% has no qty
+                        concatenate(
+                          doubles from 1 to 300 format "%5.2f",
+                          fixed(" "),
+                          from list("l", "kg", "", "m"))))
+          .add("orderDate", dates from(y = 2012, m = 9) to(y = 2014, m = 11) format "yyyy-MM-dd")
+      }
     }
 
 This produces an XML-file, order.xml, with the following content:
@@ -76,7 +65,7 @@ For a more thorough example, scroll down...
 ### Generator ###
 The basic generator trait looks like this (details omitted):
 
-/** The bare minimum interface, mostly ment for "end-of-the-line" data generators. */
+    /** The bare minimum interface, mostly meant for "end-of-the-line" data generators. */
     trait BareGenerator[+T] {
 
       /** Provide a list of n entries. */
@@ -115,8 +104,10 @@ The elements here are:
 * `getStrings(n)`: like `genStrings`, but takes `n` entries from the stream.
 * `filter(f)`: Adds a function that takes an instance of the generator's type and returns `true` if the instance should be included in the list. The function may be called several times to add multiple filters to apply, each and every filter must accept the instance to include it in the final list.
 * `formatWith(f)`: Adds a formatting function that takes an instance of the given type T  and formats it as a string.
+   The default formatting function is `toString`
 * `formatOne(v)`: Uses the defined formatting function to format one value.
-* `distinct`: requires that this generator produces only distinct values. **This should be used with caution!**  Obviously, if an "infinite" number of elements should contain no duplicates, "someone" has to remember all values past and spend time checking them. This is not for free...  Moreover, if the underlying value space is smaller than the desired number of outputs, it will usually enter an infinite loop, where the recipient keeps pulling and nothins comes out. E.g.: the `Booleans` generator has at most two possible values, the `Fixed` has only one, `FromList` is bounded, and filter functions may restrict almost any generator -- do not try to get 3 distinct Booleans...
+* `distinct`: requires that this generator produces only distinct values.
+  **This should be used with caution!**  Obviously, if an "infinite" number of elements should contain no duplicates, "someone" has to remember all values past and spend time checking them. This is not for free...  Moreover, if the underlying value space is smaller than the desired number of outputs, it will usually enter an infinite loop, where the recipient keeps pulling and nothins comes out. E.g.: the `Booleans` generator has at most two possible values, the `Fixed` has only one, `FromList` is bounded, and filter functions may restrict almost any generator -- do not try to get 3 distinct Booleans...
 
 #### GeneratorImpl & GeneratorFilters ####
 `GeneratorImpl` is a simple trait containing a sufficient implementation of the `Generator` methods. It requires the implementing class to provide (at least) a `def getStream : Stream[T]` which is used to derive the other methods. It uses the separately usable `GeneratorFilters` trait that handles the filter functions. Implementing classes get the following additional members:
@@ -189,11 +180,13 @@ Apply methods (defaults for all parameters):
 * `Ints(from:Int=Int.MinValue+1, to:Int=Int.MaxValue-1, step:Int=1)`
 
 ### Longs ###
-returns longs from the entire range. The only special method is `step(Long)` to define step size for sequences, as for `Ints`, a negative step means starting at max.
+returns longs from the entire *positive* range. The only special method is `step(Long)` to define step size for sequences, as for `Ints`, a negative step means starting at max.
 
 Apply methods (defaults for all parameters):
 
 * `Longs(from:Long=0, to:Long=Long.MaxValue-1, step:Long=1)` (note default 0 for start)
+* `Longs.negative(from:Long=0, to:Long=Long.MaxValue-1, step:Long=1)` (only returns 0 or negative)
+* `Longs.anyLong()` (returns both positive and negative values)
 
 ### Chars ###
 uses `ExtendedDelegate` and a 1-character `Strings`-generator to do its work. It adds the `chars(Seq[Char])` method also supported by Strings to add a range of available characters. Accepts a string (`chars("aeiouy")`), an interval (`chars('a' to 'z')`) etc.
@@ -204,9 +197,12 @@ Apply methods:
 * `Chars(seq)`
 
 ### Doubles ###
-returns doubles from the entire range. The only special method is `step(Double)` to define step size for sequences, as for `Ints`, a negative step means starting at max.
+returns doubles from the entire *positive* range. The only special method is `step(Double)` to define step size for sequences, as for `Ints`, a negative step means starting at max.
 
-Apply methods: `Double()`
+Apply methods:
+
+* `Doubles()`
+* `Doubles().negative()` returns only negative values
 
 ### Dates ###
 A basic enough data type, this is still one of the more complex generators. It uses JodaTime for date/time representation, although conversions for `java.util.Date` are available. There are a lot of special methods:
@@ -274,11 +270,11 @@ Apply methods:
 * `FromList()` &ndash; then you *must* call `fromList` afterwards
 * `FromList(List[T])`
 * `FromList(T*)` e.g. `FromList(1,2,4,8,16,32,64)`
-* `FromList.weighted(Seq[Tuple2[Int, T]])` helps you build weighted choices for simple values. It builds an input list from a sequence of `(weight, value)`-tuples, e.g. `FromList.weighted(List((10, "A"), (20, "B"), (20, "C")))` which will return approx. 20% As, 40% Bs and 40% Cs (for random generation; 10 As followed by 20 Bs and then 20 Cs for sequential). 
+* `FromList.weighted(Seq[Tuple2[Int, T]])` helps you build weighted choices for simple values. It builds an input list from a sequence of `(weight, value)`-tuples, e.g. `FromList.weighted(List((10, "A"), (20, "B"), (20, "C")))` which will return approx. 20% As, 40% Bs and 40% Cs (for random generation; 10 As followed by 20 Bs and then 20 Cs for sequential).
 
 ### FromStream ###
 This is the simplest implementation of all.  It simply wraps any `Stream` as a `Generator`.
- 
+
 Apply methods:
 
 * `FromStream(Stream[T])`
@@ -734,6 +730,80 @@ Contains methods to combine streams:
 * `combineGens[A](list: Seq[Generator[A]]): Stream[Seq[A]]`: runs `combine` on the `gen`s from each generator.
 * `combineStringGens[A](list: Seq[Generator[A]]): Stream[Seq[String]]`: runs `combine` on the `genString`s from each generator.
 
+## "DSL-like" syntax
+Recently, I have made some additions to make the configuration a bit more readable. Consider this *experimental*...  You may use the following constructs bye adding the `with DslLikeSyntax` trait:
+| Write | To Get |
+| ------|--------|
+| from list (ls) | `FromList(ls)` -- `ls` is a list of arguments or a list |
+| from file (name[,encoding]) | `FromFile(name, encoding)` |
+| from stream (streamVar) | `FromStream(streamVar)` |
+| from markovFile (file name(s)) | `Markov.apply(fs.toList)` |
+| positive integers | `Ints() from 1` |
+| positive longs, positive doubles | as above |
+| negative integers/longs/doubles | as expected... |
+| sequential integers | `Ints() from 1 sequential` |
+| sequential longs/dates | you guessed it |
+| integers | `Ints()` |
+| doubles | `Doubles()` |
+| booleans | `Booleans()` |
+| chars | `Chars()` |
+| characters | `Chars()` |
+| strings | `Strings()` |
+| randomStrings | Strings with length between 1 and 24 |
+| nameLike | Name-like strings with 2-3 words |
+| norskeNavn | `NorskeNavn()` |
+| fornavn | Norwegian first names |
+| etternavn | Norwegian last names |
+| rareNavn | Funny names :) |
+| letters | A-Z upper/lower |
+| alphanumerics | 0-9, A-Z upper/lower |
+| ascii | ASCII 32-126 |
+| dates | `Dates()` |
+| dateAndTime | `Dates().dateAndTime` |
+| times | `Dates().timeOnly` |
+| futureDates | Dates &gt; today |
+| previousDates | Dates &lt; today |
+| fixed(v) | `Fixed(v)` |
+| just(v) | Same as fixed |
+| cars | `CarMakes()` |
+| creditCards | `CreditCards()` |
+| visas | `CreditCards.visas` |
+| masterCards | `CreditCards.masterCards` |
+| fibonaccis | `Fibonaccis()` |
+| guids | `Guids()` |
+| mailAddresses | `MailAddresses()` |
+| englishMarkov | `Markov.english()` |
+| norskMarkov | `Markov.norwegian()` |
+| urls | `Urls()` |
+| adresser | `Adresser()` |
+| fnr or fodselsnummer | `Fnr()` |
+| fnrFromDates(dateGen) | `Fnr(dateGen)` |
+| orgnr or orgnummer | `Orgnr()` |
+| kjennemerker | `Kjennemerker()` |
+| kommuner | `Kommuner()` |
+| kommunenummer | `Kommuner.kommunenr()` |
+| land | `Land()` |
+| poststeder | `Poststeder()` |
+| postnummer | `Poststeder.postnr()` |
+| concatenate(generators | `FieldConcatenator(generators)` |
+| concatenateWith(fieldSep)(generators) | `FieldConcatenator(fieldSep, generators)` |
+| someNulls(percent, generator) | `SomeNulls(percent, generator)` |
+| transformText(generator) | `TextWrapper(generator)` |
+| substring(generator, from[, to])| `TextWrapper(generator).substring(from, to)` |
+| twoFromFunction(generator)(function) | `TwoFromFunction(gen, genFun)` |
+| twoWithPredicate(left, right)(predicate) | `TwoWithPredicate(left, right, predicate)` |
+| uniqueWithFallback(primary, fallback) | `UniqueWithFallback(primary, fallback)` |
+| weighted( (n, gen) ...) | `WeightedGenerator(...)` |
+| toCsv(...) | `ToCsv(withHeaders, delimiter, separator)` |
+| toFile(fileName, noOfRecords ...)(generator) | `ToFile(fileName, generator,...).write` |
+| toFixedWidth(...): ToFixedWidth | `ToFixedWidth(...)` |
+| toHtml(...) | `ToHtml(...)` |
+| toJson(...) | `ToJson(...)` |
+| toSql(tableName ...) | `ToSql(tableName ...)` |
+| toWiki | `ToWiki()` |
+| toXmlAttributes(...) | `ToXmlAttributes(...)` |
+| toXmlElements(...) | `ToXmlElements(...)` |
+
 ## Extended example ##
 For this last sample, we'll look at generation of data for several SQL tables. The data structure to fill looks like this:
 
@@ -765,16 +835,18 @@ The code:
 
     package no.mesan.testdatagen.generators.sample
 
-    import no.mesan.testdatagen.aggreg.{FieldConcatenator, SequenceOf, SomeNulls, TextWrapper, UniqueWithFallback, WeightedGenerator}
+    // Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
+
+    import no.mesan.testdatagen.aggreg.SequenceOf
+    import no.mesan.testdatagen.dsl.DslLikeSyntax
     import no.mesan.testdatagen.generators.misc.Names
-    import no.mesan.testdatagen.generators.norway.{Adresser, Fnr, NorskeNavn, Poststeder, RareNavn}
-    import no.mesan.testdatagen.generators.{Dates, Doubles, Fixed, FromList, Ints}
-    import no.mesan.testdatagen.recordgen.{ToFile, ToSql}
+    import no.mesan.testdatagen.generators.{Dates, FromList}
+    import no.mesan.testdatagen.recordgen.ToSql
 
     import scala.language.postfixOps
 
-    object LongerSample extends App {
-      // These are the total of numbers we will generate for the different categories
+    object LongerSample extends App with DslLikeSyntax {
+      // These are the total number of records we will generate for the different categories
       val recordsBase= 100
       val orderFact= 2
       val productFact= 3
@@ -787,65 +859,62 @@ The code:
       // To be able to reuse values between records, we generate some values in advance.
       // specifically IDs (for foreign keys) and dates (for correlation between birth dates
       // and "fodselsnummer")
-      val customerIds= FromList((Ints() from 1 distinct).get(customerFact*recordsBase))
-      val birthDates= Dates() from (y=1921) to (y=1996) get(customerFact*recordsBase)
-      val productIds= FromList((Ints() from 1 to 100000 distinct).get(productFact*recordsBase))
-      val orderIds= FromList((Ints() from 1 distinct).get(orderFact*recordsBase)) sequential
-      val postSteder= FromList(Poststeder() get(customerFact*recordsBase)) sequential
+      val customerIds= from list ((sequential integers) get(customerFact * recordsBase))
+      val birthDates= dates from (y=1921) to (y=1996) get(customerFact*recordsBase)
+      val productIds= from list((sequential integers) to 100000 get(productFact*recordsBase))
+      val orderIds: FromList[Int] = from list (sequential integers).get(orderFact * recordsBase) sequential
+      val postSteder= from list (poststeder get(customerFact*recordsBase)) sequential
 
       // Populating the customer table - no dependencies
       val customerGenerator= ToSql(tableName="customer")
         .add("id", customerIds)
-        .addQuoted("fnr", SomeNulls(percent=25, Fnr(FromList(birthDates) sequential)))
-        .addQuoted("born", FromList(birthDates) formatWith Dates.dateFormatter("yyyy-MM-dd") sequential)
-        .addQuoted("name", UniqueWithFallback(RareNavn(), NorskeNavn())) // We want, for the test's sake, unique
+        .addQuoted("fnr", someNulls(percent=25, fnrFromDates(from list birthDates sequential)))
+        .addQuoted("born", from list birthDates formatWith Dates.dateFormatter("yyyy-MM-dd") sequential)
+        .addQuoted("name", uniqueWithFallback(rareNavn, norskeNavn)) // We want, for the test's sake, unique
                    // names. We try to get "funny names" from the RareNavn-generator, but add standard names
                    // from the NorskeNavn-generator when duplicates arise.
-        .addQuoted("adr", Adresser())
-        .addQuoted("postnr", TextWrapper(postSteder).substring(0, 4))
-        .addQuoted("poststed", TextWrapper(postSteder).substring(5))
+        .addQuoted("adr", adresser)
+        .addQuoted("postnr", substring(postSteder, 0, 4))
+        .addQuoted("poststed", substring(postSteder, 5))
 
       // and products - no dependencies either
-      val productGenerator= ToSql(tableName="product")
+      val productGenerator= toSql(tableName="product")
         .add("id", productIds)
-        .addQuoted("name", WeightedGenerator()
-                             .add(60, Names(1))
-                             .add(40, Names(2)))
+        .addQuoted("name", weighted((60, Names(1)),
+                                     (40, Names(2))))
 
       // Orders are connected to customers through customerIds
-      val orderGenerator= ToSql(tableName="order")
+      val orderGenerator= toSql(tableName="order")
         .add("id", orderIds)
-        .addQuoted("status", FromList("Pending", "Ready", "Delivered", "Closed"))
+        .addQuoted("status", from list("Pending", "Ready", "Delivered", "Closed"))
         .add("customer", customerIds)
-        .addQuoted("orderDate", Dates() from(y=2010) to(y=2013) format "yyyy-MM-dd")
+        .addQuoted("orderDate", dates from(y=2010) to(y=2013) format "yyyy-MM-dd")
 
       // And order_lines connected to orders and products
-      val orderLineGenerator= ToSql(tableName="order_line")
+      val orderLineGenerator= toSql(tableName="order_line")
         .add("order", orderIds)
         .add("product", productIds)
-        .add("lineNo", Ints() from 1 sequential)
+        .add("lineNo", sequential integers)
         .addQuoted("info",
-            SomeNulls(60,
-                WeightedGenerator()
-                  .add(10, Fixed("Restock"))
-                  .add(5, Fixed("Check!"))
-                  .add(20,  TextWrapper(FieldConcatenator()
-                            .add(Fixed("Amount: "))
-                            .add(Doubles() from 1 to 300 format "%5.2f")
-                            .add(FromList(" l", " kg", "", " m")))
-                            .trim)))
+            someNulls(60,
+                weighted((10, fixed("Restock")),
+                         (5, fixed("Check!")),
+                         (20,
+                           transformText(
+                             concatenate(fixed("Amount: "),
+                               (positive doubles) from 1 to 300 format "%5.2f",
+                               from list (" l", " kg", "", " m")))
+                             trim))))
 
       // The generators are all set -- create result
-      val allGenerators= SequenceOf().makeAbsolute().addWeighted(
-        (customerFact, customerGenerator),
-        (productFact, productGenerator),
-        (orderFact, orderGenerator),
-        (orderLineFact, orderLineGenerator)
-      )
-
-      ToFile(fileName=resultFile, generator=allGenerators) write recordsBase
+      toFile(fileName=resultFile, noOfRecords = recordsBase) {
+        SequenceOf().makeAbsolute().addWeighted(
+            (customerFact, customerGenerator),
+            (productFact, productGenerator),
+            (orderFact, orderGenerator),
+            (orderLineFact, orderLineGenerator))
+      }
     }
-
 
 The output looks like this (excerpt):
 

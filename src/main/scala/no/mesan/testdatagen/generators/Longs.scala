@@ -2,7 +2,8 @@ package no.mesan.testdatagen.generators
 
 // Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
 
-import no.mesan.testdatagen.ExtendedImpl
+import no.mesan.testdatagen.aggreg.WeightedGenerator
+import no.mesan.testdatagen.{Generator, ExtendedImpl}
 
 import scala.util.Random
 
@@ -51,4 +52,9 @@ class Longs extends ExtendedImpl[Long] {
 object Longs {
   def apply(from:Long=0, to:Long=Long.MaxValue-1, step:Long=1): Longs=
     new Longs() from from to to step step
+
+  def negative(from:Long=0, to:Long=Long.MaxValue-1, step:Long=1): Generator[Long] =
+    FromStream(apply(from, to, step).gen map(_ * -1))
+
+  def anyLong: Generator[Long] = WeightedGenerator((1, apply()), (1, negative()))
 }

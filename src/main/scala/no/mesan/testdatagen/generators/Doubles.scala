@@ -2,7 +2,8 @@ package no.mesan.testdatagen.generators
 
 // Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
 
-import no.mesan.testdatagen.ExtendedImpl
+import no.mesan.testdatagen.aggreg.WeightedGenerator
+import no.mesan.testdatagen.{Generator, ExtendedImpl}
 
 import scala.util.Random
 
@@ -26,7 +27,7 @@ class Doubles extends ExtendedImpl[Double] {
   def getStream: Stream[Double] = {
     val min= lower.getOrElse(0D)
     val max= upper.getOrElse(Double.MaxValue)
-    require(max>=min, "from >= to")
+    require(max>=min, s"from $min >= to $max")
     require(!(max-min).isInfinite, "too wide range")
 
     def next(curr: Double): Stream[Double]= {
@@ -40,9 +41,12 @@ class Doubles extends ExtendedImpl[Double] {
     else if (stepSize < 0) next(max)
     else next(min)
   }
-
 }
 
 object Doubles {
   def apply(): Doubles = new Doubles()
+
+  def negative(): Generator[Double] =  FromStream(apply().gen map(_ * -1))
+
+  def anyDouble: Generator[Double] = WeightedGenerator((1, apply()), (1, negative()))
 }

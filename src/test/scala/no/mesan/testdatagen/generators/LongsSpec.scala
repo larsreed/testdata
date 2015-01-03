@@ -83,4 +83,10 @@ class LongsSpec extends FlatSpec {
     val res2 = (generator step 2 from -2 to 10 formatWith(i => f"$i%02d") sequential) getStrings 0
     assert(res2 === Nil)
   }
+
+  it should "generate negative values when expected" in {
+    val neg= Longs.negative().get(777)
+    for (i<- neg) assert(i<0)
+
+  }
 }

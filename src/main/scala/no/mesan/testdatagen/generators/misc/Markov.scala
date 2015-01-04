@@ -2,8 +2,8 @@ package no.mesan.testdatagen.generators.misc
 
 // Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
 
-import no.mesan.testdatagen.utils.IO
-import no.mesan.testdatagen.{GeneratorImpl, RandomElem}
+import no.mesan.testdatagen.utils.{RandomElem, IO}
+import no.mesan.testdatagen.GeneratorImpl
 
 import scala.annotation.tailrec
 

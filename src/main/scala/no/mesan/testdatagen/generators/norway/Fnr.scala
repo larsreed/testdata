@@ -4,6 +4,7 @@ package no.mesan.testdatagen.generators.norway
 
 import no.mesan.testdatagen._
 import no.mesan.testdatagen.generators.{Dates, Ints}
+import no.mesan.testdatagen.utils.Percentage
 import org.joda.time.DateTime
 
 import scala.annotation.tailrec

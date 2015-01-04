@@ -2,7 +2,8 @@ package no.mesan.testdatagen.aggreg
 
 // Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
 
-import no.mesan.testdatagen.{Generator, GeneratorImpl, StreamUtils}
+import no.mesan.testdatagen.utils.StreamUtils
+import no.mesan.testdatagen.{Generator, GeneratorImpl}
 
 /**
  * The FieldConcatenator is given a set of generators with the add method.

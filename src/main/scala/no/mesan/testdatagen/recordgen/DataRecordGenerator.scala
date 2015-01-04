@@ -4,7 +4,8 @@ package no.mesan.testdatagen.recordgen
 
 import java.util.regex.Pattern
 
-import no.mesan.testdatagen.{Generator, GeneratorImpl, StreamUtils}
+import no.mesan.testdatagen.utils.StreamUtils
+import no.mesan.testdatagen.{Generator, GeneratorImpl}
 
 import scala.language.postfixOps
 

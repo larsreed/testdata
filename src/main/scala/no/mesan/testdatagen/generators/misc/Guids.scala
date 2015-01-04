@@ -2,8 +2,9 @@ package no.mesan.testdatagen.generators.misc
 
 // Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
 
-import no.mesan.testdatagen.{StreamUtils, GeneratorImpl}
+import no.mesan.testdatagen.GeneratorImpl
 import no.mesan.testdatagen.generators.Longs
+import no.mesan.testdatagen.utils.StreamUtils
 
 import scala.language.postfixOps
 

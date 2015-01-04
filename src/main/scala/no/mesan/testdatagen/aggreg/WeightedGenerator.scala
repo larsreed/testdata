@@ -2,9 +2,11 @@ package no.mesan.testdatagen.aggreg
 
 // Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
 
+import no.mesan.testdatagen.utils.{StreamUtils, RandomElem}
+
 import scala.collection.immutable.List
 
-import no.mesan.testdatagen.{Generator, GeneratorImpl, RandomElem, StreamUtils}
+import no.mesan.testdatagen.{Generator, GeneratorImpl}
 
 /**
  * This generator takes one or more generators as input, and selects randomly between

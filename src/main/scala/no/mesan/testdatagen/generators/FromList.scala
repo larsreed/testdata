@@ -2,7 +2,8 @@ package no.mesan.testdatagen.generators
 
 // Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
 
-import no.mesan.testdatagen.{ExtendedImpl, RandomElem}
+import no.mesan.testdatagen.ExtendedImpl
+import no.mesan.testdatagen.utils.RandomElem
 
 /**
  * Probably the most versatile of all the generators, the FromList takes a list of

@@ -2,7 +2,8 @@ package no.mesan.testdatagen.aggreg
 
 // Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
 
-import no.mesan.testdatagen.{Generator, GeneratorImpl, Percentage}
+import no.mesan.testdatagen.utils.Percentage
+import no.mesan.testdatagen.{Generator, GeneratorImpl}
 
 /**
  * This generator takes another generator and a percentage as input.

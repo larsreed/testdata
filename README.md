@@ -488,6 +488,7 @@ There are several rules pertaining to these numbers, some of which are supported
 * The 3-digit ID is given in intervals signifying century. This is not supported by the generator.
 * The 3-digit ID is odd for men, even for women. Call `boysOnly` or `girlsOnly` if you are a sexist.
 * The algorithm for the check numbers leads to not all IDs being valid. The generator ensures that all values are valid.
+* Often, the results are written as "ddmmyy nnncc" -- use `standardFormat` to get that from `getStrings`/`genStrings`.
 
 Apply methods:
 

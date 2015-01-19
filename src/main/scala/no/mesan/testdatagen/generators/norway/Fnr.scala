@@ -39,6 +39,9 @@ class Fnr(dateGenerator: ExtendedGenerator[DateTime]) extends GeneratorImpl[Stri
   /** As the name implies... */
   def girlsOnly(): this.type = { boys=false; girls=true; this }
 
+  /** Format as DDMMYY NNNNN. */
+  def standardFormat: this.type = formatWith(s=> s.substring(0, 6) + " " + s.substring(6))
+
   private def get3: List[Int]= intGen.get(2) ++ (if (!boys) girlGen.get(1)
     else if (!girls) boyGen.get(1)
     else intGen.get(1))

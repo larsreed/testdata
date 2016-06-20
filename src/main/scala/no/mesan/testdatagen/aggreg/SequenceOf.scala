@@ -22,7 +22,7 @@ class SequenceOf[S, T] (convert: S=>T) extends BareGenerator[T] with MultiGenera
     this
   }
 
-  private def number(n: Int, weight:Int, totWeight:Int)= scala.math.round((n*weight)/totWeight)
+  private def number(n: Int, weight:Int, totWeight:Int): Int= scala.math.round((n*weight*1.0)/totWeight).asInstanceOf[Int]
 
   private def getList[U](n: Int)(f: (Int, Generator[S]) => List[U]): List[U] =  {
     val tot= if (absolute) 1 else generators.foldLeft(0)((zum, tuple) => zum + tuple._1)

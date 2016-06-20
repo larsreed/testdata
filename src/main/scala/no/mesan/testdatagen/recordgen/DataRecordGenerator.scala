@@ -64,7 +64,7 @@ abstract class StringRecordGenerator(nulls: NullHandler)
 
   /** Convert the fields, and add pre/suffix. */
   override def getStream: Stream[String] = {
-    require(fields.size>0, "at least one generator must be given")
+    require(fields.nonEmpty, "at least one generator must be given")
     genRecords(nulls).map(rec=> recordPrefix + makeFields(rec) + recordSuffix)
   }
 }

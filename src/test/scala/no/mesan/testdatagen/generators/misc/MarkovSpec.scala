@@ -29,7 +29,7 @@ class MarkovSpec extends FlatSpec {
     val gen= new Markov()
     val res= gen.build(List("begin", "end"))
     assert(res.size===2)
-    assert(res.getOrElse("begin", List())(0) === "end")
+    assert(res.getOrElse("begin", List()).head === "end")
     assert(res.getOrElse("end", List("failed")).size===0)
   }
 

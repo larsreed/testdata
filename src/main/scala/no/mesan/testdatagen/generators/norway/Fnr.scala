@@ -55,7 +55,7 @@ class Fnr(dateGenerator: ExtendedGenerator[DateTime]) extends GeneratorImpl[Stri
     def genPnr(s: String): String = {
       val orgAsInt= s.map(c=> c-'0').toList
       // Transform to DNR
-      val first6= if (hit(dnrFactor)) 4+orgAsInt(0) :: orgAsInt.drop(1)
+      val first6= if (hit(dnrFactor)) 4+orgAsInt.head :: orgAsInt.drop(1)
                   else orgAsInt
 
       @tailrec

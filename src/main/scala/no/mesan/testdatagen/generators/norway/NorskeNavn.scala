@@ -64,11 +64,11 @@ class NorskeNavn extends Generator[String] with GeneratorDelegate[String, String
 
   private def create(antFor: Int, antEtter:Int): Generator[String] = {
    val gen= new FieldConcatenator()
-   for ( i<- 0 to antFor-1) {
+   for ( i<- 0 until antFor) {
      if (i>0) gen.add(Strings().length(1).chars(" "))
      gen.add(FromFile(fornavn, "ISO-8859-1"))
    }
-   for ( i<- 0+antFor to antFor+antEtter-1) {
+   for ( i<- 0 + antFor until antFor + antEtter) {
      if (i>0) gen.add(Strings().length(1).chars(" "))
      gen.add(FromFile(etternavn, "ISO-8859-1"))
    }

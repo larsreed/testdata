@@ -19,9 +19,9 @@ class StreamGeneratorSpec extends FlatSpec  {
 
   case class GenSpec(extended: Boolean, gen: Generator[_], no: Int, count0: Boolean,
                      countDistinct: Boolean)
-  def genSpec(gen: Generator[_], no: Int= 42, count0: Boolean= true, countDistinct: Boolean= true)=
+  def genSpec(gen: Generator[_], no: Int= 42, count0: Boolean= true, countDistinct: Boolean= true): GenSpec =
     GenSpec(extended=false, gen, no, count0, countDistinct)
-  def extGenSpec(gen: ExtendedGenerator[_], no: Int= 42, count0: Boolean= true, countDistinct: Boolean= true)=
+  def extGenSpec(gen: ExtendedGenerator[_], no: Int= 42, count0: Boolean= true, countDistinct: Boolean= true): GenSpec =
     GenSpec(extended=true, gen, no, count0, countDistinct)
 
 
@@ -39,7 +39,7 @@ class StreamGeneratorSpec extends FlatSpec  {
       extGenSpec(Poststeder()),
       extGenSpec(Fixed(42), 1),
       extGenSpec(FromList("a", "foo", "test", "alpha", "beta", "gamma", "delta"), 6),
-      extGenSpec(FromFile("src/test/scala/no/mesan/testdatagen/generators/ints.txt"), 7),
+      extGenSpec(FromFile("ints.txt"), 7),
       extGenSpec(Orgnr()),
       extGenSpec(CarMakes(), 19)
     )
@@ -79,8 +79,8 @@ class StreamGeneratorSpec extends FlatSpec  {
       genSpec(ToJson().add("x", Ints().from(1).sequential), count0=false, countDistinct=false)
     )
   def generators: List[GenSpec]= extendedGenerators ++ simpleGenerators
-  def generatorList= generators map { spec => spec.gen }
-  def extendedGeneratorList=
+  def generatorList: List[Generator[_]] = generators map { spec => spec.gen }
+  def extendedGeneratorList: List[ExtendedGenerator[Any]] =
     extendedGenerators map { spec => spec.gen.asInstanceOf[ExtendedGenerator[Any]] }
 
   "A StreamGenerator" should "be lazy" in {
@@ -100,13 +100,13 @@ class StreamGeneratorSpec extends FlatSpec  {
   }
 
   it should "return an empty list on get(0)" in {
-    generators map { g=> if (g.count0) assert(List()===g.gen.get(0), g) }
-    generators map { g=> if (g.count0) assert(List()===g.gen.getStrings(0)) }
+    generators foreach { g=> if (g.count0) assert(List()===g.gen.get(0), g) }
+    generators foreach { g=> if (g.count0) assert(List()===g.gen.getStrings(0)) }
   }
 
   it should "return the specified number of entries" in {
-    generators map { g=> if (g.countDistinct) assert(g.gen.get(17).size===17, g) }
-    generators map { g=> if (g.countDistinct) assert(g.gen.getStrings(19).size===19, g) }
+    generators foreach { g=> if (g.countDistinct) assert(g.gen.get(17).size===17, g) }
+    generators foreach { g=> if (g.countDistinct) assert(g.gen.getStrings(19).size===19, g) }
   }
 
   it should "throw an exception if asked for a negative number of values" in {
@@ -117,12 +117,12 @@ class StreamGeneratorSpec extends FlatSpec  {
   }
 
   "An Extended generator" should "return an empty list on get(0).sequential" in {
-    extendedGeneratorList map { g=> assert(List()===g.sequential.get(0)) }
-    extendedGeneratorList map { g=> assert(List()===g.sequential.getStrings(0)) }
+    extendedGeneratorList foreach { g=> assert(List()===g.sequential.get(0)) }
+    extendedGeneratorList foreach { g=> assert(List()===g.sequential.getStrings(0)) }
   }
 
   it should "return the specified number of sequential entries" in {
-    extendedGeneratorList map { g=> assert(g.sequential.get(17).size===17) }
-    extendedGeneratorList map { g=> assert(g.sequential.getStrings(19).size===19) }
+    extendedGeneratorList foreach { g=> assert(g.sequential.get(17).size===17) }
+    extendedGeneratorList foreach { g=> assert(g.sequential.getStrings(19).size===19) }
   }
 }

@@ -22,10 +22,10 @@ class FromList[T] extends ExtendedImpl[T] with RandomElem {
   def fromList(l: Seq[T]): this.type= { inputList= l; this }
 
   def getStream: Stream[T] = {
-    require(inputList.length>0, "cannot extract from empty list")
+    require(inputList.nonEmpty, "cannot extract from empty list")
 
     def sequentially(inx: Int): Stream[T]= {
-      if (inx >= inputList.length) inputList(0) #:: sequentially(1)
+      if (inx >= inputList.length) inputList.head #:: sequentially(1)
       else inputList(inx) #:: sequentially(inx + 1)
     }
 

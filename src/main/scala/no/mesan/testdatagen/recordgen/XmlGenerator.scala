@@ -36,7 +36,7 @@ class ToXmlAttributes(rootName: String, recordName: String, nulls:NullHandler)
   extends XmlGenerator(rootName, nulls) {
 
   override def getStream: Stream[NodeSeq] = {
-    require(fields.size>0, "at least one generator must be given")
+    require(fields.nonEmpty, "at least one generator must be given")
     def getRecord(rec: DataRecord): List[Attribute]= {
       rec.map{
         case (attr, null)=> nulls match {
@@ -69,7 +69,7 @@ class ToXmlElements(rootName: String, recordName: String, nulls:NullHandler)
   extends XmlGenerator(rootName, nulls) {
 
   override def getStream: Stream[NodeSeq] = {
-    require(fields.size>0, "at least one generator must be given")
+    require(fields.nonEmpty, "at least one generator must be given")
     def getRecord(rec: DataRecord): Seq[NodeSeq]= {
       rec.map{
         case (tag, null)=> nulls match {

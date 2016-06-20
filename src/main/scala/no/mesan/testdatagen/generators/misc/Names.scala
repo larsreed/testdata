@@ -22,7 +22,7 @@ object Names {
                 "-'"
   def apply(n: Int): Generator[String] = {
     val gen= new FieldConcatenator()
-    for ( i<- 0 to n-1) {
+    for ( i<- 0 until n) {
       if (i>0) gen.add(Strings().length(1).chars(" "))
       gen.add(Strings().length(1).chars(pfxChars))
       gen.add(Strings().lengthBetween(2, 19).chars(sfxChars))

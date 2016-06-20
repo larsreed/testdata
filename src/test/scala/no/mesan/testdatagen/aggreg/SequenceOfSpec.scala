@@ -41,7 +41,7 @@ class SequenceOfSpec extends FlatSpec {
     val xgen= SequenceOf[Any]().addWeighted((5, FromList(1, 2, 3) sequential),
                                             (3, Chars("abc") sequential),
                                             (2, Ints() from 4 sequential))
-    val exp= List("1", "2", "3", "1", "2", "3", "a", "b", "c", "4", "5")
+    val exp= List("1", "2", "3", "1", "2", "3", "a", "b", "c", "a", "4", "5")
     val res= xgen.getStrings(12)
     assert(exp===res)
   }

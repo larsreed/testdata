@@ -54,7 +54,7 @@ class Markov extends GeneratorImpl[String] with RandomElem {
   }
 
   def getStream: Stream[String] = {
-    require(words.size > 0, "must load words")
+    require(words.nonEmpty, "must load words")
     @tailrec def selectNext(from: List[String]): String= from match {
       case Nil => selectNext(words.keys.toList)
       case _ => randomFrom(from)

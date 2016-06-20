@@ -37,7 +37,7 @@ class ToFixedWidthSpec extends FlatSpec {
     new Setup {
       val res=recordGen.get(3).mkString("\n")
       assert(res.matches("(?s)\\s*id.*$"),res)
-      assert(ToFixedWidth(withHeaders = false).add("aha", Fixed("aha"), 4).get(1)(0)==="aha ")
+      assert(ToFixedWidth(withHeaders = false).add("aha", Fixed("aha"), 4).get(1).head==="aha ")
     }
   }
 }

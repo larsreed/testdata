@@ -18,7 +18,7 @@ import java.util.regex.Pattern
 class ToCsv(withHeaders:Boolean, delimiter:String, separator:String)
       extends StringRecordGenerator(EmptyNull) {
   override protected def makeFields(recs: DataRecord): String =
-    recs.map(_._2).mkString(",")
+    recs.map(_._2).mkString(separator)
 
   override def add(fieldName: String, gen: Generator[_]): this.type = {
     add(new DelimitedDataField(fieldName, gen, delimiter))

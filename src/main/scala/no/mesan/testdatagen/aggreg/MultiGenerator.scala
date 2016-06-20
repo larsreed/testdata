@@ -43,5 +43,5 @@ trait MultiGeneratorWithWeight[T] {
   }
 
   /** Return the sum of all weights. */
-  def sumOfWeights: Int = _generators.map(_._1).foldLeft(0)(_+_)
+  def sumOfWeights: Int = _generators.map(_._1).sum
 }

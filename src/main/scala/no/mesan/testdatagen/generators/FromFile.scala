@@ -26,9 +26,8 @@ class FromFile[T](fileName: String, encoding:String) extends ExtendedGenerator[T
 
   def allFilters: List[T => Boolean]= listGen.allFilters
 
-  def getStream: Stream[T]= {
-    listGen.fromList(getContents).getStream
-  }
+  def getStream: Stream[T]= listGen.fromList(getContents).getStream
+
   private def getContents: List[T] = {
     val source = IO.fileAsStream(fileName, encoding).getLines
     var res: List[T]= Nil

@@ -33,14 +33,14 @@ class Dates extends ExtendedImpl[DateTime] {
   def timeOnly: this.type= {
     showTime= true
     showDate= false
-    if (!stepPeriod.isDefined) stepInternal(ss=1)
+    if (stepPeriod.isEmpty) stepInternal(ss=1)
     this
   }
   /** Show date and time, set period to 1 hour if sequential. */
   def dateAndTime: this.type= {
     showTime= true
     showDate= true
-    if (!stepPeriod.isDefined) stepInternal(hh=1)
+    if (stepPeriod.isEmpty) stepInternal(hh=1)
     this
   }
 

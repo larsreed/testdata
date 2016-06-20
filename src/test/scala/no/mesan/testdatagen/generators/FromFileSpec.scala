@@ -14,7 +14,7 @@ import scala.language.postfixOps
 class FromFileSpec extends FlatSpec {
 
   trait Setup {
-    val pfx= "src/test/scala/no/mesan/testdatagen/generators/"
+    val pfx= "" // src/test/scala/no/mesan/testdatagen/generators/"
     val ints= pfx + "ints.txt"
     val strings= pfx + "strings.txt"
     val empty= pfx + "empty.txt"
@@ -76,7 +76,7 @@ class FromFileSpec extends FlatSpec {
 
   it should "be able to extract randomly" in {
     new Setup {
-      val exp= List("1000000", "100000", "10000", "1000", "100", "10", "1").toSet.toList.sorted
+      val exp= List("1000000", "100000", "10000", "1000", "100", "10", "1").distinct.sorted
       val res= {
         val ss: List[String] = (FromFile(ints) distinct).get(exp.size)
         ss.toSet.toList.sorted

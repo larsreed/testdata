@@ -30,7 +30,7 @@ class TwoFromFunctionSpec extends FlatSpec with Percentage {
   it should "produce expected values" in {
     val N= 5000
     val M= 1000
-    val idList= (M to (N+M-1)) toList
+    val idList= M until N + M toList
     val altList= Random.shuffle(idList)
     val no= idList.length
     val (g1, g2)=

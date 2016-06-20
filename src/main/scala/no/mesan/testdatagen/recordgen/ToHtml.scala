@@ -35,7 +35,7 @@ List(<html>
   }
 
   override def getStream: Stream[NodeSeq] = {
-    require(fields.size>0, "at least one  must be given")
+    require(fields.nonEmpty, "at least one  must be given")
 
     def getRecord(rec: DataRecord)=  Seq[NodeSeq] {
       rec.map{

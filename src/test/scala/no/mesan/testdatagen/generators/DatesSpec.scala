@@ -63,7 +63,7 @@ class DatesSpec extends FlatSpec {
   it should "deduce missing day from date limits" in {
     // With m=2, d defaults to 31 ... should become 29 for a leap year
     val g = Dates() from(y = 2004, m = 2) to(y = 2004, m = 2) reversed()
-    val dt: DateTime = g.gen(0)
+    val dt: DateTime = g.gen.head
     val (y, m, d) = (dt.getYear, dt.getMonthOfYear, dt.getDayOfMonth)
     assert(y === 2004 && m === 2 && d === 29, dt)
   }

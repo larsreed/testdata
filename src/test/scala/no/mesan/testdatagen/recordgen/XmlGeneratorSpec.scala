@@ -74,7 +74,7 @@ class XmlGeneratorSpec extends FlatSpec with Matchers {
                      add("id", idGen).
                      add("born", bornGen)
       // ?s is dotall-mode, accepts multiline data
-      nGen.getStrings(1)(0) replaceFirst("born=[^ ]+", "") should
+      nGen.getStrings(1).head replaceFirst("born=[^ ]+", "") should
         include regex "(?s)^\\s*<data\\s+id.*(/>|</data>)\\s*$"
     }
   }
@@ -83,7 +83,7 @@ class XmlGeneratorSpec extends FlatSpec with Matchers {
     new SetupElement {
       val gen = ToXmlElements(recordName = "data", nulls = KeepNull).
           add("id", SomeNulls(100, idGen))
-      gen.get(1)(0).toString() should include regex "(?s)^\\s*<data>\\s*<id>\\s*null\\s*</id>\\s*</data>\\s*$"
+      gen.get(1).head.toString() should include regex "(?s)^\\s*<data>\\s*<id>\\s*null\\s*</id>\\s*</data>\\s*$"
     }
   }
 
@@ -91,7 +91,7 @@ class XmlGeneratorSpec extends FlatSpec with Matchers {
     new SetupElement {
       val gen = ToXmlElements(recordName = "data", nulls = SkipNull).
           add("id", SomeNulls(100, idGen))
-      gen.get(1)(0).toString() should include regex "(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"
+      gen.get(1).head.toString() should include regex "(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"
     }
   }
 
@@ -99,7 +99,7 @@ class XmlGeneratorSpec extends FlatSpec with Matchers {
     new SetupElement {
       val gen = ToXmlElements(recordName = "data", nulls = EmptyNull).
           add("id", SomeNulls(100, idGen))
-      gen.get(1)(0).toString() should include regex "(?s)^\\s*<data>\\s*(<id>\\s*</id>|<id/>)\\s*</data>\\s*$"
+      gen.get(1).head.toString() should include regex "(?s)^\\s*<data>\\s*(<id>\\s*</id>|<id/>)\\s*</data>\\s*$"
     }
   }
 
@@ -109,7 +109,7 @@ class XmlGeneratorSpec extends FlatSpec with Matchers {
           add("x", Chars("<&\"' >").sequential)
       val res = gen.getStrings(6)
       val expected= List("&lt;", "&amp;", "&quot;", "'", " ", "&gt;")
-      for (i<- 0 to expected.length-1)
+      for (i<- expected.indices)
         res(i) should include regex "(?s)^\\s*<i>\\s*<x>\\s*"+expected(i)+"\\s*</x>\\s*</i>\\s*$"
     }
   }
@@ -152,7 +152,7 @@ class XmlGeneratorSpec extends FlatSpec with Matchers {
                      add("id", idGen).
                      add("born", bornGen)
       // ?s is dotall-mode, accepts multiline data
-      nGen.getStrings(1)(0) should include regex "(?s)^\\s*<data>.*</id>.*</data>\\s*$"
+      nGen.getStrings(1).head should include regex "(?s)^\\s*<data>.*</id>.*</data>\\s*$"
     }
   }
 
@@ -160,7 +160,7 @@ class XmlGeneratorSpec extends FlatSpec with Matchers {
     new SetupAttribute {
       val gen = ToXmlAttributes(recordName = "data", nulls = KeepNull).
           add("id", SomeNulls(100, idGen))
-      gen.get(1)(0).toString() should include regex "(?s)^\\s*<data\\s*id=.null.\\s*(/>|></data>)\\s*$"
+      gen.get(1).head.toString() should include regex "(?s)^\\s*<data\\s*id=.null.\\s*(/>|></data>)\\s*$"
     }
   }
 
@@ -168,7 +168,7 @@ class XmlGeneratorSpec extends FlatSpec with Matchers {
     new SetupAttribute {
       val gen = ToXmlAttributes(recordName = "data", nulls = SkipNull).
           add("id", SomeNulls(100, idGen))
-      gen.get(1)(0).toString() should include regex "(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"
+      gen.get(1).head.toString() should include regex "(?s)^\\s*(<data>\\s*</data>|<data/>)\\s*$"
     }
   }
 
@@ -176,7 +176,7 @@ class XmlGeneratorSpec extends FlatSpec with Matchers {
     new SetupAttribute {
       val gen = ToXmlAttributes(recordName = "data", nulls = EmptyNull).
           add("id", SomeNulls(100, idGen))
-      gen.get(1)(0).toString() should include regex "(?s)^\\s*<data\\s*id=..\\s*(/>|></data>)\\s*$"
+      gen.get(1).head.toString() should include regex "(?s)^\\s*<data\\s*id=..\\s*(/>|></data>)\\s*$"
     }
   }
 
@@ -186,7 +186,7 @@ class XmlGeneratorSpec extends FlatSpec with Matchers {
           add("x", Chars("<&\"' >").sequential)
       val res = gen.getStrings(6)
       val expected= List("&lt;", "&amp;", "&quot;", "'", " ", "&gt;")
-      for (i<- 0 to expected.length-1)
+      for (i<- expected.indices)
         res(i) should include regex "(?s)^\\s*<i x=."+expected(i)+".\\s*(/>|></i>)\\s*$"
     }
   }

@@ -17,7 +17,7 @@ import scala.annotation.tailrec
 class CreditCards (prefixes: List[Long], length:Int) extends GeneratorImpl[Long] {
 
   private def digits(n:Long) = n.toString.map { _.toString.toInt }
-  private def sum(s: Seq[Int]) = s.foldLeft(0)(_+_)
+  private def sum(s: Seq[Int]) = s.sum
   private def flip(n:Int) = if (n==2) 1 else 2
 
   @tailrec private def forAll(accum: Int, factor:Int, d:List[Int]): Int = d match {

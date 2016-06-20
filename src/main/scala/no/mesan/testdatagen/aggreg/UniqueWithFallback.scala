@@ -37,7 +37,7 @@ class UniqueWithFallback[T](primary: Generator[T], alt: Generator[T]) extends Ge
 
   private def isDuplicate(newVal: T): Boolean =
     if (sortedIn) {
-      if (lastSeen == Some(newVal)) return true
+      if (lastSeen.contains(newVal)) return true
       lastSeen= Some(newVal)
       false
     }

@@ -8,7 +8,7 @@ import no.mesan.testdatagen.{ExtendedGenerator, Generator}
 
 /** Generate Norwegian county codes -- format NNNN Name, where NNNN is an integer. */
 object Kommuner {
-  def apply(): ExtendedGenerator[String] = FromFile("kommuner.txt", "ISO-8859-1")
+  def apply(): ExtendedGenerator[String] = FromFile.iso88591("kommuner.txt")
 
   /** Return the number part part only. */
   def kommunenr(): Generator[String]= TextWrapper(apply()).substring(0, 4)

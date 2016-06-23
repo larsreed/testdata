@@ -7,5 +7,5 @@ import no.mesan.testdatagen.generators.FromFile
 
 /** Generate funny names... */
 object RareNavn {
-  def apply(): ExtendedGenerator[String] = FromFile("rareNavn.txt", "ISO-8859-1")
+  def apply(): ExtendedGenerator[String] = FromFile.iso88591("rareNavn.txt")
 }

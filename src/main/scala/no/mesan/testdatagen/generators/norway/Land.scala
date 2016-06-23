@@ -7,5 +7,5 @@ import no.mesan.testdatagen.generators.FromFile
 
 /** Generate Norwegian country names. */
 object Land {
-  def apply(): ExtendedGenerator[String] = FromFile("land.txt", "ISO-8859-1")
+  def apply(): ExtendedGenerator[String] = FromFile.iso88591("land.txt")
 }

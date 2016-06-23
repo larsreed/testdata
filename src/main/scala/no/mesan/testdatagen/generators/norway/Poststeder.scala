@@ -8,7 +8,7 @@ import no.mesan.testdatagen.{ExtendedGenerator, Generator}
 
 /** Generate Norwegian postal codes -- format NNNN Name, where NNNN is an integer. */
 object Poststeder {
-  def apply(): ExtendedGenerator[String] = FromFile("postnr.txt", "ISO-8859-1")
+  def apply(): ExtendedGenerator[String] = FromFile.iso88591("postnr.txt")
 
   /** Return the number part part only. */
   def postnr(): Generator[String] = TextWrapper(apply()).substring(0, 4)

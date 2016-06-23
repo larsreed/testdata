@@ -46,4 +46,5 @@ object FromFile {
   // Only String is actually working at the moment
   def apply(resourceName: String,  encoding: String= "UTF-8"): FromFile[String] =
     new FromFile[String](resourceName, encoding)
+  def iso88591(resourceName: String): FromFile[String] = apply(resourceName, "ISO-8859-1")
 }

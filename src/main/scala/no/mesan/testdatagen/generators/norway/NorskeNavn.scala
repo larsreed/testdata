@@ -66,11 +66,11 @@ class NorskeNavn extends Generator[String] with GeneratorDelegate[String, String
    val gen= new FieldConcatenator()
    for ( i<- 0 until antFor) {
      if (i>0) gen.add(Strings().length(1).chars(" "))
-     gen.add(FromFile(fornavn, "ISO-8859-1"))
+     gen.add(FromFile.iso88591(fornavn))
    }
    for ( i<- 0 + antFor until antFor + antEtter) {
      if (i>0) gen.add(Strings().length(1).chars(" "))
-     gen.add(FromFile(etternavn, "ISO-8859-1"))
+     gen.add(FromFile.iso88591(etternavn))
    }
    gen
   }

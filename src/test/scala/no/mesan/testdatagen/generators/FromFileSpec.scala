@@ -44,7 +44,7 @@ class FromFileSpec extends FlatSpec {
 
   it should "be able to reverse the file input" in {
     new Setup {
-      val res= FromFile(ints).sequential.get(8).reverse
+      val res= intGen.sequential.get(8).reverse
       val exp= List("1", "1000000", "100000", "10000", "1000", "100", "10", "1")
       assert(res === exp)
     }
@@ -52,7 +52,7 @@ class FromFileSpec extends FlatSpec {
 
   it should "be able to extract randomly (may fail on rare occasions)" in {
     new Setup {
-      val res= FromFile(ints).get(250).toSet
+      val res= intGen.get(250).toSet
       val exp= List("1000000", "100000", "10000", "1000", "100", "10", "1").toSet
       assert(res === exp)
     }
@@ -60,7 +60,7 @@ class FromFileSpec extends FlatSpec {
 
   it should "be able to filter (may fail on rare occasions)" in {
     new Setup {
-      val res= FromFile(ints).filter(s=> s.toLong > 1000).get(100).toSet
+      val res= intGen.filter(s=> s.toLong > 1000).get(100).toSet
       val exp= List("1000000", "100000", "10000").toSet
       assert(res === exp)
     }
@@ -68,7 +68,7 @@ class FromFileSpec extends FlatSpec {
 
   it should "be able to format input" in {
     new Setup {
-      val res= FromFile(ints).sequential.formatWith(s=> f"${s.toLong}%015d").getStrings(3)
+      val res= intGen.sequential.formatWith(s=> f"${s.toLong}%015d").getStrings(3)
       val exp= List("000000000000001", "000000000000010", "000000000000100")
       assert(res === exp)
     }
@@ -78,7 +78,7 @@ class FromFileSpec extends FlatSpec {
     new Setup {
       val exp= List("1000000", "100000", "10000", "1000", "100", "10", "1").distinct.sorted
       val res= {
-        val ss: List[String] = (FromFile(ints) distinct).get(exp.size)
+        val ss: List[String] = (intGen distinct).get(exp.size)
         ss.toSet.toList.sorted
       }
       assert(res === exp)

@@ -4,7 +4,7 @@ This project contains a set of tools to help generate test data. It is primarily
 Look at the end of this docouments for more history and caveats.
 
 ## Author ##
-Lars Reed, Mesan AS
+Lars Reed, Netcompany
 Copyright: yes, see below
 
 ## Overview ##
@@ -733,8 +733,9 @@ Contains methods to combine streams:
 
 ## "DSL-like" syntax
 Recently, I have made some additions to make the configuration a bit more readable. Consider this *experimental*...  You may use the following constructs bye adding the `with DslLikeSyntax` trait:
+
 | Write | To Get |
-| ------|--------|
+| ------ | -------- |
 | from list (ls) | `FromList(ls)` -- `ls` is a list of arguments or a list |
 | from file (name[,encoding]) | `FromFile(name, encoding)` |
 | from stream (streamVar) | `FromStream(streamVar)` |
@@ -975,7 +976,7 @@ The output looks like this (excerpt):
 **2014**: Introduced streams as primary mechanism. Introduced FlatSpec for tests, though not very idomatically. Tried to find an excuse to make it reactive, but it doesn't seem to match too good with the sequential nature of the problem...
 
 ### Caveats ###
-Of the output formats, only SQL and to a certain extent CSV, has been used "in production". Try it carefully!
+Of the output formats, only SQL and to a certain extent CSV, have been used "in production". Try it carefully!
 
 ### TODO ###
 

@@ -42,7 +42,7 @@ project/plugins/project/
 
 
 src/test/scala/worksheet.sc
-src/test/scala/no/mesan/testdatagen/generators/app
+src/test/scala/no/netcompany/testdatagen/generators/app
 
 /projectFilesBackup
 /projectFilesBackup1

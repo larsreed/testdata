@@ -835,15 +835,15 @@ For this last sample, we'll look at generation of data for several SQL tables. T
 
 The code:
 
-    package no.mesan.testdatagen.generators.sample
+    package no.netcompany.testdatagen.generators.sample
 
     // Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
 
-    import no.mesan.testdatagen.aggreg.SequenceOf
-    import no.mesan.testdatagen.dsl.DslLikeSyntax
-    import no.mesan.testdatagen.generators.misc.Names
-    import no.mesan.testdatagen.generators.{Dates, FromList}
-    import no.mesan.testdatagen.recordgen.ToSql
+    import no.netcompany.testdatagen.aggreg.SequenceOf
+    import no.netcompany.testdatagen.dsl.DslLikeSyntax
+    import no.netcompany.testdatagen.generators.misc.Names
+    import no.netcompany.testdatagen.generators.{Dates, FromList}
+    import no.netcompany.testdatagen.recordgen.ToSql
 
     import scala.language.postfixOps
 

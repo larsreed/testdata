@@ -10,7 +10,7 @@ resolvers += "sbt-idea-repo" at "http://mpeltonen.github.com/maven/"
 
 resolvers += "Scalaz Bintray Repo" at "https://dl.bintray.com/scalaz/releases"
 
-organization := "no.mesan"
+organization := "no.netcompany"
 
 name := "testdatagen"
 

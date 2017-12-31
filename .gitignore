@@ -3,6 +3,7 @@ faks.sql
 project/target/
 project/project/
 project/boot/
+project/build.properties
 
 .idea*/
 *.ipr

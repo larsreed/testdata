@@ -30,7 +30,7 @@ Here is an introductory example to give you a sense of what it's all about:
       }
     }
 
-This produces an XML-file, order.xml, with the following content:
+This produces an XML-file, order.xml, with content more or less like this:
 
     <order>
        <orderLine>
@@ -41,19 +41,19 @@ This produces an XML-file, order.xml, with the following content:
        <orderLine>
           <id>2</id>
           <productName>Ysmlyjyvygsrtbr Dnbldegkieivvdrut</productName>
-          <qty>113,99 kg</qty>
+          <qty>113.99 kg</qty>
           <orderDate>2012-10-20</orderDate>
        </orderLine>
        <orderLine>
           <id>3</id>
           <productName>Iphlifhmopaka</productName>
-          <qty>87,77 kg</qty>
+          <qty>87.77 kg</qty>
           <orderDate>2013-11-04</orderDate>
        </orderLine>
        <orderLine>
           <id>4</id>
           <productName>Afoubrksoomnhehtt Leoiom</productName>
-          <qty>283,82 l</qty>
+          <qty>283.82 l</qty>
           <orderDate>2012-09-16</orderDate>
        </orderLine>
     </order>
@@ -100,14 +100,14 @@ The elements here are:
 
 * `gen`: The main function, providing a stream of data elements.
 * `genStrings`: Returns the same stream as the previous, but each element is mapped via the formatter function (see below) and thus converted to string format.
-* `get(n)`: Get `n` elements from the stream, as a list. This one, and the next, is extracted into the super trait `BareGenerator`, needed for a few instances at the end of the generator pipe where an infinite stream would be unpractical.
+* `get(n)`: Get `n` elements from the stream, as a list. This one, and the next, is extracted into the super trait `BareGenerator`, needed for a few instances at the end of the generator pipe where an infinite stream would be impractical.
 * `getStrings(n)`: like `genStrings`, but takes `n` entries from the stream.
-* `filter(f)`: Adds a function that takes an instance of the generator's type and returns `true` if the instance should be included in the list. The function may be called several times to add multiple filters to apply, each and every filter must accept the instance to include it in the final list.
-* `formatWith(f)`: Adds a formatting function that takes an instance of the given type T  and formats it as a string.
+* `filter(f)`: Adds a function that takes an instance of the generator's type and returns `true` if the instance should be included in the list. The function may be called several times to add multiple filters to apply, each and every filter must accept the instance to include it in the final result.
+* `formatWith(f)`: Sets a formatting function that takes an instance of the given type T  and formats it as a string.
    The default formatting function is `toString`
 * `formatOne(v)`: Uses the defined formatting function to format one value.
 * `distinct`: requires that this generator produces only distinct values.
-  **This should be used with caution!**  Obviously, if an "infinite" number of elements should contain no duplicates, "someone" has to remember all values past and spend time checking them. This is not for free...  Moreover, if the underlying value space is smaller than the desired number of outputs, it will usually enter an infinite loop, where the recipient keeps pulling and nothins comes out. E.g.: the `Booleans` generator has at most two possible values, the `Fixed` has only one, `FromList` is bounded, and filter functions may restrict almost any generator -- do not try to get 3 distinct Booleans...
+  **This should be used with caution!**  Obviously, if an "infinite" number of elements should contain no duplicates, "someone" has to remember all values past and spend time checking them. This is not for free...  Moreover, if the underlying value space is smaller than the desired number of outputs, it will usually enter an infinite loop, where the recipient keeps pulling and nothing comes out. E.g.: the `Booleans` generator has at most two possible values, the `Fixed` has only one, `FromList` is bounded, and filter functions may restrict almost any generator -- do not try to get 3 distinct Booleans...
 
 #### GeneratorImpl & GeneratorFilters ####
 `GeneratorImpl` is a simple trait containing a sufficient implementation of the `Generator` methods. It requires the implementing class to provide (at least) a `def getStream : Stream[T]` which is used to derive the other methods. It uses the separately usable `GeneratorFilters` trait that handles the filter functions. Implementing classes get the following additional members:
@@ -244,6 +244,7 @@ This "generator" is actually just an apply method taking a single value; it is b
 
 ### FromFile ###
 This generator reads lines from an input file and creates a list of values, from which a delegate `FromList` can take its values. The values may be typed (does not currently work as expected...), even though they are read as strings.
+
 Specialities:
 The `from` and `to` methods are not supported.
 
@@ -316,7 +317,7 @@ Apply methods:
 * `FieldConcatenator(fieldSeparator: String, generator*)` takes a field separator in addition to the generators
 
 ### SomeNulls ###
-This generator takes another generator and a percentage as input. Values are retrieved from the original generator to retrieve its values, and then replaces approximately N% of the occurrences (decided by a random generator) with `null`. N==0 means no nulls, N==100 means only nulls, N==50 approximately 50% nulls etc.
+This generator takes another generator and a percentage as input. Values are retrieved from the original generator, it then replaces approximately N% of the occurrences (decided by a random generator) with `null`. N==0 means no nulls, N==100 means only nulls, N==50 approximately 50% nulls etc.
 
 Methods:
 
@@ -340,9 +341,21 @@ Apply methods:
 
 ### SequenceOf ###
 This is one of the few `BareGenerator`s, thus, it will only produce lists, not streams.
-It takes a list of generators (which may be weighted, the default weight is 1); when producing output, the input generators are called in sequence, each adding a set of records to the result.  In default mode, each generator contributes a number of records relative to its weight, the total will then be close to N.  In absolute mode &ndash; after calling `makeAbsolute` &ndash; each generator contributes `N*weight` records.
+It takes a list of generators (which may be weighted, the default weight is 1); when producing output, the input generators are called in sequence, each adding a set of values to the result.  In default mode, each generator contributes a number of values relative to its weight, the total will then be close to N.  In absolute mode &ndash; after calling `makeAbsolute` &ndash; each generator contributes `N*weight` records.
 
 This might not seem very useful, but when generating to file (etc), it is usually easier to collect the individual  generators in this generator, rather than specifying `ToFile/append` for each input.
+
+A sample from `LongerSample`:
+
+    // The generators are all set -- create result
+    toFile(fileName=resultFile, noOfRecords = recordsBase) {
+        SequenceOf().makeAbsolute().addWeighted(
+            (customerFact, customerGenerator),
+            (productFact, productGenerator),
+            (orderFact, orderGenerator),
+            (orderLineFact, orderLineGenerator))
+    }
+
 
 It takes two type parameters:
 
@@ -390,8 +403,8 @@ Apply methods:
 
 ### UniqueWithFallback ###
 takes a primary generator and a secondary generator.  It tries to get unique values from the primary generator, but for each duplicate value obtained, it repeatedly gets a value from the secondary generator until a unique value is found.  The `formatWith`function is not supported, formatting is done by the primary generator.
-As with the `distinct` operator, use this conservatively -- it consume memory proportinately to the number of elements retrieved.  Also make sure the fallback generator is able to produce distinct values.
-If the primary generator produces values in some sorted order, thus, duplicate detection can be reduced to checking whether a value is equal to the previous, memory consumption is not an isseue. You can signal this by calling `isSorted(true)` before generating values.
+As with the `distinct` operator, use this conservatively -- it consume memory proportionately to the number of elements retrieved.  Also make sure the fallback generator is able to produce distinct values.
+If the primary generator produces values in some sorted order, thus, duplicate detection can be reduced to checking whether a value is equal to the previous, memory consumption is not an issue. You can signal this by calling `isSorted(true)` before generating values.
 
 Apply methods:
 
@@ -665,7 +678,7 @@ Sample output:
     </html>
 
 ### ToWiki ###
-Another way to output a table is to use the wiki generator. No moving parts here, it simply generates markup syntax like this:
+Another way to output a table is to use the wiki generator. No moving parts here, it simply generates Confluence markup syntax like this:
 
     || id || userId || ssn || mail || active ||
     | 1 | ZYFR | 27020785859 | ueaqefjn@iojuwy.no | X |
@@ -673,6 +686,9 @@ Another way to output a table is to use the wiki generator. No moving parts here
     | 3 | WRCB | 05086007810 | | X |
 
 ### ToJson ###
+
+**Note**: untested IRL!
+
 No prize for guessing the output format from this generator... There are two different add methods, the familiar `add` method, and a similar `addQuoted`, the latter should be used for any values that need double-quoted output (almost anything but ints, booleans and nested JSON; nulls are not quoted). The apply method has 3 parameters:
 
 1. `header:String`: This is the label for each record (ignored if `bare`, see below)
@@ -683,8 +699,6 @@ No prize for guessing the output format from this generator... There are two dif
         // => "customer": { "address": { "line1": ... }, ...}
 
 3. `nulls: NullHandler= KeepNull`: as described above
-
-**Note**: untested IRL!
 
 ### ToSql ###
 Often, you will need to put test data into a data base. This generator tries to help you... It generates records of the form `insert into tableName (field1, field2,...) values (value1, value2, ...);`.
@@ -726,13 +740,23 @@ contains `def randomFrom[T](l: Seq[T]): T` that returns a random element from it
 ### StreamUtils ###
 Contains methods to combine streams:
 
-* `combine[A](list: Seq[Stream[A]]): Stream[Seq[A]]`: the input is a sequence of streams. The input is a stream of sequences, each output sequence contains one element from each input stream.  So if you feed it with 3 streams, providing As, Bs and Cs, respectively, the output is a stream of `Seq(A, B, C)`.
+* `combine[A](list: Seq[Stream[A]]): Stream[Seq[A]]`: the input is a sequence of streams, the output is a stream of sequences, each output sequence contains one element from each input stream.  So if you feed it with 3 streams, providing As, Bs and Cs, respectively, the output is a stream of `Seq(A, B, C)`.
 * `interleave[A](list: Seq[Stream[A]]): Stream[A]`: this is the flattened version of the previous, so in the example given, this will return a stream of `A, B, C, A, B, C, A, ...`
 * `combineGens[A](list: Seq[Generator[A]]): Stream[Seq[A]]`: runs `combine` on the `gen`s from each generator.
 * `combineStringGens[A](list: Seq[Generator[A]]): Stream[Seq[String]]`: runs `combine` on the `genString`s from each generator.
 
+### Samples included ###
+
+* `SimpleSample`: described above
+* `LongerSample`: described below
+* `GrubleSample`: generate letters and categories for a game of _Gruble_
+* `MarkovSample`: just to fire the Markov generator
+* `PasshpraseSample`: generates sample pass phrases -- it uses 4 of the included data files, "fornavn.txt" (Norwegian first names, described above), "verbs.txt" (some 100 Norwegian verbs), "adj.txt" (some 90 Norwegians adjectives) and "subst.txt" (some 500 Norwegian nouns), creating phrases like:
+ "Anton deduserer triangulert brennstoff",  "Norvald skjematiserer ustresset hellefisk", "Rine gipser vinglete smørbrød", "Snefrid kombinerer hyperstresset forretningsliv"
+
+
 ## "DSL-like" syntax
-Recently, I have made some additions to make the configuration a bit more readable. Consider this *experimental*...  You may use the following constructs bye adding the `with DslLikeSyntax` trait:
+Recently (relatively speaking...), I have made some additions to make the configuration a bit more readable. Consider this *experimental*...  You may use the following constructs by adding the `with DslLikeSyntax` trait:
 
 | Write | To Get |
 | ------ | -------- |
@@ -864,7 +888,7 @@ The code:
       val customerIds= from list ((sequential integers) get(customerFact * recordsBase))
       val birthDates= dates from (y=1921) to (y=1996) get(customerFact*recordsBase)
       val productIds= from list((sequential integers) to 100000 get(productFact*recordsBase))
-      val orderIds: FromList[Int] = from list (sequential integers).get(orderFact * recordsBase) sequential
+      val orderIds = from list (sequential integers).get(orderFact * recordsBase) sequential
       val postSteder= from list (poststeder get(customerFact*recordsBase)) sequential
 
       // Populating the customer table - no dependencies
@@ -971,9 +995,14 @@ The output looks like this (excerpt):
 ### History ###
 
 **Ca 1992**: Created AWK scripts for simple SQL data generation.
+
 **Ca 2011**: Started converting into Scala.
+
 **2013**: Enhanced interface (sequential generation, complex generators etc).
+
 **2014**: Introduced streams as primary mechanism. Introduced FlatSpec for tests, though not very idomatically. Tried to find an excuse to make it reactive, but it doesn't seem to match too good with the sequential nature of the problem...
+
+**2015+**: Only minor adjustments 
 
 ### Caveats ###
 Of the output formats, only SQL and to a certain extent CSV, have been used "in production". Try it carefully!

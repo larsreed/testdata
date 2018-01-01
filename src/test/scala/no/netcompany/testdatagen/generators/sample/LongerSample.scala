@@ -27,7 +27,7 @@ object LongerSample extends App with DslLikeSyntax {
   val customerIds= from list ((sequential integers) get(customerFact * recordsBase))
   val birthDates= dates from (y=1921) to (y=1996) get(customerFact*recordsBase)
   val productIds= from list((sequential integers) to 100000 get(productFact*recordsBase))
-  val orderIds: FromList[Int] = from list (sequential integers).get(orderFact * recordsBase) sequential
+  val orderIds = from list (sequential integers).get(orderFact * recordsBase) sequential
   val postSteder= from list (poststeder get(customerFact*recordsBase)) sequential
 
   // Populating the customer table - no dependencies

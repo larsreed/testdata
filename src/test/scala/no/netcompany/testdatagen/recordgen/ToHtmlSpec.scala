@@ -24,7 +24,7 @@ class ToHtmlSpec extends FlatSpec {
     val scoreGen = SomeNulls(50, Doubles().from(0).to(10000))
     val urlGen = SomeNulls(33, Urls())
     val mailGen = SomeNulls(20, MailAddresses())
-    var kjmGen = SomeNulls(15, Kjennemerker())
+    val kjmGen = SomeNulls(15, Kjennemerker())
     val recordGen = ToHtml("Brukere").
       add("id", idGen).
       add("userId", codeGen).
@@ -51,7 +51,7 @@ class ToHtmlSpec extends FlatSpec {
 
   it should "quote special characters correctly" in {
     new Setup {
-      var tullGen = Strings().chars("<&>").sequential
+      val tullGen = Strings().chars("<&>").sequential
       val res = ToHtml().add("tull", tullGen).getStrings(3).mkString(" ")
       val exp= "c"
       assert(res.contains("&lt;"), res)

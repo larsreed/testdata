@@ -99,7 +99,7 @@ class Strings extends ExtendedImpl[String] {
 object Strings {
   val asciiUpper= "ABCDEFGHIJKLMNOPQRSTUVWXY"
   val asciiLower= "abcdefghijklmnopqrstuvwxyz"
-  val asciiUpperLower= asciiUpper + asciiLower
+  val asciiUpperLower: String = asciiUpper + asciiLower
   val digits= "0123456789"
   def apply(length: Int=1) :Strings = new Strings() length length
   def apply(length: Int, chars:Seq[Char]): Strings = new Strings() length length chars chars

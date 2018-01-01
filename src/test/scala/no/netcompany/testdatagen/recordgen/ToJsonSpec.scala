@@ -59,7 +59,7 @@ class ToJsonSpec extends FlatSpec {
 
   it should "quote correctly" in {
     new Setup {
-      var fnuttGen = Chars("\"")
+      val fnuttGen = Chars("\"")
       val res = ToJson().addQuoted("fnutt", fnuttGen).getStrings(1)(0)
       assert(res.matches("""(?s).*["]fnutt["]: ["][\\]["]["].*"""))
     }

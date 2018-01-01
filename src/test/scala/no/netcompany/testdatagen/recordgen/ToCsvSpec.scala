@@ -32,7 +32,7 @@ class ToCsvSpec extends FlatSpec {
 
   "The ToCsv generator" should "demand at least one input generator" in {
     intercept[IllegalArgumentException] {
-      ToCsv(withHeaders = true).get(1)
+      ToCsv().get(1)
     }
   }
 
@@ -45,7 +45,7 @@ class ToCsvSpec extends FlatSpec {
 
   it should "quote special characters correctly" in {
     new Setup {
-      var fnuttGen = Chars("\"")
+      val fnuttGen = Chars("\"")
       val res = ToCsv(withHeaders = false).add("fnutt", fnuttGen).getStrings(1)(0)
       val exp= "\"" + "\\" + "\"" + "\""
       assert(res===exp,res +"=" + exp)

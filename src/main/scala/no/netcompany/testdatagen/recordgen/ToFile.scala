@@ -17,8 +17,8 @@ class ToFile[T](fileName:String,
                 append:Boolean,
                 charSet:String) extends BareGenerator[T] {
 
-  protected var prefix= List[String]()
-  protected var suffix= List[String]()
+  protected var prefix: List[String] = List[String]()
+  protected var suffix: List[String] = List[String]()
 
   def prepend(s: String):this.type = {
     prefix::= s
@@ -52,19 +52,19 @@ class ToFile[T](fileName:String,
   }
 
   override def get(n: Int): List[T]= {
-    var res= generator.get(n)
+    val res= generator.get(n)
     writeToFile(res map {_.toString})
     res
   }
 
   override def getStrings(n: Int): List[String]= {
-    var res= generator.getStrings(n)
+    val res= generator.getStrings(n)
     writeToFile(res)
     res
   }
 
   // Nicer name...
-  def write(n:Int, strings:Boolean= true) = if (strings) getStrings(n) else get(n)
+  def write(n:Int, strings:Boolean= true): List[Any] = if (strings) getStrings(n) else get(n)
 }
 
 object ToFile {

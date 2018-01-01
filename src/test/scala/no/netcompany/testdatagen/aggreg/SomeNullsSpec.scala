@@ -17,7 +17,7 @@ class SomeNullsSpec extends FlatSpec {
   "SomeNulls" should "generate expected output" in  {
     new Setup {
       val nulls= xgen.genStrings.take(500).filter(_==null)
-      assert(nulls.size>150 && nulls.size<350)
+      assert(nulls.size>150 && nulls.lengthCompare(350) < 0)
     }
   }
 }

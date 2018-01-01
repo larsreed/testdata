@@ -14,7 +14,7 @@ object IO {
       Source.fromFile(fileName, encoding)
     }
     catch {
-      case ugh: FileNotFoundException =>
+      case _: FileNotFoundException =>
         Source.fromInputStream(getClass.getClassLoader.getResourceAsStream(fileName), encoding)
     }
   }

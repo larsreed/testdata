@@ -88,7 +88,7 @@ trait ExtendedGenerator[T] extends Generator[T] {
 }
 
 trait GeneratorFilters[T] {
-  private var filterFuns: List[T => Boolean] = List(t => true)
+  private var filterFuns: List[T => Boolean] = List(_ => true)
 
   /** Return the list of filters. */
   def allFilters: List[T => Boolean] = filterFuns
@@ -151,7 +151,7 @@ trait ExtendedImpl[T] extends GeneratorImpl[T] with ExtendedGenerator[T] {
   /** False means random, true means sequential. */
   protected var isSequential= false
   /** Inverts isSequential. */
-  protected final def isRandom= !isSequential
+  protected final def isRandom: Boolean = !isSequential
   override def sequential: this.type= { isSequential=true; this }
 }
 

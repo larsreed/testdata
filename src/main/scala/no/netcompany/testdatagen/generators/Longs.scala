@@ -45,7 +45,7 @@ class Longs extends ExtendedImpl[Long] {
     def randomly(): Stream[Long]= (min + (BigInt(Random.nextLong()) mod span)).toLong #:: randomly
 
     if (isSequential) startAt #:: sequentially(startAt)
-    else randomly
+    else randomly()
   }
 }
 

@@ -47,11 +47,6 @@ class TextWrapper(generator:Generator[_]) extends GeneratorImpl[String] {
 
   private def composed = transformers reduce(_ compose _)
 
-  private def transformAll(s:List[String]): List[String]= {
-    val func= transformers reduce(_ compose _)
-    s map func
-  }
-
   def getStream: Stream[String]= generator.genStrings.map(composed)
 
 }

@@ -46,7 +46,7 @@ object FromList {
   def weighted[T](elements: Seq[(Int, T)]): FromList[T]= {
     val list= for {
       (n, elem) <- elements
-      i <- 1 to n} yield elem
+      _ <- 1 to n} yield elem
     apply(list:_*)
   }
 }

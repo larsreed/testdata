@@ -1,4 +1,4 @@
-scalaVersion := "2.11.6"
+scalaVersion := "2.12.4"
 
 scalacOptions += "-feature"
 
@@ -14,21 +14,21 @@ organization := "no.netcompany"
 
 name := "testdatagen"
 
-version := "0.1-SNAPSHOT"
+version := "0.2-SNAPSHOT"
 
 libraryDependencies ++= Seq(
-  "joda-time" % "joda-time" % "2.3",
-  "org.joda" % "joda-convert" % "1.4",
-  "org.scalaj" % "scalaj-time_2.10.2" % "0.7",
-    "org.scalaz.stream" %% "scalaz-stream" % "0.7a"
+  "joda-time" % "joda-time" % "2.9.9",
+  "org.joda" % "joda-convert" % "1.9.2",
+  "com.github.nscala-time" %% "nscala-time" % "2.18.0",
+  "org.scalaz.stream" %% "scalaz-stream" % "0.8.6"
 )
 
 libraryDependencies ++= Seq( // test
-  "junit" % "junit" % "4.11" % "test",
-  "org.scalatest" %% "scalatest" % "2.2.4" % "test",
-  "org.hamcrest" % "hamcrest-core" % "1.1" % "test",
-  "org.specs2" %% "specs2" % "3.3.1" % "test",
-  "org.mockito" % "mockito-all" % "1.9.0" % "test"
+  "junit" % "junit" % "4.12" % "test",
+  "org.scalatest" %% "scalatest" % "3.0.4" % "test",
+  "org.hamcrest" % "hamcrest-core" % "1.3" % "test",
+  "org.specs2" %% "specs2-core" % "3.8.9" % "test",
+  "org.mockito" % "mockito-all" % "1.10.19" % "test"
 )
 
-org.scalastyle.sbt.ScalastylePlugin.Settings
+// org.scalastyle.sbt.ScalastylePlugin.Settings

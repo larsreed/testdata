@@ -34,7 +34,7 @@ object TadFaks extends App {
   val (funkGenIds, eierFunkGenIds)=
     TwoFromFunction(FromList(funkIdList).sequential, { id:Int=> if (id==10000) null else {
       var n= 0
-      do { n= FromList(funkIdList).get(1)(0) } while (n>=id)
+      do { n= FromList(funkIdList).get(1).head } while (n>=id)
       n
     }}).asListGens(funcFact*noOfRecs)
 

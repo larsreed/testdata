@@ -27,7 +27,7 @@ abstract class DataRecordGenerator[T](nulls: NullHandler) extends GeneratorImpl[
 
   /** Add a new data field with a given name and generator. */
   def add(fieldName: String, gen:Generator[_]): this.type =
-    add(new DataField(fieldName, gen))
+    add(DataField(fieldName, gen))
 
   /** Return a ToFile that overwrites its result. */
   def toFile(fileName: String, charSet:String=ToFile.defaultCharSet): ToFile[T]=
@@ -54,7 +54,7 @@ abstract class StringRecordGenerator(nulls: NullHandler)
   protected def recordSuffix: String= ""
 
   /** Platform line ending. */
-  protected def newline= util.Properties.lineSeparator
+  protected def newline: String = util.Properties.lineSeparator
 
   /**
    * Implement this method to convert the list of fields in one record

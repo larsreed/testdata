@@ -24,7 +24,7 @@ class ToSqlSpec extends FlatSpec {
     val scoreGen = SomeNulls(50, Doubles().from(0).to(10000))
     val urlGen = SomeNulls(33, Urls())
     val mailGen = SomeNulls(20, MailAddresses())
-    var kjmGen = SomeNulls(12, Kjennemerker())
+    val kjmGen = SomeNulls(12, Kjennemerker())
     val recordGen = ToSql("User").
       add("id", idGen).
       addQuoted("userId", codeGen).
@@ -52,7 +52,7 @@ class ToSqlSpec extends FlatSpec {
 
   it should "quote correctly" in {
     new Setup {
-      var fnuttGen = Chars("'")
+      val fnuttGen = Chars("'")
       val res = ToSql("tbl", "").addQuoted("fnutt", fnuttGen).getStrings(1)(0)
       val exp= "insert into tbl (fnutt) values ('''')"
       assert(res===exp,res +"=" + exp)

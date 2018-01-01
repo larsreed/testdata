@@ -30,6 +30,6 @@ class ToFileSpec extends FlatSpec {
   }
 
   it should "require at least one generator" in {
-    intercept[IllegalArgumentException] { ToCsv(withHeaders = true).toFile("test.txt").get(1) }
+    intercept[IllegalArgumentException] { ToCsv().toFile("test.txt").get(1) }
   }
 }

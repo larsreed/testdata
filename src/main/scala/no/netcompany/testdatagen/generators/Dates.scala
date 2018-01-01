@@ -4,10 +4,10 @@ package no.netcompany.testdatagen.generators
 
 import java.util.Date
 
+import com.github.nscala_time.time.Imports._
 import no.netcompany.testdatagen.ExtendedImpl
 import org.joda.time.format.{DateTimeFormat, DateTimeFormatter}
 import org.joda.time.{DateTime, Period}
-import org.scala_tools.time.Imports.{RichDateTime, RichReadableInstant}
 
 import scala.annotation.tailrec
 import scala.language.postfixOps
@@ -169,7 +169,7 @@ class Dates extends ExtendedImpl[DateTime] {
           new DateTime(y,m,d,hh,mm,ss,ms)
         }
         catch { // Catches illegal dates (like Nov 31st)
-          case ex: IllegalArgumentException => getAdate
+          case _: IllegalArgumentException => getAdate
         }
       }
       getAdate #:: getRandomly

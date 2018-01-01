@@ -54,7 +54,7 @@ class MarkovSpec extends FlatSpec {
     val possible= List("a b c",
       "b c a", "b c b", "b c c",
       "c a b", "c b c", "c c a", "c c b", "c c c")
-    for (n<-1 to 50) {
+    for (_ <-1 to 50) {
       val res= gen.mkString(3)
       assert(possible.contains(res), res)
     }

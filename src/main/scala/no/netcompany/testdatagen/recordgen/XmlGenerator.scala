@@ -48,13 +48,14 @@ class ToXmlAttributes(rootName: String, recordName: String, nulls:NullHandler)
       }.toList
     }
     val data= genRecords(KeepNull)
-    data.map{ case nodes =>
-      val elem=
-<xml/>.copy(label=recordName)
-       (elem /: getRecord(nodes)) {
-         case (x, null) => x
-         case (x, attr) => x % attr
-       } }
+    data.map { nodes =>
+      val elem =
+          <xml/>.copy(label = recordName)
+      (elem /: getRecord(nodes)) {
+        case (x, null) => x
+        case (x, attr) => x % attr
+      }
+    }
   }
 }
 
@@ -82,9 +83,11 @@ class ToXmlElements(rootName: String, recordName: String, nulls:NullHandler)
       }
     }
     val data= genRecords(KeepNull)
-    data.map{ case nodes => <xml>
-    {getRecord(nodes)}
-  </xml>.copy(label=recordName)}
+    data.map { nodes =>
+      <xml>
+        {getRecord(nodes)}
+      </xml>.copy(label = recordName)
+    }
   }
 }
 

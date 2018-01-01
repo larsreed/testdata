@@ -39,19 +39,20 @@ List(<html>
 
     def getRecord(rec: DataRecord)=  Seq[NodeSeq] {
       rec.map{
-        case (tag, null)=> nulls match {
+        case (_, null)=> nulls match {
           case EmptyNull => <td>&nbsp;</td>
           case KeepNull=> <td>null</td>
           case SkipNull => null
         }
-        case (tag,value)=> <td>{value}</td>
+        case (_,value)=> <td>{value}</td>
       }
     }
     val data= genRecords(KeepNull)
-    data.map{ case nodes =>
-    <tr>
-      {getRecord(nodes)}
-    </tr>}
+    data.map { nodes =>
+      <tr>
+        {getRecord(nodes)}
+      </tr>
+    }
   }
 }
 object ToHtml {

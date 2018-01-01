@@ -26,7 +26,7 @@ trait DslLikeSyntax {
   /** Alias Doubles(). */
   def doubles: Doubles = Doubles()
   /** Alias Booleans(). */
-  def booleans= Booleans()
+  def booleans: Booleans = Booleans()
   /** Alias Chars(). */
   def chars: Chars = Chars()
   /** Alias Chars(). */
@@ -50,7 +50,7 @@ trait DslLikeSyntax {
   /** 0-9/A-Z -- upper/lower -- add length(Between) as needed. */
   def alphanumerics: Strings = Strings.alphanum()
   /** ASCII 32-126 -- add length(Between) as needed. */
-  def ascii= Strings.ascii()
+  def ascii: Strings = Strings.ascii()
   /** Alias Dates(). */
   def dates: Dates = Dates()
   /** Alias Dates().dateAndTime. */
@@ -121,7 +121,7 @@ trait DslLikeSyntax {
   /** Alias TextWrapper.*/
   def transformText[T](generator: Generator[T]): TextWrapper = TextWrapper(generator)
   /** Alias TextWrapper.substring. */
-  def substring(generator: Generator[_], from:Int, to:Int= -1)= TextWrapper(generator).substring(from, to)
+  def substring(generator: Generator[_], from:Int, to:Int= -1): TextWrapper = TextWrapper(generator).substring(from, to)
   /** Alias TwoFromFunction.*/
   def twoFromFunction[T, U](gen: Generator[T])(genFun: T=>U): TwoFromFunction[T, U] =
     TwoFromFunction(gen, genFun)
@@ -186,7 +186,7 @@ class Negative {
   /** Doubles <0. */
   def doubles: Generator[Double]= Doubles.negative() filter(_<0.0D)
   /** Longs <0. */
-  def longs= Longs.negative() filter(_<0)
+  def longs: Generator[Long] = Longs.negative() filter(_<0)
 }
 
 /** Suffixes for "from". */

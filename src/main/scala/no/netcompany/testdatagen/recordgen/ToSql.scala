@@ -17,10 +17,10 @@ import no.netcompany.testdatagen.Generator
  * separator different from ";".
  */
 class ToSql(tableName: String, exec: String) extends StringRecordGenerator(KeepNull) {
-  override protected def recordPrefix =
+  override protected def recordPrefix: String =
     "insert into " + tableName + " (" + fieldNames.mkString(", ") + ") values ("
 
-  override protected def recordSuffix = ")" + exec
+  override protected def recordSuffix: String = ")" + exec
 
   override protected def makeFields(rec: DataRecord): String = rec.map(_._2).mkString(", ")
 

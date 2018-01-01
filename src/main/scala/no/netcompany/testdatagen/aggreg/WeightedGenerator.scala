@@ -19,7 +19,7 @@ class WeightedGenerator[T] extends GeneratorImpl[T]
       with StreamUtils
       with RandomElem {
 
-  lazy val drawFrom= generators.zipWithIndex flatMap {
+  lazy val drawFrom: List[Int] = generators.zipWithIndex flatMap {
     case ((weight, _), index) => List.fill(weight)(index)
   }
 

@@ -17,14 +17,14 @@ class ToFixedWidth(withHeaders:Boolean) extends StringRecordGenerator(EmptyNull)
 
   class FixedDataField(name: String, generator: Generator[_], awidth:Int)
         extends DataField(name, generator) {
-    val width= awidth
+    val width: Int = awidth
     override def transform(s: String): String = fix(s, width)
   }
 
   private def fixHeader= {
     fields.map {
-      case df =>
-        val v= df.asInstanceOf[FixedDataField]
+      df =>
+        val v = df.asInstanceOf[FixedDataField]
         fix(v.name, v.width)
     }.reverse.mkString("")
   }

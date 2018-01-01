@@ -68,8 +68,8 @@ object LongerSample extends App with DslLikeSyntax {
                        transformText(
                          concatenate(fixed("Amount: "),
                            (positive doubles) from 1 to 300 format "%5.2f",
-                           from list (" l", " kg", "", " m")))
-                         trim))))
+                           from list(" l", " kg", "", " m")))
+                         trim()))))
 
   // The generators are all set -- create result
   toFile(fileName=resultFile, noOfRecords = recordsBase) {

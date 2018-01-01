@@ -10,7 +10,7 @@ import no.netcompany.testdatagen.{ExtendedDelegate, ExtendedGenerator}
  */
 class Chars extends ExtendedGenerator[Char] with ExtendedDelegate[String, Char, ExtendedGenerator[String]] {
 
-  private val embedded= Strings(1)
+  private val embedded= Strings()
   def delegate: ExtendedGenerator[String]= embedded // For the trait
 
   /** Set character range. */

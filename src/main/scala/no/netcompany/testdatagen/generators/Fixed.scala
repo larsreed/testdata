@@ -10,7 +10,7 @@ package no.netcompany.testdatagen.generators
 class Fixed[T](value: T) extends FromList[T] {
   fromList(List(value))
 
-  override def filter(f: T=>Boolean) = {
+  override def filter(f: T=>Boolean): Fixed.this.type = {
     if (!f(value)) throw new IllegalArgumentException(s"filter does not accept single value $value")
     super.filter(f)
   }

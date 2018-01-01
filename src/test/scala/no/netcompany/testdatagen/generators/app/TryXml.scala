@@ -18,7 +18,7 @@ object TryXml extends App with StreamUtils {
   val c1= <xml><![CDATA[<ting />]]></xml>
 
 
-  val repl= Strings.letters(length = 15).get(1)(0)
+  val repl= Strings.letters(length = 15).get(1).head
   val x3= ToXmlElements(recordName = "x1") add("a", g1) add("z", g0) add("f", Fixed(repl)) add("b", g2)
   val s= x3.gen zip x2.gen map { v =>
     println(v._1.toString, repl, v._2.toString)

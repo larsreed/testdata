@@ -4,7 +4,7 @@ This project contains a set of tools to help generate test data. It is primarily
 Look at the end of this docouments for more history and caveats.
 
 ## Author ##
-Lars Reed, Netcompany
+Lars Reed
 Copyright: yes, see below
 
 ## Overview ##
@@ -1015,4 +1015,4 @@ Of the output formats, only SQL and to a certain extent CSV, have been used "in 
 4. Why does formatOne have to accept supertypes?
 
 ### LICENSE ###
-This project, with all contained files, is covered by GNU GENERAL PUBLIC LICENSE, v2.  See the file LICENSE.txt for details.
+This project, with all contained files, is covered by GNU Lesser GENERAL PUBLIC LICENSE, v3.  See the file LICENSE.txt for details.

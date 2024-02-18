@@ -13,7 +13,7 @@ class FixedSpec extends FlatSpec {
 
   "The Fixed generator" should "generate a contionous stream of equal values" in {
     val res= Fixed(List(42)) get 100
-    assert(res forall(l=> l.size==1 && l(0)==42))
+    assert(res forall(l=> l.size==1 && l.head==42))
   }
 
   it should "reject a filter that filters away its only legal value" in {

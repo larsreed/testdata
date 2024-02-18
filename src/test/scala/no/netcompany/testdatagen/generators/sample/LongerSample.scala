@@ -12,7 +12,7 @@ import scala.language.postfixOps
 
 object LongerSample extends App with DslLikeSyntax {
   // These are the total number of records we will generate for the different categories
-  val recordsBase= 100
+  val recordsBase= 10000
   val orderFact= 2
   val productFact= 3
   val customerFact= 1
@@ -26,7 +26,7 @@ object LongerSample extends App with DslLikeSyntax {
   // and "fodselsnummer")
   val customerIds= from list ((sequential integers) get(customerFact * recordsBase))
   val birthDates= dates from (y=1921) to (y=1996) get(customerFact*recordsBase)
-  val productIds= from list((sequential integers) to 100000 get(productFact*recordsBase))
+  val productIds= from list((sequential integers) to 900000 get(productFact*recordsBase))
   val orderIds = from list (sequential integers).get(orderFact * recordsBase) sequential
   val postSteder= from list (poststeder get(customerFact*recordsBase)) sequential
 
@@ -59,7 +59,7 @@ object LongerSample extends App with DslLikeSyntax {
   val orderLineGenerator= toSql(tableName="order_line")
     .add("order", orderIds)
     .add("product", productIds)
-    .add("lineNo", sequential integers)
+    .add("lineId", sequential integers)
     .addQuoted("info",
         someNulls(60,
             weighted((10, fixed("Restock")),

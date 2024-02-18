@@ -5,7 +5,7 @@ package net.kalars.testdatagen.generators.norway
 import net.kalars.testdatagen.{ExtendedGenerator, GeneratorImpl}
 import net.kalars.testdatagen.generators.{Dates, Ints}
 import net.kalars.testdatagen.utils.Percentage
-import no.netcompany.testdatagen._
+import net.kalars.testdatagen._
 import org.joda.time.DateTime
 
 import scala.annotation.tailrec

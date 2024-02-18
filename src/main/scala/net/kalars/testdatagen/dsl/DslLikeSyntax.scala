@@ -10,12 +10,12 @@ import net.kalars.testdatagen.generators.{Booleans, Chars, Dates, Doubles, Fixed
 import net.kalars.testdatagen.recordgen.{EmptyNull, KeepNull, NullHandler, ToCsv, ToFile, ToFixedWidth, ToHtml, ToJson, ToSql, ToWiki, ToXmlAttributes, ToXmlElements}
 
 import scala.language.postfixOps
-import no.netcompany.testdatagen.aggreg._
-import no.netcompany.testdatagen.generators.norway._
-import no.netcompany.testdatagen.recordgen._
-import no.netcompany.testdatagen.{BareGenerator, ExtendedGenerator, Generator}
-import no.netcompany.testdatagen.generators._
-import no.netcompany.testdatagen.generators.misc._
+import net.kalars.testdatagen.aggreg._
+import net.kalars.testdatagen.generators.norway._
+import net.kalars.testdatagen.recordgen._
+import net.kalars.testdatagen.{BareGenerator, ExtendedGenerator, Generator}
+import net.kalars.testdatagen.generators._
+import net.kalars.testdatagen.generators.misc._
 import org.joda.time.DateTime
 
 /** DSL-like building blocks. */

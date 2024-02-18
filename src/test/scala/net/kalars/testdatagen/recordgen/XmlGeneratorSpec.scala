@@ -6,7 +6,7 @@ import net.kalars.testdatagen.aggreg.SomeNulls
 import net.kalars.testdatagen.generators.{Chars, Dates, Fixed, Ints, Longs, Strings}
 import net.kalars.testdatagen.generators.misc.{Names, Urls}
 import net.kalars.testdatagen.generators.norway.NorskeNavn
-import no.netcompany.testdatagen.generators._
+import net.kalars.testdatagen.generators._
 import org.junit.runner.RunWith
 import org.scalatest.{FlatSpec, Matchers}
 import org.scalatest.junit.JUnitRunner

@@ -859,15 +859,15 @@ For this last sample, we'll look at generation of data for several SQL tables. T
 
 The code:
 
-    package no.netcompany.testdatagen.generators.sample
+    package net.kalars.testdatagen.generators.sample
 
     // Copyright (C) 2014 Lars Reed -- GNU GPL 2.0 -- see LICENSE.txt
 
-    import no.netcompany.testdatagen.aggreg.SequenceOf
-    import no.netcompany.testdatagen.dsl.DslLikeSyntax
-    import no.netcompany.testdatagen.generators.misc.Names
-    import no.netcompany.testdatagen.generators.{Dates, FromList}
-    import no.netcompany.testdatagen.recordgen.ToSql
+    import net.kalars.testdatagen.aggreg.SequenceOf
+    import net.kalars.testdatagen.dsl.DslLikeSyntax
+    import net.kalars.testdatagen.generators.misc.Names
+    import net.kalars.testdatagen.generators.{Dates, FromList}
+    import net.kalars.testdatagen.recordgen.ToSql
 
     import scala.language.postfixOps
 

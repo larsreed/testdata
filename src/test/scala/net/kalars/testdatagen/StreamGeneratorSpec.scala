@@ -7,11 +7,11 @@ import net.kalars.testdatagen.generators.misc.{CarMakes, CreditCards, Fibonaccis
 import net.kalars.testdatagen.generators.norway.{Adresser, Fnr, Kjennemerker, Kommuner, Land, NorskeNavn, Orgnr, Poststeder, RareNavn}
 import net.kalars.testdatagen.generators.{Booleans, Chars, Dates, Doubles, Fixed, FromFile, FromList, Ints, Longs, Strings}
 import net.kalars.testdatagen.recordgen.{SkipNull, ToCsv, ToFixedWidth, ToHtml, ToJson, ToSql, ToWiki, ToXmlAttributes, ToXmlElements}
-import no.netcompany.testdatagen.aggreg._
-import no.netcompany.testdatagen.generators.misc._
-import no.netcompany.testdatagen.generators.norway._
-import no.netcompany.testdatagen.generators._
-import no.netcompany.testdatagen.recordgen._
+import net.kalars.testdatagen.aggreg._
+import net.kalars.testdatagen.generators.misc._
+import net.kalars.testdatagen.generators.norway._
+import net.kalars.testdatagen.generators._
+import net.kalars.testdatagen.recordgen._
 import org.junit.runner.RunWith
 import org.scalatest.FlatSpec
 import org.scalatest.junit.JUnitRunner

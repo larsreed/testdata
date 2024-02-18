@@ -4,7 +4,7 @@ package net.kalars.testdatagen.aggreg
 
 import net.kalars.testdatagen.{Generator, GeneratorImpl}
 import net.kalars.testdatagen.generators.FromList
-import no.netcompany.testdatagen.{Generator, GeneratorImpl}
+import net.kalars.testdatagen.{Generator, GeneratorImpl}
 
 /**
  * This generator takes one generator and a generator function as input; it draws values from the first
